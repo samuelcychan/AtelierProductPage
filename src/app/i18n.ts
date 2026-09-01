@@ -102,6 +102,7 @@ export interface Translations {
     process: string;
     recipes: string;
     faq: string;
+    theme: string;
     order: string;
   };
   hero: {
@@ -167,7 +168,7 @@ export interface Translations {
 }
 
 const en: Translations = {
-  nav: { ingredients: "Ingredients", process: "Process", recipes: "Recipes", faq: "FAQ", order: "Order Now" },
+  nav: { ingredients: "Ingredients", process: "Process", recipes: "Recipes", faq: "FAQ", theme: "Theme", order: "Order Now" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
     headline: ["A jar of", "slow sunshine."],
@@ -250,7 +251,7 @@ const en: Translations = {
 };
 
 const ja: Translations = {
-  nav: { ingredients: "原材料", process: "製造工程", recipes: "レシピ", faq: "よくある質問", order: "今すぐ注文" },
+  nav: { ingredients: "原材料", process: "製造工程", recipes: "レシピ", faq: "よくある質問", theme: "テーマ", order: "今すぐ注文" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
     headline: ["太陽の光を", "瓶に詰めました。"],
@@ -291,8 +292,8 @@ const ja: Translations = {
     footerNote: "他にも：穀物ボウル・フムス・焼き魚・ドレッシング・マリネ・複合バター",
     cards: [
       { tag: "ヴィーガン", title: "彩り野菜のサラダ ～粒マスタードソース～", tile: "野菜サラダ", time: "約15分", diff: "簡単", desc: "シャキシャキの野菜に、粒マスタードのほどよい酸味と香りを合わせた、彩り豊かなサラダです。さっぱりとした味わいで、前菜にも普段の食卓にもおすすめです。" },
-      { tag: "パン", title: "タブナードトースト", time: "10分", diff: "とても簡単", desc: "温めたパンにタブナードをのせ、良質のオリーブオイルを回しかけて。トマトやチーズを添えても。" },
-      { tag: "毎日", title: "マスタードドレッシング", time: "5分", diff: "とても簡単", desc: "マスタードソース大さじ1にオリーブオイルとはちみつ少々。サラダや焼き野菜が見違えます。" },
+      { tag: "パスタ", title: "きのこと粒マスタードソースのパスタ", tile: "パスタ", time: "約20分", diff: "簡単", desc: "粒マスタードのほどよい酸味とプチプチとした食感に、きのこの旨みを合わせた香り豊かなパスタです。シンプルな材料で手軽に作れます。" },
+      { tag: "料理", title: "じゃがいもの粒マスタード和え", tile: "じゃがいも", time: "約20分", diff: "簡単", desc: "ほくほくのじゃがいもに、粒マスタードの爽やかな酸味とプチプチした食感を合わせたシンプルな一品です。温かいままでも、冷ましてサラダ感覚でもおいしくいただけます。" },
     ],
   },
   faq: {
@@ -333,7 +334,7 @@ const ja: Translations = {
 };
 
 const fr: Translations = {
-  nav: { ingredients: "Ingrédients", process: "Fabrication", recipes: "Recettes", faq: "FAQ", order: "Commander" },
+  nav: { ingredients: "Ingrédients", process: "Fabrication", recipes: "Recettes", faq: "FAQ", theme: "Thème", order: "Commander" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
     headline: ["Un bocal de", "soleil lent."],
@@ -416,7 +417,7 @@ const fr: Translations = {
 };
 
 const zh: Translations = {
-  nav: { ingredients: "原料", process: "制作工艺", recipes: "食谱", faq: "常见问题", order: "立即订购" },
+  nav: { ingredients: "原料", process: "制作工艺", recipes: "食谱", faq: "常见问题", theme: "主题", order: "立即订购" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
     headline: ["一罐", "慢慢沉淀的阳光。"],

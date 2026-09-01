@@ -7,6 +7,8 @@ import jarsRawPhoto from "@/assets/jars_raw.jpg";
 import jarMustardPhoto from "@/assets/jar_mustard_studio.jpg";
 import jarTapenadePhoto from "@/assets/jar_tapenade.png";
 import saladPhoto from "@/assets/salad_mustard.jpg";
+import pastaPhoto from "@/assets/pasta_mustard.png";
+import jagaimoPhoto from "@/assets/jagaimo_mustard.png";
 import { Lang, LANG_LABELS, Translations, translations, SLOGANS, PHRASES } from "@/app/i18n";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
@@ -128,7 +130,7 @@ function GhibliVideo({ className = "", style = {} }: { className?: string; style
 
 // ─── Theme switcher ───────────────────────────────────────────────────────────
 function ThemeSwitcher({ onDark = false }: { onDark?: boolean }) {
-  const { theme, setTheme, th } = useUI();
+  const { theme, setTheme, th, T } = useUI();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -150,7 +152,7 @@ function ThemeSwitcher({ onDark = false }: { onDark?: boolean }) {
         aria-label="Select theme"
       >
         <Contrast size={14} />
-        <span className="whitespace-nowrap">{th.label}</span>
+        <span className="whitespace-nowrap">{T.nav.theme}</span>
       </button>
 
       {open && (
@@ -646,7 +648,7 @@ function Lineup() {
 
 // ─── Recipes ──────────────────────────────────────────────────────────────────
 const RECIPE_NUMERALS = ["Ⅰ", "Ⅱ", "Ⅲ"];
-const RECIPE_PHOTOS: Array<string | null> = [saladPhoto as string, null, null];
+const RECIPE_PHOTOS: Array<string | null> = [saladPhoto as string, pastaPhoto as string, jagaimoPhoto as string];
 
 function Recipes() {
   const { T } = useUI();
