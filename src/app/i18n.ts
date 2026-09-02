@@ -1,10 +1,11 @@
-export type Lang = "en" | "ja" | "fr" | "zh";
+export type Lang = "en" | "ja" | "fr" | "zh" | "zh-TW";
 
 export const LANG_LABELS: Record<Lang, string> = {
   en: "EN",
   ja: "日本語",
   fr: "FR",
-  zh: "中文",
+  zh: "简中",
+  "zh-TW": "繁中",
 };
 
 // Rotating hero slogans, one list per language.
@@ -61,6 +62,19 @@ export const SLOGANS: Record<Lang, string[]> = {
     "今晚的主菜，主角就是这瓶酱。",
     "今天吃什么？浇上一勺，白饭停不下来。",
   ],
+  "zh-TW": [
+    "一口之間，餐桌變成小酒館。",
+    "只需一匙，今日的盛宴就完整了。",
+    "讓人忍不住開瓶紅酒的成熟奢侈。",
+    "顆粒在口中爆開，鮮味滿溢，一口接一口。",
+    "橄欖與鯷魚合奏出的地中海濃郁誘惑。",
+    "尋常的一塊肉，變成記憶裡的一道菜。",
+    "清爽的刺激，喚醒肉的甘甜。",
+    "只需塗在麵包上，三秒完成極致開胃小點。",
+    "道地風味奔湧而過的醇厚一滴。",
+    "今晚的主菜，主角就是這瓶醬。",
+    "今天吃什麼？澆上一匙，白飯停不下來。",
+  ],
 };
 
 // Cycling tasting-note phrases shown in the hero panel (Japanese in every locale, per the design).
@@ -97,6 +111,8 @@ export const PHRASES: { mustard: string[]; tapenade: string[] } = {
 };
 
 export interface Translations {
+  brand: [string, string];
+  pageTitle: string;
   nav: {
     ingredients: string;
     process: string;
@@ -168,6 +184,8 @@ export interface Translations {
 }
 
 const en: Translations = {
+  brand: ["The plant-based cuisine specialist,", "Kimie's jarred sauces"],
+  pageTitle: "Kimie's Jarred Sauces | Plant-Based Cuisine",
   nav: { ingredients: "Ingredients", process: "Process", recipes: "Recipes", faq: "FAQ", theme: "Theme", order: "Order Now" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
@@ -251,6 +269,8 @@ const en: Translations = {
 };
 
 const ja: Translations = {
+  brand: ["植物料理家", "きみえの瓶詰め"],
+  pageTitle: "植物料理家きみえの瓶詰め",
   nav: { ingredients: "原材料", process: "製造工程", recipes: "レシピ", faq: "よくある質問", theme: "テーマ", order: "今すぐ注文" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
@@ -334,6 +354,8 @@ const ja: Translations = {
 };
 
 const fr: Translations = {
+  brand: ["La spécialiste de la cuisine végétale,", "les sauces en pot de Kimie"],
+  pageTitle: "Les sauces en pot de Kimie | Cuisine végétale",
   nav: { ingredients: "Ingrédients", process: "Fabrication", recipes: "Recettes", faq: "FAQ", theme: "Thème", order: "Commander" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
@@ -417,6 +439,8 @@ const fr: Translations = {
 };
 
 const zh: Translations = {
+  brand: ["植物料理家", "Kimie的瓶装酱料"],
+  pageTitle: "植物料理家Kimie的瓶装酱料",
   nav: { ingredients: "原料", process: "制作工艺", recipes: "食谱", faq: "常见问题", theme: "主题", order: "立即订购" },
   hero: {
     eyebrow: "マスタードソース ・ タブナードソース",
@@ -457,9 +481,9 @@ const zh: Translations = {
     heading: ["一瓶，", "百种料理。"],
     footerNote: "同样适合：谷物碗 · 鹰嘴豆泥 · 烤鱼 · 鸡尾酒 · 沙拉酱 · 复合黄油 · 腌料",
     cards: [
-      { tag: "純素", title: "繽紛蔬菜沙拉 ～顆粒芥末醬～", tile: "蔬菜沙拉", time: "約15分鐘", diff: "簡單", desc: "爽脆的當季蔬菜，配上顆粒芥末恰到好處的酸度與香氣，是一道色彩豐富的沙拉。口味清爽，當前菜或日常餐桌都合適。" },
-      { tag: "麵包", title: "橄欖醬烤麵包", time: "10分鐘", diff: "非常簡單", desc: "把塔布納德醬抹在溫熱的酸種麵包上，淋上好的橄欖油。也可加番茄或軟質乳酪。" },
-      { tag: "日常", title: "芥末油醋醬", time: "5分鐘", diff: "非常簡單", desc: "一匙芥末醬加橄欖油與少許蜂蜜攪勻，任何沙拉或烤蔬菜都變得出色。" },
+      { tag: "纯素", title: "缤纷蔬菜沙拉 ～颗粒芥末酱～", tile: "蔬菜沙拉", time: "约15分钟", diff: "简单", desc: "爽脆的当季蔬菜，配上颗粒芥末恰到好处的酸度与香气，是一道色彩丰富的沙拉。口味清爽，当前菜或日常餐桌都合适。" },
+      { tag: "面包", title: "橄榄酱烤面包", time: "10分钟", diff: "非常简单", desc: "把塔布纳德酱抹在温热的酸种面包上，淋上优质橄榄油。也可加番茄或软质奶酪。" },
+      { tag: "日常", title: "芥末油醋酱", time: "5分钟", diff: "非常简单", desc: "一勺芥末酱加橄榄油与少许蜂蜜搅匀，任何沙拉或烤蔬菜都变得出色。" },
     ],
   },
   faq: {
@@ -499,4 +523,69 @@ const zh: Translations = {
   },
 };
 
-export const translations: Record<Lang, Translations> = { en, ja, fr, zh };
+const zhTw: Translations = {
+  ...zh,
+  brand: ["植物料理家", "Kimie 的瓶裝醬料"],
+  pageTitle: "植物料理家 Kimie 的瓶裝醬料",
+  nav: { ingredients: "原料", process: "製作工藝", recipes: "食譜", faq: "常見問題", theme: "主題", order: "立即訂購" },
+  hero: {
+    eyebrow: "マスタードソース ・ タブナードソース",
+    headline: ["一罐", "慢慢沉澱的陽光。"],
+    body: "在日本愛媛的山麓手工製作。僅用檸檬、海鹽和六個月的耐心，為您的餐桌而瓶裝。",
+    from: "起售價", price: "¥2,400", priceNote: "約 NT$500 · 含運費", cta: "加入購物車", learnMore: "了解更多 ↓",
+  },
+  ingredients: {
+    sectionLabel: "內含成分", heading: ["三種原料。", "一次蛻變。"], photoCaption: "愛媛縣產 · 愛媛県",
+    items: [
+      { n: "01", name: "尤里卡檸檬", kanji: "エウレカレモン", detail: "愛媛縣產", desc: "產自日本檸檬之鄉愛媛縣。皮厚、香氣濃郁，每年秋天在最佳成熟期手工採摘。" },
+      { n: "02", name: "海鹽", kanji: "天然塩", detail: "瀨戶內海", desc: "採自瀨戶內海的粗粒未精製海鹽，富含礦物質，能有效析出水分，開始漫長的醃製過程。" },
+      { n: "03", name: "時間", kanji: "時間", detail: "6 個月", desc: "在涼爽的室溫下慢慢發酵六個月。不添加任何東西，不催促。檸檬自我蛻變。" },
+      { n: "04", name: "僅此而已", kanji: "それだけ", detail: "3 種原料", desc: "無防腐劑，無添加酸，無捷徑。工藝源遠流長，成果非凡。" },
+    ],
+  },
+  process: {
+    sectionLabel: "製作工藝", heading: ["一如既往的", "傳統製法。"], badge: "小さな工房 · 露天工坊", caption: "Kimie · 愛媛縣，日本",
+    steps: [
+      { n: "Ⅰ", title: "篩選原料", desc: "我們會細心挑選每款醬料所需的原料，包括芥末籽、橄欖與香草，並尊重它們原本的香氣與層次。" },
+      { n: "Ⅱ", title: "醃製與混合", desc: "芥末籽會浸泡至變得柔軟，橄欖醬的配料則會被細心切碎，依食材特性選擇最合適的方法。" },
+      { n: "Ⅲ", title: "調和風味", desc: "我們將醋、橄欖油、鹽和香料按比例結合，持續校正酸度、鹹度和香氣的平衡。" },
+      { n: "Ⅳ", title: "裝瓶入罐", desc: "成品醬會被細心裝入經過清潔和乾燥的玻璃瓶中，嚴謹把控衛生條件並密封保存。" },
+      { n: "Ⅴ", title: "收尾與貼標", desc: "我們會確認瓶中醬料狀態，然後逐瓶手工貼標，將每一瓶的風味完整呈現。" },
+    ],
+  },
+  recipes: {
+    sectionLabel: "使用方法", heading: ["一瓶，", "百種料理。"], footerNote: "同樣適合：穀物碗 · 鷹嘴豆泥 · 烤魚 · 雞尾酒 · 沙拉醬 · 複合奶油 · 醃料",
+    cards: [
+      { tag: "純素", title: "繽紛蔬菜沙拉 ～顆粒芥末醬～", tile: "蔬菜沙拉", time: "約 15 分鐘", diff: "簡單", desc: "爽脆的當季蔬菜，配上顆粒芥末恰到好處的酸度與香氣，是一道色彩豐富的沙拉。" },
+      { tag: "麵包", title: "橄欖醬烤麵包", time: "10 分鐘", diff: "非常簡單", desc: "把塔布納德醬抹在溫熱的酸種麵包上，淋上優質橄欖油。也可加番茄或軟質乳酪。" },
+      { tag: "日常", title: "芥末油醋醬", time: "5 分鐘", diff: "非常簡單", desc: "一匙芥末醬加橄欖油與少許蜂蜜攪勻，任何沙拉或烤蔬菜都變得出色。" },
+    ],
+  },
+  faq: {
+    sectionLabel: "常見問題", heading: ["您可能想", "了解的事。"],
+    items: [
+      { q: "開封後可以保存多久？", a: "冷藏並浸泡在鹽水中，保存檸檬開封後可保存長達 12 個月。鹽是天然防腐劑。" },
+      { q: "使用檸檬皮、果肉還是兩者都用？", a: "多數食譜只使用檸檬皮，沖洗後刮去內層白色部分，使用柔軟、風味濃郁的外皮。" },
+      { q: "適合純素食者嗎？", a: "是的。唯一的原料是有機檸檬、海鹽和時間，沒有任何添加劑或防腐劑。" },
+      { q: "國際配送如何運作？", a: "我們從日本愛媛縣透過 EMS 發貨。發往美國、歐盟、英國和澳洲通常需要 5 至 10 個工作日。" },
+      { q: "可以退貨或換貨嗎？", a: "由於這是食品，我們無法接受退貨。若商品破損到貨，請在 48 小時內拍照聯絡我們。" },
+      { q: "瓶子有多大？", a: "每瓶 350 克，約 2 至 3 個完整檸檬，足夠製作 8 至 12 份料理。" },
+    ],
+  },
+  lineup: {
+    sectionLabel: "產品系列", heading: ["三個瓶子，", "一間小工坊。"], footerNote: "每一款醬都以同樣的保存檸檬為基底，一起下單，我們會裝在同一箱寄出。", cta: "加入購物車",
+    items: [
+      { jp: "保存レモン", name: "保存檸檬", tag: "經典", size: "350g", price: "¥2,400", desc: "尤里卡檸檬、海鹽、六個月的時間。一切的起點。", slotHint: "拖入保存檸檬的瓶身照片" },
+      { jp: "つぶつぶマスタードソース", name: "顆粒芥末醬", tag: "新品", size: "200g", price: "¥1,900", desc: "碾開的芥末籽在保存檸檬的鹽水中慢慢浸漬。適合烤魚、根菜與冷食豬肉。", slotHint: "拖入芥末醬的瓶身照片" },
+      { jp: "タブナードソース", name: "橄欖醬（塔布納德）", tag: "新品", size: "200g", price: "¥2,100", desc: "黑橄欖、酸豆與保存檸檬皮，手工粗搗而成。抹麵包、配羊肉或蒸時蔬。", slotHint: "拖入橄欖醬的瓶身照片" },
+    ],
+  },
+  twoJar: { h1: "兩個瓶子，", h2: "一間小工坊。", note: "兩款醬都以同一款六個月保存檸檬為基底，一起下單，我們會裝在同一箱寄出。", shipping: "含運費" },
+  buyStrip: { label: "隨時為您準備", heading: ["六個月的耐心，", "送達您的家門。"], price: "¥2,400", priceNote: "約 NT$500 · 含運費", cta: "立即訂購" },
+  footer: {
+    tagline: "來自日本愛媛縣的手工保存檸檬。小批量生產，用心配送。", japaneseText: "愛媛県産・手作り保存レモン", navigate: "導覽", contact: "聯絡方式", email: "hello@yuzumono.jp",
+    address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"], copyright: "© 2025 YuzuMono. 保留所有權利。", links: ["隱私權政策", "配送資訊", "Instagram"],
+  },
+};
+
+export const translations: Record<Lang, Translations> = { en, ja, fr, zh, "zh-TW": zhTw };

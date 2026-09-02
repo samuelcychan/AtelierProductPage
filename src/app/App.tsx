@@ -241,10 +241,12 @@ function LangSwitcher({ onDark = false }: { onDark?: boolean }) {
 
 // ─── Brand mark ───────────────────────────────────────────────────────────────
 function Brand({ light = false }: { light?: boolean }) {
+  const { T } = useUI();
+
   return (
     <>
-      <span style={{ color: light ? "#fff" : "var(--ym-fg)" }}>植物料理家きみえの</span>
-      <span style={{ color: "var(--ym-gold)" }}>瓶詰め</span>
+      <span style={{ color: light ? "#fff" : "var(--ym-fg)" }}>{T.brand[0]}</span>
+      <span style={{ color: "var(--ym-gold)" }}>{T.brand[1]}</span>
     </>
   );
 }
@@ -971,7 +973,8 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.style.scrollBehavior = "smooth";
-  }, [lang]);
+    document.title = T.pageTitle;
+  }, [lang, T.pageTitle]);
 
   useEffect(() => {
     const root = document.documentElement;
