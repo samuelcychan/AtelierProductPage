@@ -6,6 +6,8 @@ import heroImage from "@/assets/hero_kimie_mustard.png";
 import jarsRawPhoto from "@/assets/jars_raw.jpg";
 import jarMustardPhoto from "@/assets/jar_mustard_studio.jpg";
 import jarTapenadePhoto from "@/assets/jar_tapenade.png";
+import jarMustardWabiPhoto from "@/assets/jar_mustard_wabisabi.jpg";
+import jarTapenadeWabiPhoto from "@/assets/jar_tapenade_wabisabi.jpg";
 import saladPhoto from "@/assets/salad_mustard.jpg";
 import pastaPhoto from "@/assets/pasta_mustard.png";
 import jagaimoPhoto from "@/assets/jagaimo_mustard.png";
@@ -24,13 +26,13 @@ const THEMES: Record<ThemeKey, {
   shadow: string; radius: string;
 }> = {
   grove: {
-    label: "Yuzu Grove",
-    bg: "#F4FBF0", bgAlt: "#E8F5E2", fg: "#1E3A1C", fgDark: "#122810",
-    primary: "#2D6B35", gold: "#D4A820", muted: "#5A7A54", mutedLt: "#C2DFC0", lightTxt: "#A8D4A5",
-    gold60: "#D4A82099", gold50: "#D4A82080",
-    rule: "rgba(30,58,28,0.12)", rule15: "rgba(30,58,28,0.15)", rule10: "rgba(30,58,28,0.1)", rule08: "rgba(30,58,28,0.08)",
-    scrim90: "rgba(18,40,16,0.90)", scrim50: "rgba(18,40,16,0.50)", scrim08: "rgba(18,40,16,0.08)",
-    shadow: "rgba(18,40,16,0.25)", radius: "9999px",
+    label: "Fresh Garden",
+    bg: "#F9F8E8", bgAlt: "#E7F0CF", fg: "#16392A", fgDark: "#0C291E",
+    primary: "#23734D", gold: "#E3A52B", muted: "#527463", mutedLt: "#B9D7AD", lightTxt: "#A5D2A0",
+    gold60: "#E3A52B99", gold50: "#E3A52B80",
+    rule: "rgba(22,57,42,0.12)", rule15: "rgba(22,57,42,0.15)", rule10: "rgba(22,57,42,0.10)", rule08: "rgba(22,57,42,0.08)",
+    scrim90: "rgba(12,41,30,0.90)", scrim50: "rgba(12,41,30,0.50)", scrim08: "rgba(12,41,30,0.08)",
+    shadow: "rgba(12,41,30,0.25)", radius: "9999px",
   },
   wabi: {
     label: "Wabi-Sabi",
@@ -152,7 +154,7 @@ function ThemeSwitcher({ onDark = false }: { onDark?: boolean }) {
         aria-label="Select theme"
       >
         <Contrast size={14} />
-        <span className="whitespace-nowrap">{T.nav.theme}</span>
+        <span>{T.nav.theme}</span>
       </button>
 
       {open && (
@@ -458,15 +460,21 @@ function Hero() {
 // ─── Lineup (the two sauces) ─────────────────────────────────────────────────
 type JarKey = "mustard" | "tapenade";
 
-const JAR_PHOTOS: Record<JarKey, Array<{ src: string | null; style: string }>> = {
-  mustard:  [{ src: jarMustardPhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
-  tapenade: [{ src: jarTapenadePhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
+const JAR_PHOTOS: Record<ThemeKey, Record<JarKey, Array<{ src: string | null; style: string }>>> = {
+  grove: {
+    mustard:  [{ src: jarMustardPhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
+    tapenade: [{ src: jarTapenadePhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
+  },
+  wabi: {
+    mustard:  [{ src: jarMustardWabiPhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
+    tapenade: [{ src: jarTapenadeWabiPhoto as string, style: "STUDIO" }, { src: null, style: "TABLE" }, { src: null, style: "DETAIL" }],
+  },
 };
 
-function JarPhotoFrame({ jarKey, tag, slotHint, idx, onChange }: {
-  jarKey: JarKey; tag: string; slotHint: string; idx: number; onChange: (i: number) => void;
+function JarPhotoFrame({ jarKey, theme, tag, slotHint, idx, onChange }: {
+  jarKey: JarKey; theme: ThemeKey; tag: string; slotHint: string; idx: number; onChange: (i: number) => void;
 }) {
-  const photos = JAR_PHOTOS[jarKey];
+  const photos = JAR_PHOTOS[theme][jarKey];
   const i = idx % photos.length;
   const cur = photos[i];
 
@@ -545,7 +553,7 @@ function JarInfo({ item, cta, padTop = false }: { item: Translations["lineup"]["
 }
 
 function Lineup() {
-  const { T, th } = useUI();
+  const { T, th, theme } = useUI();
   const [layout, setLayout] = useState<"carousel" | "split">("carousel");
   const [slide, setSlide] = useState(0);
   const [photoIdx, setPhotoIdx] = useState<Record<JarKey, number>>({ mustard: 0, tapenade: 0 });
@@ -588,7 +596,7 @@ function Lineup() {
 
         {isCarousel ? (
           <div className="grid items-center" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "4rem" }}>
-            <JarPhotoFrame jarKey={curKey} tag={curItem.tag} slotHint={curItem.slotHint} idx={photoIdx[curKey]} onChange={setIdx(curKey)} />
+            <JarPhotoFrame jarKey={curKey} theme={theme} tag={curItem.tag} slotHint={curItem.slotHint} idx={photoIdx[curKey]} onChange={setIdx(curKey)} />
             <div className="flex flex-col">
               <JarInfo item={curItem} cta={T.lineup.cta} />
               <div className="flex items-center" style={{ marginTop: "2.5rem", gap: "1.5rem" }}>
@@ -628,11 +636,11 @@ function Lineup() {
         ) : (
           <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3.5rem" }}>
             <div className="flex flex-col">
-              <JarPhotoFrame jarKey="mustard" tag={mustard.tag} slotHint={mustard.slotHint} idx={photoIdx.mustard} onChange={setIdx("mustard")} />
+              <JarPhotoFrame jarKey="mustard" theme={theme} tag={mustard.tag} slotHint={mustard.slotHint} idx={photoIdx.mustard} onChange={setIdx("mustard")} />
               <JarInfo item={mustard} cta={T.lineup.cta} padTop />
             </div>
             <div className="flex flex-col">
-              <JarPhotoFrame jarKey="tapenade" tag={tapenade.tag} slotHint={tapenade.slotHint} idx={photoIdx.tapenade} onChange={setIdx("tapenade")} />
+              <JarPhotoFrame jarKey="tapenade" theme={theme} tag={tapenade.tag} slotHint={tapenade.slotHint} idx={photoIdx.tapenade} onChange={setIdx("tapenade")} />
               <JarInfo item={tapenade} cta={T.lineup.cta} padTop />
             </div>
           </div>

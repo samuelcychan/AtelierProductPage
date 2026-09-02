@@ -181,28 +181,28 @@
 }
 
 /* ─── YuzuMono page theme tokens ───
-   Defaults are the "Yuzu Grove" palette; App.tsx overwrites these custom
+  Defaults are the "Fresh Garden" palette; App.tsx overwrites these custom
    properties on the root element when the viewer switches themes. */
 :root {
-  --ym-bg: #F4FBF0;
-  --ym-bg-alt: #E8F5E2;
-  --ym-fg: #1E3A1C;
-  --ym-fg-dark: #122810;
-  --ym-primary: #2D6B35;
-  --ym-gold: #D4A820;
-  --ym-gold-60: #D4A82099;
-  --ym-gold-50: #D4A82080;
-  --ym-muted: #5A7A54;
-  --ym-muted-lt: #C2DFC0;
-  --ym-light-txt: #A8D4A5;
-  --ym-rule: rgba(30, 58, 28, 0.12);
-  --ym-rule-15: rgba(30, 58, 28, 0.15);
-  --ym-rule-10: rgba(30, 58, 28, 0.1);
-  --ym-rule-08: rgba(30, 58, 28, 0.08);
-  --ym-scrim-90: rgba(18, 40, 16, 0.9);
-  --ym-scrim-50: rgba(18, 40, 16, 0.5);
-  --ym-scrim-08: rgba(18, 40, 16, 0.08);
-  --ym-shadow: rgba(18, 40, 16, 0.25);
+  --ym-bg: #F9F8E8;
+  --ym-bg-alt: #E7F0CF;
+  --ym-fg: #16392A;
+  --ym-fg-dark: #0C291E;
+  --ym-primary: #23734D;
+  --ym-gold: #E3A52B;
+  --ym-gold-60: #E3A52B99;
+  --ym-gold-50: #E3A52B80;
+  --ym-muted: #527463;
+  --ym-muted-lt: #B9D7AD;
+  --ym-light-txt: #A5D2A0;
+  --ym-rule: rgba(22, 57, 42, 0.12);
+  --ym-rule-15: rgba(22, 57, 42, 0.15);
+  --ym-rule-10: rgba(22, 57, 42, 0.10);
+  --ym-rule-08: rgba(22, 57, 42, 0.08);
+  --ym-scrim-90: rgba(12, 41, 30, 0.9);
+  --ym-scrim-50: rgba(12, 41, 30, 0.5);
+  --ym-scrim-08: rgba(12, 41, 30, 0.08);
+  --ym-shadow: rgba(12, 41, 30, 0.25);
   --ym-radius: 9999px;
 }
 
