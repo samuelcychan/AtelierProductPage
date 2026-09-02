@@ -638,9 +638,6 @@ function Lineup() {
           </div>
         )}
 
-        <Reveal>
-          <p className="text-center" style={{ ...body, margin: "3.5rem 0 0", fontSize: "0.82rem", color: "var(--ym-muted)" }}>{T.twoJar.note}</p>
-        </Reveal>
       </div>
     </section>
   );
@@ -700,10 +697,6 @@ function Recipes() {
             );
           })}
         </div>
-
-        <Reveal delay={350}>
-          <p className="mt-14 text-center" style={{ ...body, fontSize: "0.82rem", color: "var(--ym-muted)" }}>{R.footerNote}</p>
-        </Reveal>
       </div>
     </section>
   );
