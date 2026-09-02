@@ -199,13 +199,11 @@ const en: Translations = {
   },
   ingredients: {
     sectionLabel: "What's Inside",
-    heading: ["Three ingredients.", "One transformation."],
-    photoCaption: "EHIME PREFECTURE · 愛媛県",
+    heading: ["Natural ingredients,", "just as they are."],
+    photoCaption: "MADE IN JAPAN",
     items: [
-      { n: "01", name: "Eureka Lemons", kanji: "エウレカレモン", detail: "Ehime Pref.", desc: "Grown in Ehime Prefecture — Japan's lemon heartland. Thick-skinned, intensely aromatic, harvested at peak ripeness each autumn." },
-      { n: "02", name: "Sea Salt", kanji: "天然塩", detail: "Seto Inland Sea", desc: "Coarse unrefined salt harvested from the Seto Inland Sea. Rich in trace minerals, it draws out moisture and begins the long cure." },
-      { n: "03", name: "Time", kanji: "時間", detail: "6 months", desc: "Six months of slow fermentation at cool room temperature. Nothing added, nothing rushed. The lemon transforms itself." },
-      { n: "04", name: "Nothing Else", kanji: "それだけ", detail: "3 ingredients", desc: "No preservatives, no added acids, no shortcuts. The process is ancient. The result is extraordinary." },
+      { n: "01", name: "Mustard Sauce", kanji: "", detail: "Made in Japan", desc: "Mustard seeds, vinegar, olive oil, honey, soy sauce, salt, black pepper, and sugar." },
+      { n: "02", name: "Tapenade Sauce", kanji: "", detail: "Made in Japan", desc: "Black olives, capers, garlic, anchovies, olive oil, lemon juice, black pepper, and herbs." },
     ],
   },
   process: {
@@ -257,13 +255,13 @@ const en: Translations = {
   twoJar: { h1: "Two jars,", h2: "one small atelier.", note: "Both sauces start from the same six-month preserved lemon — ordered together, they ship in one box.", shipping: "shipping included" },
   buyStrip: { label: "READY WHEN YOU ARE", heading: ["Six months of patience,", "delivered to your door."], price: "¥2,400", priceNote: "~$16 USD · incl. shipping", cta: "Order Now" },
   footer: {
-    tagline: "Handcrafted preserved lemons from Ehime Prefecture, Japan. Made in small batches, shipped with care.",
-    japaneseText: "愛媛県産・手作り保存レモン",
+    tagline: "Handmade jarred preserves. Made in small batches and delivered with care.",
+    japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
     navigate: "NAVIGATE",
     contact: "CONTACT",
-    email: "hello@yuzumono.jp",
-    address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"],
-    copyright: "© 2025 YuzuMono. All rights reserved.",
+    email: "Email",
+    address: ["〒000-0000", "Japan", "Japan"],
+    copyright: "© 2025 All rights reserved.",
     links: ["Privacy Policy", "Shipping Info", "Instagram"],
   },
 };
@@ -284,13 +282,11 @@ const ja: Translations = {
   },
   ingredients: {
     sectionLabel: "原材料",
-    heading: ["たった3つの素材。", "ひとつの変容。"],
-    photoCaption: "愛媛県産",
+    heading: ["自然の素材を、", "そのままに。"],
+    photoCaption: "日本国産",
     items: [
-      { n: "01", name: "ユーレカレモン", kanji: "エウレカレモン", detail: "愛媛県産", desc: "日本のレモン産地の中心、愛媛県で育てられた国産レモン。厚い皮と豊かな香りが特徴で、毎年秋に最も熟したタイミングで手摘みされます。" },
-      { n: "02", name: "天然塩", kanji: "天然塩", detail: "瀬戸内海産", desc: "瀬戸内海で採取された粗めの未精製塩。豊富なミネラルを含み、水分を引き出して長期保存を始めます。" },
-      { n: "03", name: "時間", kanji: "時間", detail: "6ヶ月", desc: "室温の涼しい場所で6ヶ月間、ゆっくりと発酵させます。何も加えず、急かさず。レモン自らが変容します。" },
-      { n: "04", name: "それだけ", kanji: "それだけ", detail: "3つの素材", desc: "防腐剤なし、添加酸なし、近道なし。製法は古来からのもの。結果は格別です。" },
+      { n: "01", name: "マスタードソース", kanji: "", detail: "日本国産", desc: "マスタードシード、酢、オリーブオイル、はちみつ、しょうゆ、塩、黒こしょう、砂糖" },
+      { n: "02", name: "タプナードソース", kanji: "", detail: "日本国産", desc: "ブラックオリーブ、ケッパー、にんにく、アンチョビ、オリーブオイル、レモン汁、黒こしょう、ハーブ" },
     ],
   },
   process: {
@@ -342,13 +338,13 @@ const ja: Translations = {
   twoJar: { h1: "二つの瓶、", h2: "ひとつの小さな工房。", note: "どちらのソースも六ヶ月の保存レモンから。まとめてご注文いただくと一箱で発送します。", shipping: "送料込み" },
   buyStrip: { label: "ご準備ができましたら", heading: ["6ヶ月の忍耐を、", "あなたの食卓へ。"], price: "¥2,400", priceNote: "送料込み", cta: "今すぐ注文" },
   footer: {
-    tagline: "愛媛県産の手作り保存レモン。少量生産で、心を込めてお届けします。",
-    japaneseText: "愛媛県産・手作り保存レモン",
+    tagline: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
+    japaneseText: "",
     navigate: "メニュー",
     contact: "お問い合わせ",
-    email: "hello@yuzumono.jp",
-    address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"],
-    copyright: "© 2025 YuzuMono. All rights reserved.",
+    email: "メール",
+    address: ["〒000-0000", "日本", "Japan"],
+    copyright: "© 2025 All rights reserved.",
     links: ["プライバシーポリシー", "配送情報", "Instagram"],
   },
 };
@@ -369,13 +365,11 @@ const fr: Translations = {
   },
   ingredients: {
     sectionLabel: "Ce qu'il y a dedans",
-    heading: ["Trois ingrédients.", "Une transformation."],
-    photoCaption: "PRÉFECTURE D'EHIME · 愛媛県",
+    heading: ["Des ingrédients naturels,", "tout simplement."],
+    photoCaption: "FABRIQUÉ AU JAPON",
     items: [
-      { n: "01", name: "Citrons Eureka", kanji: "エウレカレモン", detail: "Préf. d'Ehime", desc: "Cultivés dans la préfecture d'Ehime — le cœur de la production de citrons au Japon. À peau épaisse, intensément aromatiques, récoltés à maturité parfaite chaque automne." },
-      { n: "02", name: "Sel de mer", kanji: "天然塩", detail: "Mer de Seto", desc: "Sel de mer brut récolté dans la mer intérieure de Seto. Riche en oligo-éléments, il extrait l'humidité et commence la longue salaison." },
-      { n: "03", name: "Le temps", kanji: "時間", detail: "6 mois", desc: "Six mois de fermentation lente à température fraîche. Rien n'est ajouté, rien n'est précipité. Le citron se transforme lui-même." },
-      { n: "04", name: "Rien d'autre", kanji: "それだけ", detail: "3 ingrédients", desc: "Pas de conservateurs, pas d'acidifiants ajoutés, pas de raccourcis. Le procédé est ancestral. Le résultat est extraordinaire." },
+      { n: "01", name: "Sauce Moutarde", kanji: "", detail: "Fabriqué au Japon", desc: "Graines de moutarde, vinaigre, huile d'olive, miel, sauce soja, sel, poivre noir et sucre." },
+      { n: "02", name: "Sauce Tapenade", kanji: "", detail: "Fabriqué au Japon", desc: "Olives noires, câpres, ail, anchois, huile d'olive, jus de citron, poivre noir et herbes." },
     ],
   },
   process: {
@@ -427,13 +421,13 @@ const fr: Translations = {
   twoJar: { h1: "Deux bocaux,", h2: "un petit atelier.", note: "Les deux sauces partent du même citron confit de six mois — commandées ensemble, elles voyagent dans un seul colis.", shipping: "livraison incluse" },
   buyStrip: { label: "PRÊT QUAND VOUS L'ÊTES", heading: ["Six mois de patience,", "livré à votre porte."], price: "¥2,400", priceNote: "~16 € · livraison incluse", cta: "Commander" },
   footer: {
-    tagline: "Citrons confits artisanaux de la préfecture d'Ehime, Japon. Fabriqués en petites quantités, expédiés avec soin.",
-    japaneseText: "愛媛県産・手作り保存レモン",
+    tagline: "Des conserves en bocal faites à la main. Produites en petites quantités et livrées avec soin.",
+    japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
     navigate: "NAVIGATION",
     contact: "CONTACT",
-    email: "hello@yuzumono.jp",
-    address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japon"],
-    copyright: "© 2025 YuzuMono. Tous droits réservés.",
+    email: "E-mail",
+    address: ["〒000-0000", "Japon", "Japon"],
+    copyright: "© 2025 Tous droits réservés.",
     links: ["Confidentialité", "Livraison", "Instagram"],
   },
 };
@@ -453,14 +447,12 @@ const zh: Translations = {
     learnMore: "了解更多 ↓",
   },
   ingredients: {
-    sectionLabel: "内含成分",
-    heading: ["三种原料。", "一次蜕变。"],
-    photoCaption: "爱媛县产 · 愛媛県",
+    sectionLabel: "原料",
+    heading: ["天然原料，", "原本的风味。"],
+    photoCaption: "日本制造",
     items: [
-      { n: "01", name: "尤里卡柠檬", kanji: "エウレカレモン", detail: "爱媛县产", desc: "产自日本柠檬之乡爱媛县。皮厚、香气浓郁，每年秋天在最佳成熟期手工采摘。" },
-      { n: "02", name: "海盐", kanji: "天然塩", detail: "濑户内海", desc: "采自濑户内海的粗粒未精制海盐，富含矿物质，能有效析出水分，开始漫长的腌制过程。" },
-      { n: "03", name: "时间", kanji: "時間", detail: "6个月", desc: "在凉爽的室温下慢慢发酵六个月。不添加任何东西，不催促。柠檬自我蜕变。" },
-      { n: "04", name: "仅此而已", kanji: "それだけ", detail: "3种原料", desc: "无防腐剂，无添加酸，无捷径。工艺源远流长，成果非凡。" },
+      { n: "01", name: "芥末酱", kanji: "", detail: "日本制造", desc: "芥末籽、醋、橄榄油、蜂蜜、酱油、盐、黑胡椒和糖。" },
+      { n: "02", name: "橄榄酱", kanji: "", detail: "日本制造", desc: "黑橄榄、刺山柑、大蒜、凤尾鱼、橄榄油、柠檬汁、黑胡椒和香草。" },
     ],
   },
   process: {
@@ -512,13 +504,13 @@ const zh: Translations = {
   twoJar: { h1: "两个瓶子，", h2: "一间小工坊。", note: "两款酱都以同一款六个月保存柠檬为基底——一起下单，我们会装在同一箱寄出。", shipping: "含运费" },
   buyStrip: { label: "随时为您准备", heading: ["六个月的耐心，", "送达您的家门。"], price: "¥2,400", priceNote: "约¥115人民币 · 含运费", cta: "立即订购" },
   footer: {
-    tagline: "来自日本爱媛县的手工保存柠檬。小批量生产，用心配送。",
-    japaneseText: "愛媛県産・手作り保存レモン",
+    tagline: "手工制作的瓶装酱料。小批量生产，用心配送。",
+    japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
     navigate: "导航",
     contact: "联系方式",
-    email: "hello@yuzumono.jp",
-    address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"],
-    copyright: "© 2025 YuzuMono. 保留所有权利。",
+    email: "电子邮件",
+    address: ["〒000-0000", "日本", "Japan"],
+    copyright: "© 2025 保留所有权利。",
     links: ["隐私政策", "配送信息", "Instagram"],
   },
 };
@@ -583,7 +575,7 @@ const zhTw: Translations = {
   twoJar: { h1: "兩個瓶子，", h2: "一間小工坊。", note: "兩款醬都以同一款六個月保存檸檬為基底，一起下單，我們會裝在同一箱寄出。", shipping: "含運費" },
   buyStrip: { label: "隨時為您準備", heading: ["六個月的耐心，", "送達您的家門。"], price: "¥2,400", priceNote: "約 NT$500 · 含運費", cta: "立即訂購" },
   footer: {
-    tagline: "來自日本愛媛縣的手工保存檸檬。小批量生產，用心配送。", japaneseText: "愛媛県産・手作り保存レモン", navigate: "導覽", contact: "聯絡方式", email: "hello@yuzumono.jp",
+    tagline: "來自日本愛媛縣的手工保存檸檬。小批量生產，用心配送。", japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。", navigate: "導覽", contact: "聯絡方式", email: "hello@yuzumono.jp",
     address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"], copyright: "© 2025 YuzuMono. 保留所有權利。", links: ["隱私權政策", "配送資訊", "Instagram"],
   },
 };
