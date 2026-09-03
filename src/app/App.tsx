@@ -94,6 +94,7 @@ function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; 
 
 const display = { fontFamily: "Fraunces, Georgia, serif" };
 const body    = { fontFamily: "Mulish, system-ui, sans-serif" };
+const SHOW_FAQ = false;
 
 const pad = (n: number) => (n < 10 ? "0" + n : String(n));
 
@@ -259,7 +260,7 @@ function useNavLinks() {
     { href: "#recipes",     label: T.nav.recipes         },
     { href: "#process",     label: T.nav.process         },
     { href: "#ingredients", label: T.nav.ingredients     },
-    { href: "#faq",         label: T.nav.faq             },
+    ...(SHOW_FAQ ? [{ href: "#faq", label: T.nav.faq }] : []),
   ];
 }
 
@@ -979,7 +980,7 @@ export default function App() {
         <Recipes />
         <Process />
         <Ingredients />
-        <FAQ />
+        {SHOW_FAQ && <FAQ />}
         <BuyStrip />
         <Footer />
       </div>
