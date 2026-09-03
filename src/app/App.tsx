@@ -802,19 +802,6 @@ function Ingredients() {
             ))}
             <div style={{ borderTop: "1px solid var(--ym-rule)" }} />
           </div>
-
-          <Reveal delay={180}>
-            <div className="relative hidden lg:block">
-              <div className="overflow-hidden" style={{ border: "1px solid var(--ym-rule-08)", background: "var(--ym-bg-alt)" }}>
-                <img src={jarsRawPhoto as string} alt="Whole-grain mustard seeds and olives in the atelier" className="w-full aspect-[3/4] object-cover block" loading="lazy" />
-              </div>
-              <div className="absolute -bottom-5 -right-5 w-full h-full -z-10" style={{ border: "1px solid var(--ym-gold)", opacity: 0.25 }} />
-              <div className="mt-5 flex items-center gap-3">
-                <div className="h-px w-8" style={{ background: "var(--ym-rule-15)" }} />
-                <span style={{ ...body, fontSize: "0.6rem", letterSpacing: "0.22em", color: "var(--ym-muted)" }}>{I.photoCaption}</span>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </div>
     </section>
