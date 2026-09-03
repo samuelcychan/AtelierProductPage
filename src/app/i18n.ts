@@ -77,8 +77,13 @@ export const SLOGANS: Record<Lang, string[]> = {
   ],
 };
 
-// Cycling tasting-note phrases shown in the hero panel (Japanese in every locale, per the design).
-export const PHRASES: { mustard: string[]; tapenade: string[] } = {
+// Cycling tasting-note phrases shown in the hero panel.
+type TastingPhrases = { mustardLabel: string; tapenadeLabel: string; mustard: string[]; tapenade: string[] };
+
+export const PHRASES: Record<Lang, TastingPhrases> = {
+  ja: {
+    mustardLabel: "マスタードソース",
+    tapenadeLabel: "タブナードソース",
   mustard: [
     "ピリッとした辛味",
     "爽やかな酸味",
@@ -108,6 +113,31 @@ export const PHRASES: { mustard: string[]; tapenade: string[] } = {
     "白身魚や鶏肉のグリルに添えて",
     "パスタの隠し味やアクセントに",
   ],
+  },
+  en: {
+    mustardLabel: "MUSTARD SAUCE",
+    tapenadeLabel: "TAPENADE SAUCE",
+    mustard: ["A bright peppery heat", "A fresh, clean acidity", "A crisp aroma that rises through the nose", "Brings out the savoriness of meat", "Adds depth and a clean finish", "A supporting flavor that lets ingredients shine", "A lively pop from whole mustard seeds", "Made with French Dijon mustard", "House-made honey mustard", "A sweet-spicy balance from a touch of honey", "A perfect match for roast beef", "Makes every sausage taste even better", "Cuts through the richness of fried food"],
+    tapenade: ["A traditional flavor from Provence", "A breath of the Mediterranean", "A rich aroma inspired by the South of France", "The concentrated savoriness of black olives", "Deep salinity from anchovies and capers", "Generously coated in olive oil", "A grown-up flavor made for wine", "Rich, rounded depth", "A layered harmony of flavors", "An exceptional appetizer simply spread on a baguette", "Lovely with grilled white fish or chicken", "A hidden flavor boost for pasta"],
+  },
+  fr: {
+    mustardLabel: "SAUCE MOUTARDE",
+    tapenadeLabel: "SAUCE TAPENADE",
+    mustard: ["Un piquant vif et franc", "Une acidité fraîche", "Un parfum vivifiant qui remonte au nez", "Révèle la richesse de la viande", "Apporte du caractère et de la fraîcheur", "Un second rôle qui laisse les ingrédients s'exprimer", "Le croquant joyeux des graines de moutarde", "À base de moutarde de Dijon française", "Moutarde au miel faite maison", "Une douceur relevée grâce à une touche de miel", "Parfaite avec le rosbif", "Sublime les saucisses", "Allège la richesse des fritures"],
+    tapenade: ["Une saveur traditionnelle de Provence", "Un souffle de Méditerranée", "Un parfum généreux inspiré du Sud de la France", "L'umami concentré des olives noires", "La profondeur saline des anchois et des câpres", "Enrobée généreusement d'huile d'olive", "Une saveur adulte qui appelle le vin", "Une richesse profonde et parfumée", "Une harmonie aux multiples nuances", "Sur une baguette, un hors-d'oeuvre d'exception", "Délicieuse avec du poisson blanc ou du poulet grillé", "La touche secrète des pâtes"],
+  },
+  zh: {
+    mustardLabel: "颗粒芥末酱",
+    tapenadeLabel: "橄榄酱",
+    mustard: ["清爽辛香", "清新的酸味", "直达鼻腔的清新香气", "衬托肉类的鲜美", "增添醇厚与利落口感", "不抢味的最佳配角", "颗粒芥末的弹脆口感", "选用法国第戎芥末", "自制蜂蜜芥末", "一抹蜂蜜交织出的甜辣平衡", "与烤牛肉堪称绝配", "让香肠更显美味", "化解油炸食物的厚重感"],
+    tapenade: ["法国普罗旺斯的传统风味", "感受地中海的微风", "地道手法带来的浓郁香气", "黑橄榄凝缩的鲜味", "凤尾鱼与刺山柑的深邃咸香", "裹满奢华橄榄油", "令人想配酒细品的成熟风味", "浓郁醇厚", "层次丰富的和谐", "抹在法棍上就是极致前菜", "搭配烤白身鱼或鸡肉", "为意面增添秘密风味"],
+  },
+  "zh-TW": {
+    mustardLabel: "顆粒芥末醬",
+    tapenadeLabel: "橄欖醬",
+    mustard: ["清爽辛香", "清新的酸味", "直達鼻腔的清新香氣", "襯托肉類的鮮美", "增添醇厚與俐落口感", "不搶味的最佳配角", "顆粒芥末的彈脆口感", "選用法國第戎芥末", "自製蜂蜜芥末", "一抹蜂蜜交織出的甜辣平衡", "與烤牛肉堪稱絕配", "讓香腸更顯美味", "化解油炸食物的厚重感"],
+    tapenade: ["法國普羅旺斯的傳統風味", "感受地中海的微風", "道地手法帶來的濃郁香氣", "黑橄欖凝縮的鮮味", "鯷魚與酸豆的深邃鹹香", "裹滿奢華橄欖油", "令人想配酒細品的成熟風味", "濃郁醇厚", "層次豐富的和諧", "抹在法棍上就是極致前菜", "搭配烤白肉魚或雞肉", "為義大利麵增添祕密風味"],
+  },
 };
 
 export interface Translations {
@@ -167,7 +197,6 @@ export interface Translations {
   buyStrip: {
     label: string;
     heading: [string, string];
-    price: string;
     priceNote: string;
     cta: string;
   };
@@ -193,7 +222,7 @@ const en: Translations = {
     body: "Handcrafted in the foothills of Ehime, Japan. Just lemons, sea salt, and six months of patience — bottled for your table.",
     from: "FROM",
     price: "¥2,400",
-    priceNote: "~$16 USD · shipping included",
+    priceNote: "Shipping included",
     cta: "Add to Cart",
     learnMore: "Learn more ↓",
   },
@@ -208,15 +237,15 @@ const en: Translations = {
   },
   process: {
     sectionLabel: "How It's Made",
-    heading: ["Made the way", "it has always been."],
-    badge: "小さな工房 · OPEN-AIR ATELIER",
-    caption: "KIMIE · EHIME, JAPAN",
+    heading: ["The goodness of natural ingredients,", "in every jar."],
+    badge: "KIMIE · PLANT-BASED CUISINE SPECIALIST",
+    caption: "JAPAN",
     steps: [
-      { n: "Ⅰ", title: "Choose the ingredients", desc: "We carefully select the ingredients for each sauce — mustard seeds, olives, herbs, and more — while honoring their natural aroma and depth. We prepare each one with close attention to its condition and character." },
-      { n: "Ⅱ", title: "Season and mix", desc: "Mustard seeds are soaked until tender, while tapenade ingredients are chopped with care. We use the method best suited to each ingredient to bring out its ideal flavor and texture." },
-      { n: "Ⅲ", title: "Balance the flavor", desc: "We combine vinegar, olive oil, salt, and aromatic ingredients to let each ingredient speak clearly. We check the balance of acidity, salt, and aroma until each bottle finds its own character." },
-      { n: "Ⅳ", title: "Bottle it", desc: "The finished sauce is packed into thoroughly cleaned and dried glass bottles with meticulous care. We seal each jar with attention to hygiene and store it at the proper temperature." },
-      { n: "Ⅴ", title: "Finish and label", desc: "We check the bottled sauce, then label each one by hand. The gentle texture of mustard and the deep aroma of tapenade are both treated as the final expression of the product." },
+      { n: "Ⅰ", title: "Choose the ingredients", desc: "We carefully select the mustard seeds, olives, herbs, and other ingredients used in each sauce. We respect their natural aroma and flavor, checking the condition of every ingredient as we prepare it." },
+      { n: "Ⅱ", title: "Prepare the sauces", desc: "We soak the mustard seeds slowly until tender, and carefully chop the olives and aromatic ingredients for the tapenade. Each ingredient is prepared in the way that best brings out its flavor and texture." },
+      { n: "Ⅲ", title: "Balance the flavors", desc: "We combine vinegar, olive oil, salt, and aromatic ingredients to preserve the character of every ingredient. Each jar is finished by carefully balancing acidity, saltiness, and aroma." },
+      { n: "Ⅳ", title: "Jar the sauces", desc: "The finished sauces are carefully packed into sterilized, thoroughly dried glass jars. They are sealed with close attention to hygiene and stored at the proper temperature." },
+      { n: "Ⅴ", title: "Finish each jar", desc: "We check every jar before applying each label by hand. The pop of whole-grain mustard and the rich aroma of tapenade are preserved with care for delivery." },
     ],
   },
   recipes: {
@@ -247,13 +276,13 @@ const en: Translations = {
     footerNote: "Each sauce is built on the same preserved lemon — bought together, they ship in one box.",
     cta: "Add to Cart",
     items: [
-      { jp: "保存レモン", name: "Preserved Lemon", tag: "Signature", size: "350g", price: "¥2,400", desc: "Eureka lemons, sea salt, six months of patience. The original jar.", slotHint: "Drop the preserved lemon jar photo" },
-      { jp: "つぶつぶマスタードソース", name: "Whole-Grain Mustard Sauce", tag: "New", size: "200g", price: "¥1,900", desc: "Cracked mustard seeds, cider vinegar and sea salt. For grilled fish, root vegetables, cold roast pork.", slotHint: "Drop the mustard sauce jar photo" },
-      { jp: "タブナードソース", name: "Tapenade Sauce", tag: "New", size: "200g", price: "¥2,100", desc: "Black olives, capers and olive oil, pounded coarsely by hand. Spoon onto bread, lamb, or steamed greens.", slotHint: "Drop the tapenade sauce jar photo" },
+      { jp: "保存レモン", name: "Preserved Lemon", tag: "Signature", size: "350g", price: "$16", desc: "Eureka lemons, sea salt, six months of patience. The original jar.", slotHint: "Drop the preserved lemon jar photo" },
+      { jp: "Whole-Grain Mustard Sauce", name: "Whole-Grain Mustard Sauce", tag: "New", size: "200g", price: "$13", desc: "Cracked mustard seeds, cider vinegar and sea salt. For grilled fish, root vegetables, cold roast pork.", slotHint: "Drop the mustard sauce jar photo" },
+      { jp: "Tapenade Sauce", name: "Tapenade Sauce", tag: "New", size: "200g", price: "$14", desc: "Black olives, capers and olive oil, pounded coarsely by hand. Spoon onto bread, lamb, or steamed greens.", slotHint: "Drop the tapenade sauce jar photo" },
     ],
   },
   twoJar: { h1: "Two jars,", h2: "one small atelier.", note: "Both sauces start from the same six-month preserved lemon — ordered together, they ship in one box.", shipping: "shipping included" },
-  buyStrip: { label: "READY WHEN YOU ARE", heading: ["Six months of patience,", "delivered to your door."], price: "¥2,400", priceNote: "~$16 USD · incl. shipping", cta: "Order Now" },
+  buyStrip: { label: "READY WHEN YOU ARE", heading: ["Made with care,", "for your table."], priceNote: "Shipping included", cta: "Order Now" },
   footer: {
     tagline: "Handmade jarred preserves. Made in small batches and delivered with care.",
     japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
@@ -336,7 +365,7 @@ const ja: Translations = {
     ],
   },
   twoJar: { h1: "二つの瓶、", h2: "ひとつの小さな工房。", note: "どちらのソースも六ヶ月の保存レモンから。まとめてご注文いただくと一箱で発送します。", shipping: "送料込み" },
-  buyStrip: { label: "ご準備ができましたら", heading: ["6ヶ月の忍耐を、", "あなたの食卓へ。"], price: "¥2,400", priceNote: "送料込み", cta: "今すぐ注文" },
+  buyStrip: { label: "ご準備ができましたら", heading: ["心を込めて、", "あなたの食卓へ。"], priceNote: "送料込み", cta: "今すぐ注文" },
   footer: {
     tagline: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
     japaneseText: "",
@@ -359,7 +388,7 @@ const fr: Translations = {
     body: "Fabriqué à la main dans les contreforts d'Ehime, au Japon. Juste des citrons, du sel de mer et six mois de patience — mis en bocal pour votre table.",
     from: "À PARTIR DE",
     price: "¥2,400",
-    priceNote: "~16 € · livraison incluse",
+    priceNote: "Livraison incluse",
     cta: "Ajouter au panier",
     learnMore: "En savoir plus ↓",
   },
@@ -373,16 +402,16 @@ const fr: Translations = {
     ],
   },
   process: {
-    sectionLabel: "Comment c'est fait",
-    heading: ["Fait comme", "il l'a toujours été."],
-    badge: "小さな工房 · PETIT ATELIER",
-    caption: "KIMIE · EHIME, JAPON",
+    sectionLabel: "Fabrication",
+    heading: ["Le goût naturel des ingrédients,", "dans chaque bocal."],
+    badge: "KIMIE · CUISINIÈRE VÉGÉTALE",
+    caption: "JAPON",
     steps: [
-      { n: "Ⅰ", title: "Choisir les ingrédients", desc: "Nous sélectionnons avec soin les ingrédients de chaque sauce — graines de moutarde, olives, herbes et autres éléments — en respectant leur parfum et leur profondeur naturels. Nous préparons chacun d'eux en vérifiant sa qualité et sa personnalité." },
-      { n: "Ⅱ", title: "Mise en œuvre", desc: "Les graines de moutarde sont trempées jusqu'à devenir souples, tandis que les ingrédients de la tapenade sont hachés avec soin. Nous utilisons la méthode la mieux adaptée à chaque ingrédient pour faire ressortir son goût et sa texture." },
-      { n: "Ⅲ", title: "Équilibrer les saveurs", desc: "Nous associons vinaigre, huile d'olive, sel et aromates pour laisser chaque ingrédient s'exprimer pleinement. Nous ajustons l'équilibre entre acidité, salinité et parfum jusqu'à ce que chaque bouteille révèle son propre caractère." },
-      { n: "Ⅳ", title: "Mettre en bocal", desc: "La sauce finie est versée dans des bocaux en verre soigneusement nettoyés et séchés. Nous les scellons avec attention à l'hygiène et les conservons à la température idéale." },
-      { n: "Ⅴ", title: "Terminer et étiqueter", desc: "Nous vérifions l'état des sauces en bouteille puis les étiquetons une par une à la main. La texture douce de la moutarde et l'arôme profond de la tapenade sont autant d'éléments que nous chérissons dans le produit final." },
+      { n: "Ⅰ", title: "Choisir les ingrédients", desc: "Nous sélectionnons avec soin les graines de moutarde, les olives, les herbes et les autres ingrédients de chaque sauce. Nous respectons leurs arômes et leurs saveurs naturelles en vérifiant chaque ingrédient lors de sa préparation." },
+      { n: "Ⅱ", title: "Préparer les sauces", desc: "Les graines de moutarde sont trempées lentement jusqu'à devenir tendres, tandis que les olives et les aromates de la tapenade sont hachés avec soin. Chaque ingrédient est préparé pour révéler au mieux sa saveur et sa texture." },
+      { n: "Ⅲ", title: "Équilibrer les saveurs", desc: "Nous associons vinaigre, huile d'olive, sel et aromates pour préserver le caractère de chaque ingrédient. L'acidité, le sel et le parfum sont ajustés avec soin pour chaque bocal." },
+      { n: "Ⅳ", title: "Mettre en bocal", desc: "Les sauces terminées sont soigneusement conditionnées dans des bocaux en verre stérilisés et parfaitement séchés. Elles sont scellées dans le respect de l'hygiène et conservées à la bonne température." },
+      { n: "Ⅴ", title: "Finaliser chaque bocal", desc: "Nous vérifions chaque bocal avant de poser chaque étiquette à la main. Le croquant de la moutarde à l'ancienne et l'arôme profond de la tapenade sont préservés avec soin." },
     ],
   },
   recipes: {
@@ -413,13 +442,13 @@ const fr: Translations = {
     footerNote: "Chaque sauce part du même citron confit — commandés ensemble, ils voyagent dans un seul colis.",
     cta: "Ajouter au panier",
     items: [
-      { jp: "保存レモン", name: "Citron Confit", tag: "Signature", size: "350g", price: "¥2,400", desc: "Citrons Eureka, sel de mer, six mois de patience. Le bocal d'origine.", slotHint: "Déposez la photo du bocal de citron confit" },
-      { jp: "つぶつぶマスタードソース", name: "Sauce Moutarde à l'Ancienne", tag: "Nouveau", size: "200g", price: "¥1,900", desc: "Graines de moutarde concassées macérées dans la saumure de citron confit. Pour le poisson grillé et les légumes racines.", slotHint: "Déposez la photo du bocal de sauce moutarde" },
-      { jp: "タブナードソース", name: "Sauce Tapenade", tag: "Nouveau", size: "200g", price: "¥2,100", desc: "Olives noires, câpres et zeste de citron confit, pilés grossièrement à la main. Sur du pain, de l'agneau, des légumes vapeur.", slotHint: "Déposez la photo du bocal de tapenade" },
+      { jp: "保存レモン", name: "Citron Confit", tag: "Signature", size: "350g", price: "15 €", desc: "Citrons Eureka, sel de mer, six mois de patience. Le bocal d'origine.", slotHint: "Déposez la photo du bocal de citron confit" },
+      { jp: "Sauce Moutarde à l'Ancienne", name: "Sauce Moutarde à l'Ancienne", tag: "Nouveau", size: "200g", price: "12 €", desc: "Graines de moutarde concassées macérées dans la saumure de citron confit. Pour le poisson grillé et les légumes racines.", slotHint: "Déposez la photo du bocal de sauce moutarde" },
+      { jp: "Sauce Tapenade", name: "Sauce Tapenade", tag: "Nouveau", size: "200g", price: "13 €", desc: "Olives noires, câpres et zeste de citron confit, pilés grossièrement à la main. Sur du pain, de l'agneau, des légumes vapeur.", slotHint: "Déposez la photo du bocal de tapenade" },
     ],
   },
   twoJar: { h1: "Deux bocaux,", h2: "un petit atelier.", note: "Les deux sauces partent du même citron confit de six mois — commandées ensemble, elles voyagent dans un seul colis.", shipping: "livraison incluse" },
-  buyStrip: { label: "PRÊT QUAND VOUS L'ÊTES", heading: ["Six mois de patience,", "livré à votre porte."], price: "¥2,400", priceNote: "~16 € · livraison incluse", cta: "Commander" },
+  buyStrip: { label: "PRÊT QUAND VOUS L'ÊTES", heading: ["Fait avec soin,", "pour votre table."], priceNote: "Livraison incluse", cta: "Commander" },
   footer: {
     tagline: "Des conserves en bocal faites à la main. Produites en petites quantités et livrées avec soin.",
     japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
@@ -442,7 +471,7 @@ const zh: Translations = {
     body: "在日本爱媛的山麓手工制作。仅用柠檬、海盐和六个月的耐心——为您的餐桌而瓶装。",
     from: "起售价",
     price: "¥2,400",
-    priceNote: "约¥115人民币 · 含运费",
+    priceNote: "含运费",
     cta: "加入购物车",
     learnMore: "了解更多 ↓",
   },
@@ -457,15 +486,15 @@ const zh: Translations = {
   },
   process: {
     sectionLabel: "制作工艺",
-    heading: ["一如既往的", "传统制法。"],
-    badge: "小さな工房 · 露天工坊",
-    caption: "木江 · 爱媛县，日本",
+    heading: ["保留食材的天然美味，", "装进每一瓶。"],
+    badge: "Kimie · 植物料理家",
+    caption: "日本",
     steps: [
-      { n: "Ⅰ", title: "筛选原料", desc: "我们会细心挑选每款酱料所需的原料——芥末籽、橄榄、香草等，并尊重它们原本的香气与层次。每一份材料在备料时都会被认真检查其状态与特性。" },
-      { n: "Ⅱ", title: "腌制与混合", desc: "芥末籽会浸泡至变得柔软，橄榄酱的配料则会被细心切碎。我们根据每种食材的特点选择最合适的方法，以激发它们最好的风味和口感。" },
-      { n: "Ⅲ", title: "调和风味", desc: "我们将醋、橄榄油、盐和香料按比例结合，让每一种材料都能充分表达自己。我们不断校正酸度、咸度和香气的平衡，直到每一瓶都找到独特的风味。" },
-      { n: "Ⅳ", title: "装瓶入罐", desc: "成品酱会被细心装入经过清洁和干燥的玻璃瓶中。我们严谨把控卫生条件并密封，确保在适宜的温度下保存。" },
-      { n: "Ⅴ", title: "收尾与贴签", desc: "我们会确认瓶中酱料状态，然后逐瓶手工贴签。芥末的颗粒口感与橄榄酱的浓郁香气，都会被视为成品最重要的最终表达。" },
+      { n: "Ⅰ", title: "筛选原料", desc: "我们会细心挑选每款酱料所需的芥末籽、橄榄、香草等原料，尊重食材本身的香气与风味，并逐一确认它们的状态。" },
+      { n: "Ⅱ", title: "制作酱料", desc: "芥末籽会慢慢浸泡至柔软，橄榄酱的橄榄和香味食材则会被细心切碎。我们采用最适合的方式，带出每种食材的风味与口感。" },
+      { n: "Ⅲ", title: "调和风味", desc: "我们将醋、橄榄油、盐和香味食材结合，保留食材的个性。仔细调整酸度、咸度和香气的平衡，完成每一瓶酱料。" },
+      { n: "Ⅳ", title: "装瓶入罐", desc: "成品酱会被细心装入经过清洗、消毒并完全干燥的玻璃瓶中。我们严谨把控卫生条件，密封后在适宜温度下保存。" },
+      { n: "Ⅴ", title: "完成与贴签", desc: "确认每一瓶酱料的状态后，我们会逐瓶手工贴签。颗粒芥末的口感与橄榄酱的浓郁香气，都会被细心保留并送达。" },
     ],
   },
   recipes: {
@@ -496,13 +525,13 @@ const zh: Translations = {
     footerNote: "每一款酱都以同样的保存柠檬为基底——一起下单，我们会装在同一箱寄出。",
     cta: "加入购物车",
     items: [
-      { jp: "保存レモン", name: "保存柠檬", tag: "经典", size: "350g", price: "¥2,400", desc: "尤里卡柠檬、海盐、六个月的时间。一切的起点。", slotHint: "拖入保存柠檬的瓶身照片" },
-      { jp: "つぶつぶマスタードソース", name: "颗粒芥末酱", tag: "新品", size: "200g", price: "¥1,900", desc: "碾开的芥末籽在保存柠檬的盐水中慢慢浸渍。适合烤鱼、根菜与冷食猪肉。", slotHint: "拖入芥末酱的瓶身照片" },
-      { jp: "タブナードソース", name: "橄榄酱（塔布纳德）", tag: "新品", size: "200g", price: "¥2,100", desc: "黑橄榄、刺山柑与保存柠檬皮，手工粗捣而成。抹面包、配羊肉或蒸时蔬。", slotHint: "拖入橄榄酱的瓶身照片" },
+      { jp: "保存レモン", name: "保存柠檬", tag: "经典", size: "350g", price: "¥115", desc: "尤里卡柠檬、海盐、六个月的时间。一切的起点。", slotHint: "拖入保存柠檬的瓶身照片" },
+      { jp: "颗粒芥末酱", name: "颗粒芥末酱", tag: "新品", size: "200g", price: "¥91", desc: "碾开的芥末籽在保存柠檬的盐水中慢慢浸渍。适合烤鱼、根菜与冷食猪肉。", slotHint: "拖入芥末酱的瓶身照片" },
+      { jp: "橄榄酱（塔布纳德）", name: "橄榄酱（塔布纳德）", tag: "新品", size: "200g", price: "¥101", desc: "黑橄榄、刺山柑与保存柠檬皮，手工粗捣而成。抹面包、配羊肉或蒸时蔬。", slotHint: "拖入橄榄酱的瓶身照片" },
     ],
   },
   twoJar: { h1: "两个瓶子，", h2: "一间小工坊。", note: "两款酱都以同一款六个月保存柠檬为基底——一起下单，我们会装在同一箱寄出。", shipping: "含运费" },
-  buyStrip: { label: "随时为您准备", heading: ["六个月的耐心，", "送达您的家门。"], price: "¥2,400", priceNote: "约¥115人民币 · 含运费", cta: "立即订购" },
+  buyStrip: { label: "随时为您准备", heading: ["用心制作，", "送到您的餐桌。"], priceNote: "含运费", cta: "立即订购" },
   footer: {
     tagline: "手工制作的瓶装酱料。小批量生产，用心配送。",
     japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。",
@@ -524,25 +553,23 @@ const zhTw: Translations = {
     eyebrow: "マスタードソース ・ タブナードソース",
     headline: ["一罐", "慢慢沉澱的陽光。"],
     body: "在日本愛媛的山麓手工製作。僅用檸檬、海鹽和六個月的耐心，為您的餐桌而瓶裝。",
-    from: "起售價", price: "¥2,400", priceNote: "約 NT$500 · 含運費", cta: "加入購物車", learnMore: "了解更多 ↓",
+    from: "起售價", price: "¥2,400", priceNote: "含運費", cta: "加入購物車", learnMore: "了解更多 ↓",
   },
   ingredients: {
-    sectionLabel: "內含成分", heading: ["三種原料。", "一次蛻變。"], photoCaption: "愛媛縣產 · 愛媛県",
+    sectionLabel: "原料", heading: ["天然原料，", "原本的風味。"], photoCaption: "日本製造",
     items: [
-      { n: "01", name: "尤里卡檸檬", kanji: "エウレカレモン", detail: "愛媛縣產", desc: "產自日本檸檬之鄉愛媛縣。皮厚、香氣濃郁，每年秋天在最佳成熟期手工採摘。" },
-      { n: "02", name: "海鹽", kanji: "天然塩", detail: "瀨戶內海", desc: "採自瀨戶內海的粗粒未精製海鹽，富含礦物質，能有效析出水分，開始漫長的醃製過程。" },
-      { n: "03", name: "時間", kanji: "時間", detail: "6 個月", desc: "在涼爽的室溫下慢慢發酵六個月。不添加任何東西，不催促。檸檬自我蛻變。" },
-      { n: "04", name: "僅此而已", kanji: "それだけ", detail: "3 種原料", desc: "無防腐劑，無添加酸，無捷徑。工藝源遠流長，成果非凡。" },
+      { n: "01", name: "芥末醬", kanji: "", detail: "日本製造", desc: "芥末籽、醋、橄欖油、蜂蜜、醬油、鹽、黑胡椒與糖。" },
+      { n: "02", name: "橄欖醬", kanji: "", detail: "日本製造", desc: "黑橄欖、酸豆、大蒜、鯷魚、橄欖油、檸檬汁、黑胡椒與香草。" },
     ],
   },
   process: {
-    sectionLabel: "製作工藝", heading: ["一如既往的", "傳統製法。"], badge: "小さな工房 · 露天工坊", caption: "Kimie · 愛媛縣，日本",
+    sectionLabel: "製作工藝", heading: ["保留食材的天然美味，", "裝進每一瓶。"], badge: "Kimie · 植物料理家", caption: "日本",
     steps: [
-      { n: "Ⅰ", title: "篩選原料", desc: "我們會細心挑選每款醬料所需的原料，包括芥末籽、橄欖與香草，並尊重它們原本的香氣與層次。" },
-      { n: "Ⅱ", title: "醃製與混合", desc: "芥末籽會浸泡至變得柔軟，橄欖醬的配料則會被細心切碎，依食材特性選擇最合適的方法。" },
-      { n: "Ⅲ", title: "調和風味", desc: "我們將醋、橄欖油、鹽和香料按比例結合，持續校正酸度、鹹度和香氣的平衡。" },
-      { n: "Ⅳ", title: "裝瓶入罐", desc: "成品醬會被細心裝入經過清潔和乾燥的玻璃瓶中，嚴謹把控衛生條件並密封保存。" },
-      { n: "Ⅴ", title: "收尾與貼標", desc: "我們會確認瓶中醬料狀態，然後逐瓶手工貼標，將每一瓶的風味完整呈現。" },
+      { n: "Ⅰ", title: "篩選原料", desc: "我們會細心挑選每款醬料所需的芥末籽、橄欖、香草等原料，尊重食材本身的香氣與風味，並逐一確認它們的狀態。" },
+      { n: "Ⅱ", title: "製作醬料", desc: "芥末籽會慢慢浸泡至柔軟，橄欖醬的橄欖和香味食材則會被細心切碎。我們採用最適合的方式，帶出每種食材的風味與口感。" },
+      { n: "Ⅲ", title: "調和風味", desc: "我們將醋、橄欖油、鹽和香味食材結合，保留食材的個性。仔細調整酸度、鹹度和香氣的平衡，完成每一瓶醬料。" },
+      { n: "Ⅳ", title: "裝瓶入罐", desc: "成品醬會被細心裝入經過清洗、消毒並完全乾燥的玻璃瓶中。我們嚴謹把控衛生條件，密封後在適宜溫度下保存。" },
+      { n: "Ⅴ", title: "完成與貼標", desc: "確認每一瓶醬料的狀態後，我們會逐瓶手工貼標。顆粒芥末的口感與橄欖醬的濃郁香氣，都會被細心保留並送達。" },
     ],
   },
   recipes: {
@@ -567,13 +594,13 @@ const zhTw: Translations = {
   lineup: {
     sectionLabel: "產品系列", heading: ["三個瓶子，", "一間小工坊。"], footerNote: "每一款醬都以同樣的保存檸檬為基底，一起下單，我們會裝在同一箱寄出。", cta: "加入購物車",
     items: [
-      { jp: "保存レモン", name: "保存檸檬", tag: "經典", size: "350g", price: "¥2,400", desc: "尤里卡檸檬、海鹽、六個月的時間。一切的起點。", slotHint: "拖入保存檸檬的瓶身照片" },
-      { jp: "つぶつぶマスタードソース", name: "顆粒芥末醬", tag: "新品", size: "200g", price: "¥1,900", desc: "碾開的芥末籽在保存檸檬的鹽水中慢慢浸漬。適合烤魚、根菜與冷食豬肉。", slotHint: "拖入芥末醬的瓶身照片" },
-      { jp: "タブナードソース", name: "橄欖醬（塔布納德）", tag: "新品", size: "200g", price: "¥2,100", desc: "黑橄欖、酸豆與保存檸檬皮，手工粗搗而成。抹麵包、配羊肉或蒸時蔬。", slotHint: "拖入橄欖醬的瓶身照片" },
+      { jp: "保存レモン", name: "保存檸檬", tag: "經典", size: "350g", price: "NT$500", desc: "尤里卡檸檬、海鹽、六個月的時間。一切的起點。", slotHint: "拖入保存檸檬的瓶身照片" },
+      { jp: "顆粒芥末醬", name: "顆粒芥末醬", tag: "新品", size: "200g", price: "NT$400", desc: "碾開的芥末籽在保存檸檬的鹽水中慢慢浸漬。適合烤魚、根菜與冷食豬肉。", slotHint: "拖入芥末醬的瓶身照片" },
+      { jp: "橄欖醬（塔布納德）", name: "橄欖醬（塔布納德）", tag: "新品", size: "200g", price: "NT$440", desc: "黑橄欖、酸豆與保存檸檬皮，手工粗搗而成。抹麵包、配羊肉或蒸時蔬。", slotHint: "拖入橄欖醬的瓶身照片" },
     ],
   },
   twoJar: { h1: "兩個瓶子，", h2: "一間小工坊。", note: "兩款醬都以同一款六個月保存檸檬為基底，一起下單，我們會裝在同一箱寄出。", shipping: "含運費" },
-  buyStrip: { label: "隨時為您準備", heading: ["六個月的耐心，", "送達您的家門。"], price: "¥2,400", priceNote: "約 NT$500 · 含運費", cta: "立即訂購" },
+  buyStrip: { label: "隨時為您準備", heading: ["用心製作，", "送到您的餐桌。"], priceNote: "含運費", cta: "立即訂購" },
   footer: {
     tagline: "來自日本愛媛縣的手工保存檸檬。小批量生產，用心配送。", japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。", navigate: "導覽", contact: "聯絡方式", email: "hello@yuzumono.jp",
     address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"], copyright: "© 2025 YuzuMono. 保留所有權利。", links: ["隱私權政策", "配送資訊", "Instagram"],

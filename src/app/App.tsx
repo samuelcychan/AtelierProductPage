@@ -355,6 +355,7 @@ function Hero() {
   const [phTapenade, setPhTapenade] = useState(0);
 
   const slogans = SLOGANS[lang] ?? SLOGANS.ja;
+  const phrases = PHRASES[lang] ?? PHRASES.ja;
   const si = slogans.length ? slogan % slogans.length : 0;
 
   useEffect(() => {
@@ -362,8 +363,8 @@ function Hero() {
     return () => clearInterval(t);
   }, []);
 
-  const mi = PHRASES.mustard.length ? phMustard % PHRASES.mustard.length : 0;
-  const ti = PHRASES.tapenade.length ? phTapenade % PHRASES.tapenade.length : 0;
+  const mi = phrases.mustard.length ? phMustard % phrases.mustard.length : 0;
+  const ti = phrases.tapenade.length ? phTapenade % phrases.tapenade.length : 0;
 
   return (
     <section id="buy" className="relative min-h-screen flex items-end overflow-hidden">
@@ -435,8 +436,8 @@ function Hero() {
             </div>
 
             <div className="grid" style={{ gap: "0.7rem", marginTop: "1rem", paddingTop: "0.9rem", borderTop: "1px solid rgba(255,255,255,0.16)" }}>
-              <PhraseRow label="マスタードソース" list={PHRASES.mustard} idx={mi} onChange={setPhMustard} />
-              <PhraseRow label="タブナードソース" list={PHRASES.tapenade} idx={ti} onChange={setPhTapenade} />
+              <PhraseRow label={phrases.mustardLabel} list={phrases.mustard} idx={mi} onChange={setPhMustard} />
+              <PhraseRow label={phrases.tapenadeLabel} list={phrases.tapenade} idx={ti} onChange={setPhTapenade} />
             </div>
 
             <div className="flex flex-wrap items-center" style={{ gap: "1.25rem 1.75rem", marginTop: "1rem", paddingTop: "0.9rem", borderTop: "1px solid rgba(255,255,255,0.16)" }}>
@@ -881,7 +882,6 @@ function BuyStrip() {
         <Reveal delay={150}>
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <div className="text-center sm:text-right">
-              <div style={{ ...display, fontSize: "2.5rem", color: "#fff", fontWeight: 600 }}>{B.price}</div>
               <div style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted-lt)" }}>{B.priceNote}</div>
             </div>
             <a
