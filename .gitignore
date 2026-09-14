@@ -22,8 +22,7 @@ Thumbs.db
 
 # Env files
 .env
-.env.local
-.env.*.local
+.env.*
 
 # Claude Design tooling scratch dirs (not project source)
 .design-canvas/
