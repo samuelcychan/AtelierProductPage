@@ -6,11 +6,14 @@ type Flavor = "mustard" | "tapenade";
 
 export default function FlavorScene({
   flavor,
+  photo,
   motion,
   section,
   onAvailability,
 }: {
   flavor: Flavor;
+  /** Still image shown until, or instead of, the 3D scene. Defaults to the bundled photo. */
+  photo?: string;
   motion: boolean;
   section: RefObject<HTMLElement>;
   onAvailability: (available: boolean) => void;
@@ -515,7 +518,7 @@ export default function FlavorScene({
     >
       <img
         className="ks-scene-fallback"
-        src={flavor === "mustard" ? mustardPhoto : tapenadePhoto}
+        src={photo ?? (flavor === "mustard" ? mustardPhoto : tapenadePhoto)}
         alt=""
       />
     </div>

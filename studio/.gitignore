@@ -1,0 +1,8 @@
+# Sanity Studio build output and local cache
+/dist
+/.sanity
+/node_modules
+
+# Studio environment (project id lives here locally)
+.env
+.env.local

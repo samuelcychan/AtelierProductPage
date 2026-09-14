@@ -3,9 +3,9 @@ import { ArrowUpRight, ArrowRight, Plus, Check, Menu, X } from "lucide-react";
 import { LANG_LABELS, translations, type Lang } from "../i18n";
 import { storyCopy } from "./copy";
 import FlavorScene from "./FlavorScene";
+import { STORY_SLUGS } from "@/features/products/query";
+import { useStoryProducts } from "@/features/products/useStoryProducts";
 import hero from "@/assets/story_kitchen.webp";
-import mustard from "@/assets/jar_mustard_studio.jpg";
-import tapenade from "@/assets/story_tapenade.webp";
 import salad from "@/assets/salad_mustard.jpg";
 import pasta from "@/assets/story_pasta.webp";
 import potatoes from "@/assets/story_potatoes.webp";
@@ -24,6 +24,7 @@ export default function StoryPage() {
   const video = useRef<HTMLVideoElement>(null);
   const c = storyCopy[lang],
     t = translations[lang];
+  const { products, source } = useStoryProducts(lang);
   const animate = false;
   useEffect(() => {
     document.title = `きみえの瓶詰め | ${c.kitchen}`;
@@ -186,10 +187,15 @@ export default function StoryPage() {
               <figcaption>{c.kitchenCaption}</figcaption>
             </figure>
             <figure className="ks-floating-jar">
-              <img src={mustard} alt={c.mustard} />
+              <img
+                src={products.mustard.photo.src}
+                srcSet={products.mustard.photo.srcSet}
+                sizes="(min-width: 900px) 20vw, 38vw"
+                alt={products.mustard.name}
+              />
               <figcaption>
                 <span>きみえ</span>
-                <span>{c.mustard}</span>
+                <span>{products.mustard.name}</span>
               </figcaption>
             </figure>
           </div>
@@ -224,18 +230,18 @@ export default function StoryPage() {
                   aria-pressed={flavor === "mustard"}
                   onClick={() => setFlavor("mustard")}
                 >
-                  {c.mustard}
+                  {products.mustard.name}
                 </button>
                 <button
                   aria-pressed={flavor === "tapenade"}
                   onClick={() => setFlavor("tapenade")}
                 >
-                  {c.tapenade}
+                  {products.tapenade.name}
                 </button>
               </div>
               <div className="ks-tasting-note" aria-live="polite">
-                <h3>{flavor === "mustard" ? c.mustardNote : c.tapenadeNote}</h3>
-                <p>{flavor === "mustard" ? c.mustardDesc : c.tapenadeDesc}</p>
+                <h3>{products[flavor].tastingNote}</h3>
+                <p>{products[flavor].description}</p>
               </div>
               <a className="ks-text-link" href={`#jar-${flavor}`}>
                 {c.nextJar}
@@ -245,6 +251,7 @@ export default function StoryPage() {
             <div className="ks-flavor-art">
               <FlavorScene
                 flavor={flavor}
+                photo={products[flavor].photo.src}
                 motion={animate}
                 section={encounter}
                 onAvailability={setSceneAvailable}
@@ -253,7 +260,12 @@ export default function StoryPage() {
             </div>
           </div>
         </section>
-        <section className="ks-products ks-wrap" id="jars" data-sc-act="flow">
+        <section
+          className="ks-products ks-wrap"
+          id="jars"
+          data-sc-act="flow"
+          data-products-source={source}
+        >
           <div className="ks-section-heading ks-reveal">
             <h2>
               {c.two[0]}
@@ -263,8 +275,8 @@ export default function StoryPage() {
             <p>{c.twoDesc}</p>
           </div>
           <div className="ks-product-grid">
-            {(["mustard", "tapenade"] as const).map((key, i) => {
-              const item = t.lineup.items[i + 1];
+            {STORY_SLUGS.map((key) => {
+              const product = products[key];
               return (
                 <article
                   id={`jar-${key}`}
@@ -273,19 +285,23 @@ export default function StoryPage() {
                 >
                   <div className="ks-product-photo">
                     <img
-                      src={i === 0 ? mustard : tapenade}
-                      alt={item.name}
+                      src={product.photo.src}
+                      srcSet={product.photo.srcSet}
+                      sizes="(min-width: 900px) 45vw, 100vw"
+                      alt={product.photo.alt}
                       loading="lazy"
                     />
-                    <span className="ks-product-kanji">
-                      {i === 0 ? "粒マスタード" : "タプナード"}
-                    </span>
+                    {product.japaneseLabel && (
+                      <span className="ks-product-kanji">
+                        {product.japaneseLabel}
+                      </span>
+                    )}
                   </div>
                   <div className="ks-product-title">
-                    <h3>{i === 0 ? c.mustard : c.tapenade}</h3>
-                    <span>{item.size}</span>
+                    <h3>{product.name}</h3>
+                    <span>{product.sizeLabel}</span>
                   </div>
-                  <p>{i === 0 ? c.mustardDesc : c.tapenadeDesc}</p>
+                  <p>{product.description}</p>
                   <button
                     className="ks-product-choice"
                     aria-pressed={flavor === key}
@@ -299,7 +315,7 @@ export default function StoryPage() {
                       {c.ingredients}
                       <Plus size={17} />
                     </summary>
-                    <p>{t.ingredients.items[i].desc}</p>
+                    <p>{product.ingredients}</p>
                   </details>
                 </article>
               );
