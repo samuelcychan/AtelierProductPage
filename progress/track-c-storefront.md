@@ -15,9 +15,9 @@
 
 ## Tasks
 
-- [ ] `npm ci` in the repo root
-- [ ] `cart.ts` (`ym-cart-v1`, storage wrapped in `try`), `api.ts` (typed to the contract), `money.ts` (§11.1)
-- [ ] Development mock: when `import.meta.env.DEV` and the URL has `?commerce=mock`, `api.ts` returns a sample catalog (mustard ¥1,900, tapenade ¥2,100, both available) and a fake checkout URL; also a way to simulate `price_changed`, `insufficient_stock` and `unavailable`. Must be impossible in production builds
+- [x] `npm ci` in the repo root
+- [x] `cart.ts` (`ym-cart-v1`, storage wrapped in `try`), `api.ts` (typed to the contract), `money.ts` (§11.1)
+- [x] Development mock: when `import.meta.env.DEV` and the URL has `?commerce=mock`, `api.ts` returns a sample catalog (mustard ¥1,900, tapenade ¥2,100, both available) and a fake checkout URL; also a way to simulate `price_changed`, `insufficient_stock` and `unavailable`. Must be impossible in production builds
 - [ ] `CommerceProvider.tsx` with every state in the §11.1 table, including `?cart=open`
 - [ ] `CartDrawer.tsx`: `grove` skin (inline `--ym-*` styles) and `story` skin (`.ks-cart*` in `story.css`); accessibility and behaviour per §11.4
 - [ ] `App.tsx` touchpoints per §11.2 (nav Order Now, cart button, hero, `JarInfo` price and button with slug passed at the carousel and split layouts, buy strip, footer links to the four `/legal/*` paths); buttons visually identical to the anchors they replace
@@ -36,6 +36,8 @@
 
 | Date | Command | Result |
 |---|---|---|
+| 2026-09-15 | `npm ci` | OK, 0 vulnerabilities |
+| 2026-09-15 | `npm run typecheck` (after cart/api/money/mock) | Pass (after adding `src/features/commerce/env.d.ts`, see deviations) |
 
 ## Deviations from plan
 
