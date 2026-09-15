@@ -1,6 +1,6 @@
 # Track B — Server and API
 
-**Status:** Not started
+**Status:** In progress
 **Plan:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md) §6.3 (config only), §8, §9, §10 (incl. §10.4 and §10.5), §13 rules that apply to server code
 **Board and contracts:** [README.md](README.md) — the HTTP API and Sanity contracts there are binding
 
