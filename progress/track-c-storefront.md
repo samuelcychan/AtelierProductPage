@@ -1,6 +1,6 @@
 # Track C — Storefront, cart and copy
 
-**Status:** Not started
+**Status:** In progress
 **Plan:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md) §11.1–11.5, §14, D11
 **Board and contracts:** [README.md](README.md) — build against the HTTP API contract there; Track B implements it in parallel
 
