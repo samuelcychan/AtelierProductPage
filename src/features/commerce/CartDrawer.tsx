@@ -71,7 +71,9 @@ export function CartDrawer({ skin, lang, products, browseHref }: {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const frame = window.requestAnimationFrame(() => closeRef.current?.focus());
+    // Synchronous: the panel is already visible in the committed DOM, and
+    // requestAnimationFrame can be throttled in background tabs.
+    closeRef.current?.focus();
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -99,7 +101,6 @@ export function CartDrawer({ skin, lang, products, browseHref }: {
     document.addEventListener("keydown", onKey, true);
 
     return () => {
-      window.cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKey, true);
       document.body.style.overflow = previousOverflow;
       if (opener && document.contains(opener)) opener.focus();

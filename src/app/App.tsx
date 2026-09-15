@@ -950,7 +950,7 @@ function BuyStrip() {
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
-  const { T } = useUI();
+  const { T, lang } = useUI();
   const F = T.footer;
   const links = useNavLinks();
 
@@ -990,7 +990,7 @@ function Footer() {
           <span style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{F.copyright}</span>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {LEGAL_KEYS.map((k, i) => (
-              <a key={k} href={LEGAL_PATHS[i]} className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{T.legal[k]}</a>
+              <a key={k} href={`${LEGAL_PATHS[i]}?lang=${lang}`} className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{T.legal[k]}</a>
             ))}
             <a href="#" className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{F.links[2]}</a>
           </nav>

@@ -502,7 +502,7 @@ function StoryPageBody({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) =>
         <a href="/">{c.original}</a>
         <nav className="ks-footer-legal">
           {LEGAL_LINKS.map(([href, key]) => (
-            <a key={key} href={href}>
+            <a key={key} href={`${href}?lang=${lang}`}>
               {t.legal[key]}
             </a>
           ))}

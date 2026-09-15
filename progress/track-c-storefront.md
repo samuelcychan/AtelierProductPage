@@ -45,11 +45,27 @@
 
 ## Deviations from plan
 
-_None yet._
+- **Worktree base:** the worktree was created at `7889cca`; fast-forwarded to `114193d` before any work.
+- **`src/features/commerce/env.d.ts`:** `src/vite-env.d.ts` declares `ImportMetaEnv` without Vite's built-in `DEV`, so `import.meta.env.DEV` did not typecheck. A global interface merge in a Track C-owned file adds `readonly DEV: boolean`.
+- **Dev mock redirect:** in mock mode the fake checkout URL is `<origin>/order/complete?session_id=cs_mock_…`. `api.ts` accepts that only when the reply came from the mock; real replies must start with `https://checkout.stripe.com/`.
+- **Extra context fields:** `CommerceValue.canCheckout` (ready, not busy, non-empty, every line priced and available). A cart line that is sold out or no longer for sale shows `cart.soldOut` and blocks Checkout until removed, so the drawer never sends a request that is certain to fail.
+- **`add(slug)` guard:** does nothing unless `priceFor(slug)?.available` (the buttons are disabled in that case anyway).
+- **Checkout error mapping:** `503`/`502 { error: "unavailable" }` → `cart.unavailable`; `not_for_sale` → `cart.error` and the product is marked not for sale locally; `400`/`403`/`415`/network → `cart.error`. The cart is always kept.
+- **Catalog refresh:** opening the drawer re-fetches `/api/catalog` quietly if the last fetch is older than 60 s. Cart changes in another tab or page are followed via the `storage` event.
+- **Extra copy keys:** `order.total`, `order.loading` and `order.item` (fallback when an order line name is empty, per Track B) in all five locales. The `/order/complete` fetch-failure state reuses `cart.error`.
+- **Language on `/order/complete` and on cancel:** there is no saved language preference in the codebase (both pages start in English). `checkout()` saves the language to **sessionStorage `ym-checkout-lang`** just before redirecting. `/order/complete` uses it (else the browser language, else English), and `/` and `/story` restore it only when opened with `?cart=open`. Otherwise both pages still start in English.
+- **Main-page footer:** the bottom row now shows the four legal links plus the existing Instagram label (`footer.links[2]`, still `href="#"`). `footer.links[0..1]` (Privacy/Shipping) are no longer rendered; the strings stay in `i18n.ts`.
+- **`/story` footer:** also links the four legal pages (§11.6 "Link all four from both footers").
+- **Legal link language (Track D clarification):** every legal link (`/` footer, `/story` footer, `/order/complete` footer) is `/legal/<page>?lang=<current page language>`.
+- **`status: "off"`:** the nav/story cart buttons, hero Add to Cart, JarInfo buttons and story card buttons are hidden. Nav and buy-strip "Order Now" stay as links to `#lineup`.
+- **`/api/order` (Track B clarification):** `status: null` is accepted and shown as not found; an empty line `name` falls back to `order.item`.
 
 ## Requests to integrator
 
-_None yet._
+- **Privacy page (Track D):** also mention sessionStorage `ym-checkout-lang` (language of the last checkout, this tab only), next to `ym-cart-v1`.
+- **`tsconfig.json`:** `include` covers only `src/features/**`, so `npm run typecheck` does not check `App.tsx` or `StoryPage.tsx` directly. With a scratch config that adds them, Track C code is clean; 7 pre-existing errors remain (no `three` types, CSS side-effect imports). Consider widening `include` with `declare module "*.css"` and `@types/three`, or leave as is.
+- **`src/main.tsx` merge:** Track C added only the `/order/complete` ternary branch between `/story` and `App`; Track D's `/legal/*` branch will touch the same expression.
+- **`.claude/launch.json`** in the worktree has only the 5173 `dev` entry, and the preview tool read that config, so the visual check used a manually started `npx vite --port 5174 --strictPort`. The file was not changed.
 
 ## Handoff notes
 

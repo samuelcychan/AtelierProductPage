@@ -141,7 +141,7 @@ export default function OrderCompletePage() {
       <footer className="px-6 py-8" style={{ background: "var(--ym-fg-dark)" }}>
         <nav className="max-w-xl mx-auto flex flex-wrap gap-x-6 gap-y-2">
           {LEGAL_LINKS.map(([href, key]) => (
-            <a key={key} href={href} className="ym-hover-gold" style={{ ...body, fontSize: "0.75rem", color: "var(--ym-muted-lt)" }}>
+            <a key={key} href={`${href}?lang=${lang}`} className="ym-hover-gold" style={{ ...body, fontSize: "0.75rem", color: "var(--ym-muted-lt)" }}>
               {T.legal[key]}
             </a>
           ))}
