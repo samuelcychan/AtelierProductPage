@@ -30,14 +30,18 @@ export interface CatalogItem {
   stock?: CatalogStock | null;
 }
 
-export type SellableItem = CatalogItem & { jpy: number; sku: string; stock: CatalogStock };
+export type SellableItem = CatalogItem & { jpy: number; sku: string; packedWeightGrams: number; stock: CatalogStock };
 
 export async function loadCatalog(): Promise<Map<string, CatalogItem>> {
   const items = await sanity().fetch<CatalogItem[]>(CATALOG_QUERY, { slugs: STORY_SLUGS });
   return new Map(items.map((item) => [item.slug, item]));
 }
 
-/** For sale means: switched on, priced, SKU set, and a stock document with an integer count exists. */
+/**
+ * For sale means: switched on, priced, SKU and packed weight set, and a stock
+ * document with an integer count exists. The Studio requires SKU and weight only
+ * while "For sale" is on, so a published product can still lack them.
+ */
 export function isForSale(item: CatalogItem | undefined): item is SellableItem {
   return (
     !!item?.isActive &&
@@ -45,6 +49,9 @@ export function isForSale(item: CatalogItem | undefined): item is SellableItem {
     Number.isInteger(item.jpy) &&
     item.jpy > 0 &&
     !!item.sku &&
+    typeof item.packedWeightGrams === "number" &&
+    Number.isInteger(item.packedWeightGrams) &&
+    item.packedWeightGrams > 0 &&
     !!item.stock &&
     Number.isInteger(item.stock.available)
   );
