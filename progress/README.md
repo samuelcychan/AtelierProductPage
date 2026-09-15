@@ -44,7 +44,8 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 
 ## Owner actions (start now — these gate launch more than the code)
 
-- [ ] Create the Sanity project and seed it (PLAN3 §19.4 steps 1–4)
+- [x] Create the Sanity project and seed it (PLAN3 §19.4 steps 1–4) — already done: project `59rfnf2c`, dataset `production`, in `.env.local` and `studio/.env`. Checked 2026-09-15: `product-mustard` (¥1,900, for sale), `product-tapenade` (¥2,100, for sale), `product-preserved-lemon` (¥2,400, not for sale)
+- [ ] Sanity commerce setup on that same project: restart `sanity dev` or `npx sanity deploy` (hosted `kimie-jars.sanity.studio` returns 404, so it isn't deployed yet); `npx sanity exec scripts/seed-commerce.ts --with-user-token`, then again with `-- --write` (no SKUs or stock documents exist yet); enter packed weights, customs text, HS codes and stock; create the `vercel-commerce` Editor token
 - [ ] Stripe account (Japan), business profile, test keys (§6.1)
 - [ ] Shippo account; request a DHL Express Japan (or FedEx/UPS) business account (§6.4)
 - [ ] Legal notice, privacy and returns text from advisers; tax accountant (§5.1)
