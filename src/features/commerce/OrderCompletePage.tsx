@@ -32,10 +32,17 @@ export default function OrderCompletePage() {
   const T = translations[lang];
   const [view, setView] = useState<View>({ kind: "loading" });
 
+  const heading =
+    view.kind === "loading" ? T.order.loading
+    : view.kind === "paid" ? T.order.thanks
+    : view.kind === "pending" ? T.order.pending
+    : view.kind === "notFound" ? T.order.notFound
+    : T.cart.error;
+
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title = `${T.order.thanks} | ${T.pageTitle}`;
-  }, [lang, T]);
+    document.title = `${heading} | ${T.pageTitle}`;
+  }, [lang, heading, T]);
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get("session_id") ?? "";
