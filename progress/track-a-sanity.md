@@ -1,6 +1,6 @@
 # Track A — Sanity commerce schema
 
-**Status:** Not started
+**Status:** In progress
 **Plan:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md) §7.1–7.2, §3.1
 **Board and contracts:** [README.md](README.md)
 
@@ -14,7 +14,7 @@
 
 ## Tasks
 
-- [ ] `npm ci` in `studio/`
+- [x] `npm ci` in `studio/`
 - [ ] `product.ts`: unhide `prices`; `jpy` required, integer, ≥ 1, description per §7.1; `usd`, `eur`, `cny`, `twd` stay hidden with no validation
 - [ ] `product.ts`: unhide `isActive`, retitle "For sale", description per §7.1, `rule.required()`; keep `HIDDEN_UNTIL_MAIN_PAGE` for the remaining main-page fields
 - [ ] `product.ts`: add a **Commerce** group with `sku`, `packedWeightGrams`, `customsDescription`, `hsCode` (§7.1)
