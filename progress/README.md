@@ -11,7 +11,7 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 | Track | File | Plan sections | Agent estimate (§18.1) | Status |
 |---|---|---|---:|---|
 | A — Sanity commerce schema | [track-a-sanity.md](track-a-sanity.md) | §7.1–7.2 | 0.5–1 h | **Done**, merged 2026-09-15 (`99bfb89`); Studio requests applied by integrator |
-| B — Server and API | [track-b-server.md](track-b-server.md) | §6.3 (config only), §8, §9, §10 | 3–6 h | In progress — resumed after a usage-limit interruption |
+| B — Server and API | [track-b-server.md](track-b-server.md) | §6.3 (config only), §8, §9, §10 | 3–6 h | **Done**, merged 2026-09-15 after integrator review; untested against real Stripe, Sanity or Shippo |
 | C — Storefront, cart, copy | [track-c-storefront.md](track-c-storefront.md) | §11.1–11.5, §14 | 3.5–6 h | In progress — resumed after a usage-limit interruption |
 | D — Legal pages | [track-d-legal.md](track-d-legal.md) | §11.6 | 0.5–1 h | In progress — resumed after a usage-limit interruption |
 
@@ -23,6 +23,8 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 | 2026-09-15 | B, C, D interrupted by a usage limit mid-task; resumed from their worktrees with uncommitted work intact |
 | 2026-09-15 | Track A merged. Integrator applied its requests in `studio/sanity.config.ts`: Stock list item; stock documents can't be created, deleted or duplicated in the Studio |
 | 2026-09-15 | Contract note to Track B: `sku` and `packedWeightGrams` may be empty on a published product that isn't for sale; `isForSale` must require both |
+| 2026-09-15 | Track B finished: typecheck, build and a credential-free smoke check pass. Integrator review of checkout, fulfilment, webhook and reconcile found no blocking issues; contract clarifications recorded above and relayed to Track C; `CLAUDE.md` notes the `.js` import rule and the runtime use of `localize.ts`/`query.ts` |
+| 2026-09-15 | Review notes to verify on a preview deploy: (1) `SITE_URL` must equal the exact origin buyers use — a `www.` variant or the production `*.vercel.app` alias gets 403 from `/api/checkout`; (2) `.js` relative imports load under Vercel's Node runtime; (3) `getDocument("fulfilment.<id>")` works with the `published` perspective on a real dataset; (4) `@types/node` is 26 while Vercel runs Node 22 — harmless for the APIs used; (5) two simultaneous webhook deliveries can still create two Shippo orders with the same order number (known, rare) |
 
 ## Not yet assigned
 
@@ -81,10 +83,12 @@ Tracks build against these. A change needs the integrator's agreement, recorded 
 
 ```ts
 // 200
-{ status: "open" | "complete" | "expired"; paymentStatus: "paid" | "unpaid" | "no_payment_required"; orderNumber: string | null; total: number | null; currency: string | undefined; lines: Array<{ name: string; quantity: number | null; amount: number }> }
+{ status: "open" | "complete" | "expired" | null; paymentStatus: "paid" | "unpaid" | "no_payment_required"; orderNumber: string | null; total: number | null; currency: string | undefined; lines: Array<{ name: string /* "" when Stripe has no description */; quantity: number | null; amount: number }> }
 // 404
 { error: "not_found" }
 ```
+
+Clarifications from Track B (2026-09-15): `POST /api/checkout` returns 400 `invalid_cart` for a malformed line or a slug not matching `^[a-z0-9-]{1,64}$`, and 502 `unavailable` when Sanity or Stripe fails. `/api/stripe-webhook` returns 503 when not configured (Stripe keeps retrying) and 500 when fulfilment fails.
 
 Stripe redirects: `success_url` = `/order/complete?session_id={CHECKOUT_SESSION_ID}`; `cancel_url` = `<returnPath>?cart=open`.
 
@@ -92,7 +96,8 @@ Stripe redirects: `success_url` = `/order/complete?session_id={CHECKOUT_SESSION_
 
 - `product` fields: `slug.current`, `name` (internationalized array), `sizeValue`, `sizeUnit`, `sku`, `packedWeightGrams`, `customsDescription`, `hsCode`, `isActive` ("For sale"), `prices.jpy`.
 - `stock` documents: fixed ids `stock-mustard`, `stock-tapenade`; fields `product` (reference), `available` (integer, may go negative).
-- `fulfilment.<checkoutSessionId>` documents: written only by the server; no schema type in the Studio.
+- `fulfilment.<checkoutSessionId>` documents: written only by the server; no schema type in the Studio. Fields: `orderNumber`, `paidAt`, `lines[]` (`slug`, `sku`, `quantity`), `oversold`, optional `shippoOrderId`.
+- `sku` and `packedWeightGrams` may be empty on a published product that isn't for sale; the server's `isForSale` requires both.
 
 ### Routes and storage
 
