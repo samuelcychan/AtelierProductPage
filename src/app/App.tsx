@@ -12,6 +12,12 @@ import saladPhoto from "@/assets/salad_mustard.jpg";
 import pastaPhoto from "@/assets/pasta_mustard.png";
 import jagaimoPhoto from "@/assets/jagaimo_mustard.png";
 import { Lang, LANG_LABELS, Translations, translations, SLOGANS, PHRASES } from "@/app/i18n";
+import { CommerceProvider, useCommerce } from "@/features/commerce/CommerceProvider";
+import { CartDrawer } from "@/features/commerce/CartDrawer";
+import { initialPageLang } from "@/features/commerce/cart";
+
+const LEGAL_PATHS = ["/legal/tokushoho", "/legal/privacy", "/legal/shipping", "/legal/returns"] as const;
+const LEGAL_KEYS = ["tokushoho", "privacy", "shipping", "returns"] as const;
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 type ThemeKey = "grove" | "wabi";
@@ -266,6 +272,7 @@ function useNavLinks() {
 
 function Nav() {
   const { T, th } = useUI();
+  const { status, count, openDrawer } = useCommerce();
   const [scrolled, setScrolled] = useState(false);
   const links = useNavLinks();
 
@@ -304,8 +311,29 @@ function Nav() {
           ))}
           <ThemeSwitcher onDark={!scrolled} />
           <LangSwitcher onDark={!scrolled} />
+          {status !== "off" && (
+            <button
+              type="button"
+              onClick={openDrawer}
+              aria-label={count > 0 ? `${T.cart.open} (${count})` : T.cart.open}
+              className="relative flex items-center px-2 py-1.5 rounded transition-colors"
+              style={{ ...body, fontSize: "0.9rem", color: scrolled ? "var(--ym-muted)" : "rgba(255,255,255,0.75)" }}
+            >
+              <ShoppingBag size={18} />
+              {count > 0 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-1 -right-1 text-center"
+                  style={{ ...body, minWidth: 18, height: 18, padding: "0 4px", fontSize: "0.65rem", fontWeight: 700, lineHeight: "18px", borderRadius: 9999, background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          )}
           <a
-            href="#buy"
+            href="#lineup"
+            onClick={(e) => { if (count > 0) { e.preventDefault(); openDrawer(); } }}
             style={{ ...body, fontSize: "0.92rem", background: "var(--ym-primary)", color: "var(--ym-bg)", borderRadius: "var(--ym-radius)" }}
             className="px-[1.1rem] py-2 whitespace-nowrap hover:opacity-90 transition-opacity"
           >
@@ -350,6 +378,7 @@ function PhraseRow({ label, list, idx, onChange }: { label: string; list: string
 
 function Hero() {
   const { T, lang } = useUI();
+  const { status, priceFor, add } = useCommerce();
   const [loaded, setLoaded] = useState(false);
   const [slogan, setSlogan] = useState(0);
   const [phMustard, setPhMustard] = useState(0);
@@ -442,14 +471,19 @@ function Hero() {
             </div>
 
             <div className="flex flex-wrap items-center" style={{ gap: "1.25rem 1.75rem", marginTop: "1rem", paddingTop: "0.9rem", borderTop: "1px solid rgba(255,255,255,0.16)" }}>
-              <a
-                href="#"
-                className="flex items-center gap-3 font-semibold hover:scale-105 active:scale-95 transition-all duration-200"
-                style={{ ...body, padding: "0.85rem 1.75rem", borderRadius: "var(--ym-radius)", background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
-              >
-                <ShoppingBag size={17} />
-                {T.hero.cta}
-              </a>
+              {/* The hero photograph shows the mustard jar. */}
+              {status !== "off" && (
+                <button
+                  type="button"
+                  onClick={() => add("mustard")}
+                  disabled={!priceFor("mustard")?.available}
+                  className="flex items-center gap-3 font-semibold enabled:hover:scale-105 enabled:active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ ...body, padding: "0.85rem 1.75rem", borderRadius: "var(--ym-radius)", background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
+                >
+                  <ShoppingBag size={17} />
+                  {T.hero.cta}
+                </button>
+              )}
               <a href="#lineup" className="ym-hover-gold" style={{ ...body, fontSize: "0.8rem", color: "rgba(255,255,255,0.85)" }}>
                 {T.hero.learnMore}
               </a>
@@ -532,7 +566,12 @@ function JarPhotoFrame({ jarKey, theme, tag, slotHint, idx, onChange }: {
   );
 }
 
-function JarInfo({ item, cta, padTop = false }: { item: Translations["lineup"]["items"][number]; cta: string; padTop?: boolean }) {
+function JarInfo({ slug, item, cta, padTop = false }: { slug: JarKey; item: Translations["lineup"]["items"][number]; cta: string; padTop?: boolean }) {
+  const { T } = useUI();
+  const { status, priceFor, add } = useCommerce();
+  // Prices come only from /api/catalog; nothing is shown while loading or unavailable (D11).
+  const price = priceFor(slug);
+  const soldOut = price !== undefined && !price.available;
   return (
     <div className={`flex flex-col ${padTop ? "flex-1" : ""}`} style={padTop ? { paddingTop: "1.75rem" } : undefined}>
       <div style={{ ...body, fontSize: "0.7rem", letterSpacing: "0.12em", color: "var(--ym-gold)" }}>{item.jp}</div>
@@ -540,18 +579,25 @@ function JarInfo({ item, cta, padTop = false }: { item: Translations["lineup"]["
       <p style={{ ...body, fontSize: "0.95rem", color: "var(--ym-muted)", lineHeight: 1.75, margin: "1.25rem 0 0", maxWidth: "30rem" }}>{item.desc}</p>
       <div className="flex items-end justify-between gap-6" style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid var(--ym-rule)" }}>
         <div>
-          <div style={{ ...display, fontSize: "1.9rem", fontWeight: 600, color: "var(--ym-fg)" }}>{item.price}</div>
+          <div style={{ ...display, fontSize: "1.9rem", fontWeight: 600, color: "var(--ym-fg)", minHeight: "1.5em" }}>{price?.label ?? ""}</div>
           <div style={{ ...body, fontSize: "0.68rem", letterSpacing: "0.14em", color: "var(--ym-muted)" }}>{item.size}</div>
         </div>
-        <a
-          href="#buy"
-          className="flex items-center whitespace-nowrap font-semibold hover:scale-[1.04] active:scale-[0.96] transition-transform duration-200"
-          style={{ ...body, gap: "0.6rem", fontSize: "0.82rem", padding: "0.85rem 1.6rem", borderRadius: "var(--ym-radius)", background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
-        >
-          <ShoppingBag size={16} />
-          {cta}
-        </a>
+        {status !== "off" && (
+          <button
+            type="button"
+            onClick={() => add(slug)}
+            disabled={!price?.available}
+            className="flex items-center whitespace-nowrap font-semibold enabled:hover:scale-[1.04] enabled:active:scale-[0.96] transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ ...body, gap: "0.6rem", fontSize: "0.82rem", padding: "0.85rem 1.6rem", borderRadius: "var(--ym-radius)", background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
+          >
+            <ShoppingBag size={16} />
+            {soldOut ? T.cart.soldOut : cta}
+          </button>
+        )}
       </div>
+      {status === "unavailable" && (
+        <p style={{ ...body, fontSize: "0.8rem", color: "var(--ym-muted)", margin: "0.75rem 0 0" }}>{T.cart.unavailable}</p>
+      )}
     </div>
   );
 }
@@ -602,7 +648,7 @@ function Lineup() {
           <div className="grid items-center" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "4rem" }}>
             <JarPhotoFrame jarKey={curKey} theme={theme} tag={curItem.tag} slotHint={curItem.slotHint} idx={photoIdx[curKey]} onChange={setIdx(curKey)} />
             <div className="flex flex-col">
-              <JarInfo item={curItem} cta={T.lineup.cta} />
+              <JarInfo slug={curKey} item={curItem} cta={T.lineup.cta} />
               <div className="flex items-center" style={{ marginTop: "2.5rem", gap: "1.5rem" }}>
                 <button
                   onClick={() => setSlide((slide + 1) % 2)}
@@ -641,11 +687,11 @@ function Lineup() {
           <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3.5rem" }}>
             <div className="flex flex-col">
               <JarPhotoFrame jarKey="mustard" theme={theme} tag={mustard.tag} slotHint={mustard.slotHint} idx={photoIdx.mustard} onChange={setIdx("mustard")} />
-              <JarInfo item={mustard} cta={T.lineup.cta} padTop />
+              <JarInfo slug="mustard" item={mustard} cta={T.lineup.cta} padTop />
             </div>
             <div className="flex flex-col">
               <JarPhotoFrame jarKey="tapenade" theme={theme} tag={tapenade.tag} slotHint={tapenade.slotHint} idx={photoIdx.tapenade} onChange={setIdx("tapenade")} />
-              <JarInfo item={tapenade} cta={T.lineup.cta} padTop />
+              <JarInfo slug="tapenade" item={tapenade} cta={T.lineup.cta} padTop />
             </div>
           </div>
         )}
@@ -867,6 +913,7 @@ function FAQ() {
 // ─── Buy strip ────────────────────────────────────────────────────────────────
 function BuyStrip() {
   const { T } = useUI();
+  const { count, openDrawer } = useCommerce();
   const B = T.buyStrip;
 
   return (
@@ -886,7 +933,8 @@ function BuyStrip() {
               <div style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted-lt)" }}>{B.priceNote}</div>
             </div>
             <a
-              href="#"
+              href="#lineup"
+              onClick={(e) => { if (count > 0) { e.preventDefault(); openDrawer(); } }}
               className="flex items-center gap-3 font-semibold hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
               style={{ ...body, padding: "1rem 2.25rem", borderRadius: "var(--ym-radius)", background: "var(--ym-gold)", color: "var(--ym-fg-dark)" }}
             >
@@ -940,11 +988,12 @@ function Footer() {
 
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <span style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{F.copyright}</span>
-          <div className="flex gap-6">
-            {F.links.map((l) => (
-              <a key={l} href="#" className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{l}</a>
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {LEGAL_KEYS.map((k, i) => (
+              <a key={k} href={LEGAL_PATHS[i]} className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{T.legal[k]}</a>
             ))}
-          </div>
+            <a href="#" className="ym-hover-gold" style={{ ...body, fontSize: "0.72rem", color: "var(--ym-muted)" }}>{F.links[2]}</a>
+          </nav>
         </div>
       </div>
     </footer>
@@ -953,7 +1002,7 @@ function Footer() {
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useState<Lang>(initialPageLang);
   const [theme, setTheme] = useState<ThemeKey>("grove");
   const T = translations[lang];
   const th = THEMES[theme];
@@ -973,17 +1022,28 @@ export default function App() {
 
   return (
     <UICtx.Provider value={{ lang, setLang, T, theme, setTheme, th }}>
-      <div className="min-h-screen overflow-x-hidden" style={{ ...body, background: "var(--ym-bg)", color: "var(--ym-fg)", transition: "background-color 400ms ease" }}>
-        <Nav />
-        <Hero />
-        <Lineup />
-        <Recipes />
-        <Process />
-        <Ingredients />
-        {SHOW_FAQ && <FAQ />}
-        <BuyStrip />
-        <Footer />
-      </div>
+      <CommerceProvider lang={lang} returnPath="/">
+        <div className="min-h-screen overflow-x-hidden" style={{ ...body, background: "var(--ym-bg)", color: "var(--ym-fg)", transition: "background-color 400ms ease" }}>
+          <Nav />
+          <Hero />
+          <Lineup />
+          <Recipes />
+          <Process />
+          <Ingredients />
+          {SHOW_FAQ && <FAQ />}
+          <BuyStrip />
+          <Footer />
+          <CartDrawer
+            skin="grove"
+            lang={lang}
+            browseHref="#lineup"
+            products={{
+              mustard: { name: T.lineup.items[1].name, size: T.lineup.items[1].size, photo: JAR_PHOTOS[theme].mustard[0].src ?? undefined },
+              tapenade: { name: T.lineup.items[2].name, size: T.lineup.items[2].size, photo: JAR_PHOTOS[theme].tapenade[0].src ?? undefined },
+            }}
+          />
+        </div>
+      </CommerceProvider>
     </UICtx.Provider>
   );
 }

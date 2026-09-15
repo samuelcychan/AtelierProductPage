@@ -19,12 +19,12 @@
 - [x] `cart.ts` (`ym-cart-v1`, storage wrapped in `try`), `api.ts` (typed to the contract), `money.ts` (§11.1)
 - [x] Development mock: when `import.meta.env.DEV` and the URL has `?commerce=mock`, `api.ts` returns a sample catalog (mustard ¥1,900, tapenade ¥2,100, both available) and a fake checkout URL; also a way to simulate `price_changed`, `insufficient_stock` and `unavailable`. Must be impossible in production builds
 - [x] `CommerceProvider.tsx` with every state in the §11.1 table, including `?cart=open`
-- [ ] `CartDrawer.tsx`: `grove` skin (inline `--ym-*` styles) and `story` skin (`.ks-cart*` in `story.css`); accessibility and behaviour per §11.4
-- [ ] `App.tsx` touchpoints per §11.2 (nav Order Now, cart button, hero, `JarInfo` price and button with slug passed at the carousel and split layouts, buy strip, footer links to the four `/legal/*` paths); buttons visually identical to the anchors they replace
-- [ ] `StoryPage.tsx` touchpoints per §11.3
-- [ ] `OrderCompletePage.tsx` and the `/order/complete` branch in `main.tsx` (§11.5)
-- [ ] `i18n.ts`: `cart`, `order` and `legal` blocks in all five locales (§14). The legal labels are for footer links
-- [ ] Verify: `npm run typecheck`, `npm run build`
+- [x] `CartDrawer.tsx`: `grove` skin (inline `--ym-*` styles) and `story` skin (`.ks-cart*` in `story.css`); accessibility and behaviour per §11.4
+- [x] `App.tsx` touchpoints per §11.2 (nav Order Now, cart button, hero, `JarInfo` price and button with slug passed at the carousel and split layouts, buy strip, footer links to the four `/legal/*` paths); buttons visually identical to the anchors they replace
+- [x] `StoryPage.tsx` touchpoints per §11.3
+- [x] `OrderCompletePage.tsx` and the `/order/complete` branch in `main.tsx` (§11.5)
+- [x] `i18n.ts`: `cart`, `order` and `legal` blocks in all five locales (§14). The legal labels are for footer links
+- [x] Verify: `npm run typecheck`, `npm run build`
 - [ ] Visual check in the Browser pane with `?commerce=mock`: both main-page themes, `/story`, five languages, 375 px width, keyboard only, `prefers-reduced-motion`. Run the dev server on port **5174** (`npx vite --port 5174 --strictPort`) so other tracks don't collide
 
 ## Blocked on owner
@@ -38,6 +38,10 @@
 |---|---|---|
 | 2026-09-15 | `npm ci` | OK, 0 vulnerabilities |
 | 2026-09-15 | `npm run typecheck` (after cart/api/money/mock) | Pass (after adding `src/features/commerce/env.d.ts`, see deviations) |
+| 2026-09-15 | `npm run typecheck` (all Track C code) | Pass |
+| 2026-09-15 | `tsc --noEmit` with a scratch config that also includes `App.tsx`, `StoryPage.tsx`, `main.tsx` | No errors in Track C code; 7 pre-existing errors remain (no `three` types in `FlavorScene.tsx`, CSS side-effect imports) |
+| 2026-09-15 | `npm run build` | Pass (only the existing >500 kB `three` chunk warning); `OrderCompletePage` is its own lazy chunk |
+| 2026-09-15 | `grep -rE "cs_mock\|commerce mock\|ym-commerce-mock\|mockSend" dist` | No matches: the dev mock is not in the production bundle. `https://checkout.stripe.com/` redirect check is present |
 
 ## Deviations from plan
 
