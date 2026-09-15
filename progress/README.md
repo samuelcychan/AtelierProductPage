@@ -10,10 +10,19 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 
 | Track | File | Plan sections | Agent estimate (§18.1) | Status |
 |---|---|---|---:|---|
-| A — Sanity commerce schema | [track-a-sanity.md](track-a-sanity.md) | §7.1–7.2 | 0.5–1 h | Not started |
-| B — Server and API | [track-b-server.md](track-b-server.md) | §6.3 (config only), §8, §9, §10 | 3–6 h | Not started |
-| C — Storefront, cart, copy | [track-c-storefront.md](track-c-storefront.md) | §11.1–11.5, §14 | 3.5–6 h | Not started |
-| D — Legal pages | [track-d-legal.md](track-d-legal.md) | §11.6 | 0.5–1 h | Not started |
+| A — Sanity commerce schema | [track-a-sanity.md](track-a-sanity.md) | §7.1–7.2 | 0.5–1 h | **Done**, merged 2026-09-15 (`99bfb89`); Studio requests applied by integrator |
+| B — Server and API | [track-b-server.md](track-b-server.md) | §6.3 (config only), §8, §9, §10 | 3–6 h | In progress — resumed after a usage-limit interruption |
+| C — Storefront, cart, copy | [track-c-storefront.md](track-c-storefront.md) | §11.1–11.5, §14 | 3.5–6 h | In progress — resumed after a usage-limit interruption |
+| D — Legal pages | [track-d-legal.md](track-d-legal.md) | §11.6 | 0.5–1 h | In progress — resumed after a usage-limit interruption |
+
+## Integration log
+
+| Date | Event |
+|---|---|
+| 2026-09-15 | Tracks A–D started from `114193d` |
+| 2026-09-15 | B, C, D interrupted by a usage limit mid-task; resumed from their worktrees with uncommitted work intact |
+| 2026-09-15 | Track A merged. Integrator applied its requests in `studio/sanity.config.ts`: Stock list item; stock documents can't be created, deleted or duplicated in the Studio |
+| 2026-09-15 | Contract note to Track B: `sku` and `packedWeightGrams` may be empty on a published product that isn't for sale; `isForSale` must require both |
 
 ## Not yet assigned
 

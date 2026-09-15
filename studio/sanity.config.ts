@@ -26,7 +26,12 @@ export default defineConfig({
       structure: (S) =>
         S.list()
           .title('Content')
-          .items([S.documentTypeListItem('product').title('Products')]),
+          .items([
+            S.documentTypeListItem('product').title('Products'),
+            // Stock saves as you type (liveEdit). The two documents are created
+            // by scripts/seed-commerce.ts with fixed ids the checkout server uses.
+            S.documentTypeListItem('stock').title('Stock'),
+          ]),
     }),
     internationalizedArray({
       languages: [...LANGUAGES],
@@ -42,8 +47,16 @@ export default defineConfig({
   schema: {types: schemaTypes},
 
   document: {
-    // No permanent deletion of products.
-    actions: (prev, context) =>
-      context.schemaType === 'product' ? prev.filter(({action}) => action !== 'delete') : prev,
+    // Stock documents exist only under the fixed ids stock-mustard and
+    // stock-tapenade, so they can't be created by hand.
+    newDocumentOptions: (prev) => prev.filter((item) => item.templateId !== 'stock'),
+    // No permanent deletion of products; stock can be neither deleted nor duplicated.
+    actions: (prev, context) => {
+      if (context.schemaType === 'product') return prev.filter(({action}) => action !== 'delete')
+      if (context.schemaType === 'stock') {
+        return prev.filter(({action}) => action !== 'delete' && action !== 'duplicate')
+      }
+      return prev
+    },
   },
 })
