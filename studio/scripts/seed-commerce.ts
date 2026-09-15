@@ -3,10 +3,14 @@
  * touching anything the owner has entered.
  *
  *   cd studio
- *   npx sanity exec scripts/seed-commerce.ts --with-user-token              # dry run: shows the plan
- *   npx sanity exec scripts/seed-commerce.ts --with-user-token -- --write   # writes it
+ *   npx sanity exec scripts/seed-commerce.ts --with-user-token         # dry run: shows the plan
+ *   npx sanity exec scripts/seed-commerce.ts write --with-user-token   # writes it
  *
- * Unlike seed.ts this is a DRY RUN BY DEFAULT: nothing is written without --write.
+ * `write` is a plain word so it works in every shell: PowerShell's npx wrapper
+ * drops a bare `--`, which breaks the `-- --write` form. `-- --write` still
+ * works in Git Bash, cmd or with npx.cmd.
+ *
+ * Unlike seed.ts this is a DRY RUN BY DEFAULT: nothing is written without `write`.
  * Run seed.ts first; this script finds the products by their slug (ID).
  *
  * What it does, per product:
@@ -24,7 +28,7 @@ import path from 'node:path'
 import {getCliClient} from 'sanity/cli'
 
 const args = new Set(process.argv.slice(2))
-const WRITE = args.has('--write')
+const WRITE = args.has('write') || args.has('--write')
 
 const COMMERCE = [
   {slug: 'mustard', stockId: 'stock-mustard', sku: 'KIMIE-MUS-200'},
@@ -130,7 +134,10 @@ async function main() {
     return
   }
   if (!WRITE) {
-    console.log(`\nDry run: ${changes} change(s) planned, nothing written. Re-run with -- --write to apply.`)
+    console.log(
+      `\nDry run: ${changes} change(s) planned, nothing written. To apply:\n` +
+        '  npx sanity exec scripts/seed-commerce.ts write --with-user-token',
+    )
     return
   }
   await tx.commit()

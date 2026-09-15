@@ -48,7 +48,7 @@
 2. **`sku` and `packedWeightGrams` are required only while "For sale" is on** (a `rule.custom` check), not always with `rule.required()` as §7.1 has it. The seeded `preserved-lemon` product is not for sale and has no SKU or weight. An unconditional rule would stop it being published. The format rules (SKU regex, integer, positive) still apply whenever a value is present. Track B must still refuse to sell a product with no SKU or weight.
 3. **`prices` object also gets `rule.required()`**, so a missing `prices` object is flagged as well as a missing `jpy` inside it.
 4. §3.1 places the commerce fields under "Settings". The task list says a Commerce group, so I followed the task list.
-5. **Stock is seeded by a new `scripts/seed-commerce.ts`, not by `seed.ts`** (§7.2 allows either). `seed.ts` uses `createOrReplace`, and `--force` discards the owner's edits. The new script only adds. It is a **dry run unless `-- --write` is passed**, the reverse of `seed.ts`'s `--dry-run` flag.
+5. **Stock is seeded by a new `scripts/seed-commerce.ts`, not by `seed.ts`** (§7.2 allows either). `seed.ts` uses `createOrReplace`, and `--force` discards the owner's edits. The new script only adds. It is a **dry run unless `write` is passed**, the reverse of `seed.ts`'s `--dry-run` flag.
 6. **`seed-commerce.ts` also sets `sku` on an existing draft** of the product, not only on the published document. Otherwise publishing that draft later would drop the SKU.
 7. **`seed-commerce.ts` skips a product that has no published version.** A stock document's `product` reference needs a published product to point at. It reads with `perspective: 'raw'` so it sees drafts as well as published documents.
 8. `stock.ts` matches §7.2, apart from a comment naming the fixed ids and the seed script.
@@ -72,7 +72,7 @@
 **For the owner (in order)**
 
 1. Create the Sanity project and put `SANITY_STUDIO_PROJECT_ID` in `studio/.env`. Log in (`npx sanity login`), run `seed.ts` (PLAN3 §19.4), then `npx sanity deploy`.
-2. `cd studio`, then `npx sanity exec scripts/seed-commerce.ts --with-user-token`. Read the dry-run plan, then re-run with `-- --write`.
+2. `cd studio`, then `npx sanity exec scripts/seed-commerce.ts --with-user-token`. Read the dry-run plan, then re-run with `write`.
 3. In the Studio, on each product's **Commerce** tab: enter the measured packed weight, customs description and HS code. Check the SKU and JPY price (1900 / 2100), turn **For sale** on, then **Publish**.
 4. Under Stock (once the integrator adds it), set **Jars available to sell** on both documents. These save immediately, with no Publish step.
 5. Create the `vercel-commerce` Editor token (§7.3) and store it only in Vercel and `.env.local` as `SANITY_WRITE_TOKEN`.

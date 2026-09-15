@@ -16,6 +16,7 @@ npm run build    # production build
 
 - Use **npm**: `pnpm-workspace.yaml` pins `supportedArchitectures` to Linux only (a leftover from Figma Make's build environment), which breaks native binaries on this Windows machine. npm ignores that file.
 - In PowerShell, if `npm` fails with an execution-policy error, run `npm.cmd` instead.
+- In PowerShell, the `npx` wrapper (`npx.ps1`) silently drops a bare `--`, so `npx sanity exec script.ts -- --flag` fails with "Nonexistent flag". Use `npx.cmd`, Git Bash, or a script argument without dashes (e.g. `seed-commerce.ts write`).
 - `react`/`react-dom` are declared only as optional peerDependencies; npm installs them transitively via the hard peer deps of packages like `@mui/material`. Don't "clean up" the package.json peer-dep arrangement — it's the Figma Make convention.
 
 ## Architecture
