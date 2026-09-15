@@ -1,6 +1,6 @@
 # Track D — Legal and policy pages
 
-**Status:** Not started
+**Status:** In progress
 **Plan:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md) §11.6, §5.1
 **Board and contracts:** [README.md](README.md)
 
