@@ -5,7 +5,9 @@ import "./styles/index.css";
 const Page =
   window.location.pathname.replace(/\/$/, "") === "/story"
     ? lazy(() => import("./app/story/StoryPage"))
-    : lazy(() => import("./app/App"));
+    : /^\/legal(\/|$)/.test(window.location.pathname)
+      ? lazy(() => import("./features/legal/LegalPage"))
+      : lazy(() => import("./app/App"));
 createRoot(document.getElementById("root")!).render(
   <Suspense
     fallback={
