@@ -49,11 +49,35 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 ## Owner actions (start now — these gate launch more than the code)
 
 - [x] Create the Sanity project and seed it (PLAN3 §19.4 steps 1–4) — already done: project `59rfnf2c`, dataset `production`, in `.env.local` and `studio/.env`. Checked 2026-09-15: `product-mustard` (¥1,900, for sale), `product-tapenade` (¥2,100, for sale), `product-preserved-lemon` (¥2,400, not for sale)
-- [ ] Sanity commerce setup on that same project: restart `sanity dev` or `npx sanity deploy` (hosted `kimie-jars.sanity.studio` returns 404, so it isn't deployed yet); `npx sanity exec scripts/seed-commerce.ts --with-user-token`, then again with `write` (no SKUs or stock documents exist yet); enter packed weights, customs text, HS codes and stock; create the `vercel-commerce` Editor token
-- [ ] Stripe account (Japan), business profile, test keys (§6.1)
-- [ ] Shippo account; request a DHL Express Japan (or FedEx/UPS) business account (§6.4)
-- [ ] Legal notice, privacy and returns text from advisers; tax accountant (§5.1)
-- [ ] Vercel: `vercel link`, commercial-use plan decision (§6.2, D13)
+Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, Vercel CLI, repo files).
+
+**Sanity commerce setup (same project `59rfnf2c`)**
+- [x] `seed-commerce.ts write` applied: SKUs `KIMIE-MUS-200` / `KIMIE-TAP-200` set; `stock-mustard` and `stock-tapenade` created
+- [x] Packed weights entered: 100 g each. **Confirm these are measured packed weights**, not placeholders — labels use them
+- [x] Stock entered: mustard 1 (was 2; one jar used by test order `KJ-260915-2664B8`), tapenade 2. Reset to real numbers before launch
+- [x] Write token works end to end: the test order's webhook created `fulfilment.cs_test_…` and decremented stock (after replaying the missed event)
+- [x] CORS origins: `http://localhost:3333`, `http://localhost:5173`, `http://localhost:3000`, `https://kimie-atelier.vercel.app`
+- [ ] Customs description and HS code: empty on both products. Only needed for export or Shippo (Path A)
+- [ ] Hosted Studio: `kimie-jars.sanity.studio` still returns 404 (`npx sanity deploy`). Optional while editing through local `sanity dev`
+- [ ] CORS for preview deployments: no preview origin listed; add the preview URL(s) before testing on a preview deploy
+
+**Stripe (§6.1)**
+- [x] Account exists and test mode works: test payment `KJ-260915-2664B8` succeeded in JPY; `sk_test_` key and the `stripe listen` webhook secret are in the local `.env`
+- [ ] Country = Japan, business profile, activation for live payments: **not verifiable from here** (the CLI's key can't read the account); check the Dashboard. Stripe reviews the public site, so the legal pages must be complete first (§5.1)
+- [ ] Webhook endpoints and keys for Preview (test) and Production (live) (§10.1): none created yet
+
+**Shippo (§6.4)**
+- [ ] Shippo account and a DHL Express Japan (or FedEx/UPS) business account request: nothing set up (no Shippo token anywhere); the go/no-go test hasn't run
+
+**Legal and tax (§5.1)**
+- [ ] Legal notice, privacy and returns text: none filled in. `src/features/legal/content.ts` still has 37 Japanese + 37 English owner placeholders, 8 each in French, Simplified and Traditional Chinese (shipping page), and 4 adviser-review items
+- [ ] Tax accountant (consumption tax, invoice registration, April 2027 food-rate change): no record of this yet
+- [ ] Decide shipping scope: legal pages say Japan only, the current FAQ copy still promises international shipping
+
+**Vercel (§6.2, D13)**
+- [x] `vercel link`: linked to project `atelier-product-page` (team `samuelcychan-team`), which serves `https://kimie-atelier.vercel.app`; `.vercel` and `.env*` are gitignored
+- [ ] Commercial-use plan decision (D13): plan tier isn't visible from the CLI; check the team's billing page
+- [ ] Project environment variables: only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `VITE_SANITY_API_VERSION` (Production). Nothing for Preview, and no `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SANITY_WRITE_TOKEN`, `SITE_URL` or `CRON_SECRET` in any environment
 
 ## Shared contracts
 
