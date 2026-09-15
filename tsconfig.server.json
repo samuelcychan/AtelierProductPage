@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "lib": ["ES2022", "DOM"], "types": ["node"], "paths": {} },
+  "include": [
+    "api/**/*",
+    "server/**/*",
+    "src/features/products/localize.ts",
+    "src/features/products/query.ts",
+    "src/features/products/types.ts",
+    "src/features/products/format.ts"
+  ]
+}
