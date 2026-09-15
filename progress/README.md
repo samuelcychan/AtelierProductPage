@@ -13,7 +13,7 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 | A — Sanity commerce schema | [track-a-sanity.md](track-a-sanity.md) | §7.1–7.2 | 0.5–1 h | **Done**, merged 2026-09-15 (`99bfb89`); Studio requests applied by integrator |
 | B — Server and API | [track-b-server.md](track-b-server.md) | §6.3 (config only), §8, §9, §10 | 3–6 h | **Done**, merged 2026-09-15 after integrator review; untested against real Stripe, Sanity or Shippo |
 | C — Storefront, cart, copy | [track-c-storefront.md](track-c-storefront.md) | §11.1–11.5, §14 | 3.5–6 h | In progress — resumed after a usage-limit interruption |
-| D — Legal pages | [track-d-legal.md](track-d-legal.md) | §11.6 | 0.5–1 h | In progress — resumed after a usage-limit interruption |
+| D — Legal pages | [track-d-legal.md](track-d-legal.md) | §11.6 | 0.5–1 h | **Done**, merged 2026-09-15; all owner and adviser values are placeholders |
 
 ## Integration log
 
@@ -25,6 +25,8 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 | 2026-09-15 | Contract note to Track B: `sku` and `packedWeightGrams` may be empty on a published product that isn't for sale; `isForSale` must require both |
 | 2026-09-15 | Track B finished: typecheck, build and a credential-free smoke check pass. Integrator review of checkout, fulfilment, webhook and reconcile found no blocking issues; contract clarifications recorded above and relayed to Track C; `CLAUDE.md` notes the `.js` import rule and the runtime use of `localize.ts`/`query.ts` |
 | 2026-09-15 | Review notes to verify on a preview deploy: (1) `SITE_URL` must equal the exact origin buyers use — a `www.` variant or the production `*.vercel.app` alias gets 403 from `/api/checkout`; (2) `.js` relative imports load under Vercel's Node runtime; (3) `getDocument("fulfilment.<id>")` works with the `published` perspective on a real dataset; (4) `@types/node` is 26 while Vercel runs Node 22 — harmless for the APIs used; (5) two simultaneous webhook deliveries can still create two Shippo orders with the same order number (known, rare) |
+| 2026-09-15 | Track D finished and merged. The site saves no language preference, so legal pages read `?lang=`, then the browser's languages, then English; footer-link format relayed to Track C. Owner must fill every placeholder (listed in Track D's handoff notes) and confirm "ships within Japan only" against the current FAQ copy, which mentions international shipping |
+| 2026-09-15 | `.claude/launch.json` is tracked; tracks must not commit changes to it and should run dev servers from the shell |
 
 ## Not yet assigned
 
