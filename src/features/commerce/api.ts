@@ -31,7 +31,7 @@ export type CheckoutResult =
   | { kind: "error" };
 
 export interface OrderSummary {
-  status: "open" | "complete" | "expired";
+  status: "open" | "complete" | "expired" | null; // null as Stripe types it; shown as not found
   paymentStatus: "paid" | "unpaid" | "no_payment_required";
   orderNumber: string | null;
   total: number | null;
@@ -154,7 +154,7 @@ export async function startCheckout(lines: CheckoutLine[], lang: Lang, returnPat
 function toOrderSummary(value: unknown): OrderSummary | null {
   if (!isObject(value)) return null;
   const { status, paymentStatus } = value;
-  if (status !== "open" && status !== "complete" && status !== "expired") return null;
+  if (status !== "open" && status !== "complete" && status !== "expired" && status !== null) return null;
   if (paymentStatus !== "paid" && paymentStatus !== "unpaid" && paymentStatus !== "no_payment_required") return null;
   const lines = Array.isArray(value.lines)
     ? value.lines.filter(isObject).map((line) => ({

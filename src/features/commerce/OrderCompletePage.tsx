@@ -55,7 +55,7 @@ export default function OrderCompletePage() {
       } else if (order.status === "complete") {
         setView({ kind: "pending", order });
       } else {
-        setView({ kind: "notFound" }); // open or expired
+        setView({ kind: "notFound" }); // open, expired, or null status
       }
     });
     return () => {
@@ -106,7 +106,7 @@ export default function OrderCompletePage() {
                 {order.lines.map((line, i) => (
                   <li key={i} className="flex items-baseline justify-between gap-4 py-4" style={{ borderBottom: "1px solid var(--ym-rule)" }}>
                     <span style={{ ...body, fontSize: "0.95rem" }}>
-                      {line.name}
+                      {line.name.trim() || T.order.item}
                       {line.quantity !== null && <span style={{ color: "var(--ym-muted)" }}> × {line.quantity}</span>}
                     </span>
                     <span className="whitespace-nowrap" style={{ ...display, fontWeight: 600 }}>{formatMoney(line.amount, order.currency)}</span>

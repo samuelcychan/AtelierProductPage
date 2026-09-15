@@ -165,6 +165,12 @@ export async function mockSend(path: string, init: RequestInit): Promise<{ statu
     if (id === "cs_mock_pending") return order("complete", "unpaid");
     if (id === "cs_mock_open") return order("open", "unpaid");
     if (id === "cs_mock_expired") return order("expired", "unpaid");
+    // Contract edge cases from Track B: Stripe may report a null status, and a line name may be empty.
+    if (id === "cs_mock_null") return { status: 200, body: { ...order("open", "unpaid").body, status: null } };
+    if (id === "cs_mock_noname") {
+      const paid = order("complete", "paid");
+      return { status: 200, body: { ...paid.body, lines: lines.map((l) => ({ ...l, name: "" })) } };
+    }
     return { status: 404, body: { error: "not_found" } };
   }
 

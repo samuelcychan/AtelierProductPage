@@ -218,7 +218,7 @@ export interface Translations {
     shippingNote: string; unavailable: string; soldOut: string; redirecting: string;
     priceChanged: string; stockLimited: string; error: string;
   };
-  order: { thanks: string; number: string; receipt: string; pending: string; notFound: string; back: string; total: string; loading: string };
+  order: { thanks: string; number: string; receipt: string; pending: string; notFound: string; back: string; total: string; loading: string; item: string };
   legal: { tokushoho: string; privacy: string; shipping: string; returns: string };
 }
 
@@ -317,7 +317,7 @@ const en: Translations = {
   order: {
     thanks: "Thank you for your order.", number: "Order number", receipt: "A receipt has been sent to your e-mail.",
     pending: "We've received your order. We'll confirm it as soon as your payment is complete.",
-    notFound: "We couldn't find this order.", back: "Back to the shop", total: "Total", loading: "Loading your order…",
+    notFound: "We couldn't find this order.", back: "Back to the shop", total: "Total", loading: "Loading your order…", item: "Item",
   },
   legal: { tokushoho: "Legal notice", privacy: "Privacy policy", shipping: "Shipping", returns: "Returns & refunds" },
 };
@@ -417,7 +417,7 @@ const ja: Translations = {
   order: {
     thanks: "ご注文ありがとうございます。", number: "注文番号", receipt: "領収書をメールでお送りしました。",
     pending: "ご注文を承りました。お支払いの完了を確認しだい、ご連絡いたします。",
-    notFound: "ご注文が見つかりませんでした。", back: "ショップに戻る", total: "合計", loading: "ご注文を確認しています…",
+    notFound: "ご注文が見つかりませんでした。", back: "ショップに戻る", total: "合計", loading: "ご注文を確認しています…", item: "商品",
   },
   legal: { tokushoho: "特定商取引法に基づく表記", privacy: "プライバシーポリシー", shipping: "配送について", returns: "返品・返金について" },
 };
@@ -517,7 +517,7 @@ const fr: Translations = {
   order: {
     thanks: "Merci pour votre commande.", number: "Numéro de commande", receipt: "Un reçu vous a été envoyé par e-mail.",
     pending: "Nous avons bien reçu votre commande. Nous la confirmerons dès que votre paiement sera finalisé.",
-    notFound: "Nous n'avons pas trouvé cette commande.", back: "Retour à la boutique", total: "Total", loading: "Chargement de votre commande…",
+    notFound: "Nous n'avons pas trouvé cette commande.", back: "Retour à la boutique", total: "Total", loading: "Chargement de votre commande…", item: "Article",
   },
   legal: { tokushoho: "Mentions légales", privacy: "Politique de confidentialité", shipping: "Livraison", returns: "Retours et remboursements" },
 };
@@ -617,7 +617,7 @@ const zh: Translations = {
   order: {
     thanks: "感谢您的订购。", number: "订单编号", receipt: "收据已发送至您的电子邮箱。",
     pending: "我们已收到您的订单，付款完成后将为您确认。",
-    notFound: "未找到此订单。", back: "返回商店", total: "合计", loading: "正在加载订单…",
+    notFound: "未找到此订单。", back: "返回商店", total: "合计", loading: "正在加载订单…", item: "商品",
   },
   legal: { tokushoho: "特定商业交易法标示", privacy: "隐私政策", shipping: "配送信息", returns: "退货与退款" },
 };
@@ -697,7 +697,7 @@ const zhTw: Translations = {
   order: {
     thanks: "感謝您的訂購。", number: "訂單編號", receipt: "收據已寄至您的電子郵件信箱。",
     pending: "我們已收到您的訂單，付款完成後將為您確認。",
-    notFound: "找不到此訂單。", back: "返回商店", total: "合計", loading: "正在載入訂單…",
+    notFound: "找不到此訂單。", back: "返回商店", total: "合計", loading: "正在載入訂單…", item: "商品",
   },
   legal: { tokushoho: "特定商業交易法標示", privacy: "隱私權政策", shipping: "配送資訊", returns: "退貨與退款" },
 };
