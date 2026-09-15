@@ -360,13 +360,14 @@ const privacy: LegalPageContent = {
           blocks: [
             {
               kind: "p",
-              text: "本ウェブサイトは、お使いのブラウザのローカルストレージに以下の情報を保存します。個人情報は含まれません。",
+              text: "本ウェブサイトは、お使いのブラウザのローカルストレージおよびセッションストレージに以下の情報を保存します。個人情報は含まれません。",
             },
             {
               kind: "list",
               items: [
                 "ym-cart-v1：カートに入れた商品の識別子と数量のみ",
                 "ym-story-products-v1：/story ページを速く表示するための商品情報のキャッシュ",
+                "ym-checkout-lang（セッションストレージ）：決済後にご注文確認ページを同じ言語で表示するための言語設定。ブラウザのタブを閉じると削除されます",
               ],
             },
             {
@@ -482,13 +483,14 @@ const privacy: LegalPageContent = {
           blocks: [
             {
               kind: "p",
-              text: "This website saves the following items in your browser's local storage. They contain no personal information.",
+              text: "This website saves the following items in your browser's local storage and session storage. They contain no personal information.",
             },
             {
               kind: "list",
               items: [
                 "ym-cart-v1: the products in your cart (product identifiers and quantities only).",
                 "ym-story-products-v1: a cached copy of product information so the /story page loads faster.",
+                "ym-checkout-lang (session storage): your language choice, so the order confirmation page after payment opens in the same language. It is deleted when you close the browser tab.",
               ],
             },
             {
