@@ -14,11 +14,11 @@
 
 ## Tasks
 
-- [ ] `npm ci` in the repo root
-- [ ] `vercel.json`: rewrite `/((?!api/).*)` → `/index.html`; add the daily cron for `/api/cron/reconcile` (§10.5)
-- [ ] Dependencies: `stripe`, dev `@types/node`; edit `package.json` directly for the two-pass `typecheck` script (§8.1)
-- [ ] `tsconfig.server.json` (§8.1)
-- [ ] `server/env.ts`, `server/http.ts` (with the `sameOrigin` that tolerates a `null` origin), `server/stripe.ts`, `server/sanity.ts` (§8.4–8.6)
+- [x] `npm ci` in the repo root
+- [x] `vercel.json`: rewrite `/((?!api/).*)` → `/index.html`; add the daily cron for `/api/cron/reconcile` (§10.5)
+- [x] Dependencies: `stripe`, dev `@types/node`; edit `package.json` directly for the two-pass `typecheck` script (§8.1)
+- [x] `tsconfig.server.json` (§8.1)
+- [x] `server/env.ts`, `server/http.ts` (with the `sameOrigin` that tolerates a `null` origin), `server/stripe.ts`, `server/sanity.ts` (§8.4–8.6)
 - [ ] `server/catalog.ts` and `api/catalog.ts` (§9.1–9.2)
 - [ ] `api/checkout.ts` (§9.3)
 - [ ] `api/order.ts` (§9.4)
@@ -46,6 +46,10 @@
 
 | Date | Command | Result |
 |---|---|---|
+| 2026-09-15 | `git merge --ff-only 114193d` | Worktree was created at `7889cca` (before the board commit); fast-forwarded to `114193d` as the brief specifies |
+| 2026-09-15 | `npm ci` | OK, 300 packages, 0 vulnerabilities |
+| 2026-09-15 | `npm install stripe` / `npm install --save-dev @types/node` | `stripe@22.6.2` (pins API version `2026-08-26.dahlia`), `@types/node@26.5.1`; peer-dependency block untouched |
+| 2026-09-15 | `npm run typecheck` (after `server/env.ts`, `http.ts`, `stripe.ts`, `sanity.ts`) | Both configs pass, exit 0 |
 
 ## Deviations from plan
 
