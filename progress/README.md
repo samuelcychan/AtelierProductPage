@@ -5,6 +5,7 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 - **Integration branch:** `feat/commerce-stripe-shippo` (from `main`). Each track works on its own worktree branch and is merged here after review. `main` is updated only after the integrated result is reviewed.
 - **Started:** 2026-09-15.
 - **Business location:** ships from **Kanagawa**, Japan (owner, 2026-09-15). Do not write "Ehime" in new copy. Changing the existing FAQ copy and the plan files is not in any track's scope.
+- **Launch backlog:** [backlog-launch.md](backlog-launch.md) — 13 WWA items for the work left before going live (2026-09-16).
 
 ## Tracks
 
