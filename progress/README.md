@@ -44,6 +44,25 @@ Implementation of [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), spl
 | 2026-09-19 | Expired-session test **passed**: session `cs_test_a171WramWH…` (the declined attempt) reached `status: "expired"`, `payment_status: "unpaid"` at 15:41 UTC — 31 minutes after creation, matching `expires_at` from `/api/checkout`. Stripe emitted `checkout.session.expired`, which the webhook ignores; `fulfilment.*` count stayed 2 and stock was unchanged |
 | 2026-09-19 | Guard tests on the preview **passed**, none needing a card: stock 0 → catalog `available:false`, `/story` shows a disabled "Sold out" for mustard while tapenade stays buyable, and checkout refuses `insufficient_stock … available:0`; stock 1, asking 2 → `available:1`; stale price 1800 → `price_changed … unitAmount:1900`; `Origin: https://example.com` → HTTP 403. Browser: a 2-jar cart was reduced to 1 on Checkout with the "adjusted your cart" message, subtotal ¥1,900, no Stripe redirect. `stock-mustard` restored to 1 |
 
+## Preview test results (PLAN §15.1, branch preview, 2026-09-19/20)
+
+All run against `https://atelier-product-page-git-feat-commerce-62a5ef-…vercel.app` in Stripe test mode. Card entry was done by the owner; everything else was checked from the API, the browser, Vercel logs and Sanity.
+
+| # | Scenario | Evidence | Result |
+|---|---|---|---|
+| 1 | Purchase from `/story` | Session `cs_test_a1GliJ…`, ¥2,100 paid; order `KJ-260916-E0C41B`; `stock-tapenade` 2 → 1 | Pass |
+| 2 | Purchase from `/` | Session `cs_test_a1ZKdwxs…`, ¥1,900 paid, cancel URL `/?cart=open`; order `KJ-260919-28B46F`; `stock-mustard` 1 → 0 | Pass |
+| 3 | Declined card | PaymentIntent `requires_payment_method` (`card_declined`), charge `failed`; no record, stock unchanged | Pass |
+| 4 | Expired session | `status: expired`, `payment_status: unpaid` 31 min after creation; `checkout.session.expired` ignored; no record | Pass |
+| 5 | Duplicate event replay | `stripe events resend` → Vercel log `POST /api/stripe-webhook`; record count and stock unchanged | Pass |
+| 6 | Sold out (stock 0) | Catalog `available:false`; `/story` shows disabled "Sold out"; checkout refused `insufficient_stock … available:0` | Pass |
+| 7 | Not enough stock (want 2, have 1) | API `insufficient_stock … available:1`; drawer cut the cart to 1 with the "adjusted your cart" message, no Stripe redirect | Pass |
+| 8 | Price changed mid-cart | Price 2100 → 2200 while a cart was open; checkout refused; drawer showed ¥2,200 and "A price has changed."; price restored | Pass |
+| 9 | Request from another origin | `Origin: https://example.com` → HTTP 403 | Pass |
+| 10 | Functions on Vercel | All five functions build and run; `.js` import extensions load | Pass |
+
+**Not covered here:** live-mode payments, the daily reconcile cron (production only), Shippo (path undecided), and anything needing real legal or compliance sign-off.
+
 ## Not yet assigned
 
 | Work | Why not now |

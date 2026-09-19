@@ -66,7 +66,11 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Sold out, low stock, stale price and wrong origin: passed (2026-09-19 15:50–16:05 UTC), all without entering a card.** With `stock-mustard` set to 0: the catalog reported `available:false` while tapenade stayed `true`, `/story` showed a disabled "Sold out" button for mustard, and `POST /api/checkout` refused with `{"error":"insufficient_stock","slug":"mustard","available":0}`. With stock back at 1: asking for 2 returned `available:1`; sending a stale price of 1800 returned `{"error":"price_changed","slug":"mustard","unitAmount":1900}`; a request with `Origin: https://example.com` got HTTP 403. In the browser, a cart holding 2 mustard was reduced to 1 on Checkout with "We've adjusted your cart to the jars still available", subtotal ¥1,900, and no redirect to Stripe. Stock was restored to 1 afterwards.
 
-Still to do for this item: **a purchase started from `/`** (needs a test card), the `price_changed` message in the drawer on the preview (the API returns it correctly; the drawer's handling was verified against the dev mock), and the results table in `progress/README.md`.
+**Purchase from `/`: passed (2026-09-19 16:03 UTC).** Session `cs_test_a1ZKdwxs…` (¥1,900, cancel URL `/?cart=open`, so it started on the main page) was paid and complete; it created order `KJ-260919-28B46F` (mustard ×1, `oversold: false`) and `stock-mustard` went 1 → 0 at the same second.
+
+**Price changed: passed (2026-09-20).** With a cart holding tapenade at ¥2,100 open on the preview, the price was changed to ¥2,200 in Sanity. Checkout was refused, and the drawer updated the line and subtotal to ¥2,200 with "A price has changed. Please check your cart.", staying on `/story` with the cart intact. The price was restored to ¥2,100 and the catalog confirms it.
+
+**Status: Done.** Every §15.1 scenario has evidence; the results table is in [README.md](README.md) under "Preview test results". Note for launch: `stock-mustard` is 0 because the last test purchase took the final jar — set real stock before going live.
 
 ---
 
