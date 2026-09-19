@@ -60,7 +60,9 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Declined card: passed (2026-09-19 15:10 UTC).** Payment intent `pi_3UHPxEE…` (¥1,900) ended `requires_payment_method` with `card_declined` / `generic_decline`; charge `ch_3UHPxEE…` `failed`, `paid: false`; session `cs_test_a171WramWH…` stayed `unpaid`. No `fulfilment.*` document was created (count still 2) and stock was unchanged (mustard 1, tapenade 1).
 
-Still to do for this item: a purchase started from `/`; an abandoned or expired session (the declined session above expires about 31 minutes after creation — check it then); replaying a completed event (no second log, no second decrement); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
+**Event replay: passed (2026-09-19 15:28 UTC).** `stripe events resend evt_1UFzp0…  --webhook-endpoint=we_1UG1SG…` re-delivered the first order's `checkout.session.completed` to the preview. Vercel logs show `POST /api/stripe-webhook` at 15:28 UTC; afterwards the `fulfilment.*` count was still 2 and both stock documents kept their earlier timestamps (2026-09-15 / 2026-09-16). So a repeated event creates no second order and takes no second jar.
+
+Still to do for this item: a purchase started from `/`; an abandoned or expired session (the declined session above expires about 31 minutes after creation — check it then); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
 
 ---
 
