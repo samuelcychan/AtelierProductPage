@@ -33,6 +33,12 @@
 
 Priority: P0 | Effort: S | Owner: engineering (needs Vercel project access) | Dependencies: none
 
+**Status: Done — verified 2026-09-19** on deployment `n0x6j6d0a` (the branch address):
+- `…/api/catalog?t=…` returns `"enabled":true`, both jars `forSale` and `available`, ¥1,900 and ¥2,100 ✅
+- `/story` shows both prices with Add to Cart enabled; `/` shows the price and enabled buttons in its carousel; the cart button is present and no "paused" note appears ✅
+- `/story` reports `data-products-source="cms"`; no console errors on either page ✅
+- `vercel env ls preview` lists all seven variables (`VITE_SANITY_*` now target Production **and** Preview) ✅
+
 ---
 
 ### 2. Checkout, fulfilment and stock verified on the preview
@@ -49,6 +55,10 @@ Priority: P0 | Effort: S | Owner: engineering (needs Vercel project access) | De
 - Results table added to `progress/README.md` with date, scenario and outcome
 
 Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencies: item 1
+
+**Status: Partly done.** One purchase on the preview succeeded end to end: order `KJ-260916-E0C41B`, tapenade ×1, ¥2,100, paid 2026-09-16 01:56 UTC. Its Stripe session's success and cancel URLs are the branch address (started from `/story`), it created exactly one `fulfilment.*` document, and `stock-tapenade` went 2 → 1 at the same moment — with no `stripe listen` running, so the Dashboard webhook delivered it.
+
+Still to do for this item: a purchase started from `/`; a declined card; an abandoned or expired session; replaying a completed event (no second log, no second decrement); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
 
 ---
 
