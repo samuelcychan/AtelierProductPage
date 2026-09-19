@@ -62,7 +62,9 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Event replay: passed (2026-09-19 15:28 UTC).** `stripe events resend evt_1UFzp0…  --webhook-endpoint=we_1UG1SG…` re-delivered the first order's `checkout.session.completed` to the preview. Vercel logs show `POST /api/stripe-webhook` at 15:28 UTC; afterwards the `fulfilment.*` count was still 2 and both stock documents kept their earlier timestamps (2026-09-15 / 2026-09-16). So a repeated event creates no second order and takes no second jar.
 
-Still to do for this item: a purchase started from `/`; an abandoned or expired session (the declined session above expires about 31 minutes after creation — check it then); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
+**Abandoned / expired session: passed (2026-09-19 15:41 UTC).** The declined attempt's session `cs_test_a171WramWH…` reached `status: "expired"` with `payment_status: "unpaid"` at its `expires_at` (31 minutes after creation, as `/api/checkout` sets). Stripe emitted `checkout.session.expired`; the site ignores that type. Afterwards the `fulfilment.*` count was still 2 and stock was unchanged.
+
+Still to do for this item: a purchase started from `/`; `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
 
 ---
 
