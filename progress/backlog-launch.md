@@ -58,7 +58,9 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Status: Partly done.** One purchase on the preview succeeded end to end: order `KJ-260916-E0C41B`, tapenade ×1, ¥2,100, paid 2026-09-16 01:56 UTC. Its Stripe session's success and cancel URLs are the branch address (started from `/story`), it created exactly one `fulfilment.*` document, and `stock-tapenade` went 2 → 1 at the same moment — with no `stripe listen` running, so the Dashboard webhook delivered it.
 
-Still to do for this item: a purchase started from `/`; a declined card; an abandoned or expired session; replaying a completed event (no second log, no second decrement); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
+**Declined card: passed (2026-09-19 15:10 UTC).** Payment intent `pi_3UHPxEE…` (¥1,900) ended `requires_payment_method` with `card_declined` / `generic_decline`; charge `ch_3UHPxEE…` `failed`, `paid: false`; session `cs_test_a171WramWH…` stayed `unpaid`. No `fulfilment.*` document was created (count still 2) and stock was unchanged (mustard 1, tapenade 1).
+
+Still to do for this item: a purchase started from `/`; an abandoned or expired session (the declined session above expires about 31 minutes after creation — check it then); replaying a completed event (no second log, no second decrement); `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
 
 ---
 
