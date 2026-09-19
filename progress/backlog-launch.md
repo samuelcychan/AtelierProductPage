@@ -64,7 +64,9 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Abandoned / expired session: passed (2026-09-19 15:41 UTC).** The declined attempt's session `cs_test_a171WramWH…` reached `status: "expired"` with `payment_status: "unpaid"` at its `expires_at` (31 minutes after creation, as `/api/checkout` sets). Stripe emitted `checkout.session.expired`; the site ignores that type. Afterwards the `fulfilment.*` count was still 2 and stock was unchanged.
 
-Still to do for this item: a purchase started from `/`; `price_changed`, `insufficient_stock` and "stock 0 → Sold out" on the preview; and the results table in `progress/README.md`.
+**Sold out, low stock, stale price and wrong origin: passed (2026-09-19 15:50–16:05 UTC), all without entering a card.** With `stock-mustard` set to 0: the catalog reported `available:false` while tapenade stayed `true`, `/story` showed a disabled "Sold out" button for mustard, and `POST /api/checkout` refused with `{"error":"insufficient_stock","slug":"mustard","available":0}`. With stock back at 1: asking for 2 returned `available:1`; sending a stale price of 1800 returned `{"error":"price_changed","slug":"mustard","unitAmount":1900}`; a request with `Origin: https://example.com` got HTTP 403. In the browser, a cart holding 2 mustard was reduced to 1 on Checkout with "We've adjusted your cart to the jars still available", subtotal ¥1,900, and no redirect to Stripe. Stock was restored to 1 afterwards.
+
+Still to do for this item: **a purchase started from `/`** (needs a test card), the `price_changed` message in the drawer on the preview (the API returns it correctly; the drawer's handling was verified against the dev mock), and the results table in `progress/README.md`.
 
 ---
 
