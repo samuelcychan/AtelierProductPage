@@ -190,8 +190,10 @@ curl -sI -H "Origin: http://localhost:5173" "https://59rfnf2c.api.sanity.io/v202
 
 ## Checklist
 
-- [ ] **F1** `CRON_SECRET` set on Preview and Production, redeployed, cron returns `{"checked":…}`
-- [ ] **F2** preview no longer writes to the live dataset (Route A or B), re-tested end to end
+- [x] **F1** — done 2026-09-20. `CRON_SECRET` set on Preview and Production. On the preview, `GET /api/cron/reconcile` with the bearer returned **`{"checked":1,"failed":0}` (HTTP 200)**, and the same call without it returned 401. The one session it examined was already fulfilled, so nothing changed — idempotency confirmed on a live deployment. Production still answers 401 by design until commerce is switched on at item 13.
+- [x] **F2** — done 2026-09-20, Route A. `staging` created and seeded from `production`; `VITE_SANITY_DATASET` split into two variables (`production` → `production`, `preview` → `staging`). Proof: `stock-mustard` was set to **5 in staging only**, after which the preview's `/api/catalog` reported mustard `available:true` and `/api/checkout` reported `available:5`, while the `production` dataset stayed at 0. The preview's server functions therefore read and write staging, and a preview test purchase can no longer touch live inventory.
 - [ ] **F3** `localhost:5173` re-added without credentials, stale origin deleted, verified by response header
+
+**Left in place deliberately:** staging `stock-mustard` is 5, so the preview has stock to test with. The `production` dataset still reads mustard 0 / tapenade 1 — real numbers must be set there before launch.
 
 F1 and F2 are also acceptance criteria on backlog item 12; F3 is an owner action on the board.

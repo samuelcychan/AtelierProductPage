@@ -237,8 +237,8 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 - `/`, `/story` and all four `/legal/*` pages load on production with no buy buttons and no console errors
 - `vercel.json`'s rewrite serves built assets correctly on production (no HTML served for `.js`/`.css`)
 - The five security response headers added for finding F4 are present on production (`curl -I`)
-- **F1:** `CRON_SECRET` is set on Preview and Production (done 2026-09-20). Note that production answers 401 to the cron regardless until commerce is switched on, because `isCommerceConfigured` is checked before the bearer — verify the bearer on the preview now, and on production at item 13
-- **F2:** previews no longer write to the live dataset — either Vercel deployment protection is on for previews, or Preview points at a separate Sanity dataset
+- **F1:** ✅ done 2026-09-20 — `CRON_SECRET` set on Preview and Production; the preview cron returns `{"checked":1,"failed":0}` with the bearer and 401 without it. Note that production answers 401 to the cron regardless until commerce is switched on, because `isCommerceConfigured` is checked before the bearer — verify the bearer on the preview now, and on production at item 13
+- **F2:** ✅ done 2026-09-20 — Preview points at the new `staging` dataset; `VITE_SANITY_DATASET` is split per environment and the separation was proved with a stock value present only in staging
 
 Priority: P0 | Effort: S | Owner: owner (plan) + engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging
 
@@ -255,7 +255,7 @@ Verified on production:
 
 **Steps for F1 and F2:** [security-fix-steps.md](security-fix-steps.md) — neither depends on D13.
 
-**Still open on this item:** the commercial-use plan decision (D13), finding F1 (`CRON_SECRET` unset — Vercel now calls the cron daily and gets 401) and finding F2 (previews still write to the live dataset).
+**Still open on this item:** only the commercial-use plan decision (D13), which is on hold. F1 and F2 were closed on 2026-09-20 — see [security-fix-steps.md](security-fix-steps.md). Production still shows mustard 0 / tapenade 1; real stock must be set there before launch.
 
 ---
 
