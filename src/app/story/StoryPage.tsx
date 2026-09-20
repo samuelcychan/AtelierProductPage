@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, ArrowRight, Plus, Check, Menu, X } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Plus, Check, Menu, X, ShoppingBag } from "lucide-react";
 import { LANG_LABELS, translations, type Lang } from "../i18n";
+import { CommerceProvider, useCommerce } from "@/features/commerce/CommerceProvider";
+import { CartDrawer } from "@/features/commerce/CartDrawer";
+import { initialPageLang } from "@/features/commerce/cart";
 import { storyCopy } from "./copy";
 import FlavorScene from "./FlavorScene";
 import { STORY_SLUGS } from "@/features/products/query";
@@ -13,8 +16,24 @@ import movie from "@/imports/kimie-cooking-ghibli.mp4";
 import stamp from "@/assets/kimie-stamp.png";
 import "./story.css";
 
+const LEGAL_LINKS = [
+  ["/legal/tokushoho", "tokushoho"],
+  ["/legal/privacy", "privacy"],
+  ["/legal/shipping", "shipping"],
+  ["/legal/returns", "returns"],
+] as const;
+
 export default function StoryPage() {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useState<Lang>(initialPageLang);
+  return (
+    <CommerceProvider lang={lang} returnPath="/story">
+      <StoryPageBody lang={lang} setLang={setLang} />
+    </CommerceProvider>
+  );
+}
+
+function StoryPageBody({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => void }) {
+  const commerce = useCommerce();
   const [flavor, setFlavor] = useState<"mustard" | "tapenade">("mustard");
   const [meal, setMeal] = useState(0);
   const [sceneAvailable, setSceneAvailable] = useState(true);
@@ -139,6 +158,25 @@ export default function StoryPage() {
             {c.explore}
             <ArrowUpRight size={16} />
           </a>
+          {commerce.status !== "off" && (
+            <button
+              type="button"
+              className="ks-cart-button"
+              aria-label={
+                commerce.count > 0
+                  ? `${t.cart.open} (${commerce.count})`
+                  : t.cart.open
+              }
+              onClick={commerce.openDrawer}
+            >
+              <ShoppingBag size={22} />
+              {commerce.count > 0 && (
+                <span className="ks-cart-badge" aria-hidden="true">
+                  {commerce.count}
+                </span>
+              )}
+            </button>
+          )}
           <button
             className="ks-menu-button"
             aria-label={c.menu}
@@ -277,6 +315,9 @@ export default function StoryPage() {
           <div className="ks-product-grid">
             {STORY_SLUGS.map((key) => {
               const product = products[key];
+              // Prices come only from /api/catalog (D11).
+              const price = commerce.priceFor(key);
+              const soldOut = price !== undefined && !price.available;
               return (
                 <article
                   id={`jar-${key}`}
@@ -299,7 +340,14 @@ export default function StoryPage() {
                   </div>
                   <div className="ks-product-title">
                     <h3>{product.name}</h3>
-                    <span>{product.sizeLabel}</span>
+                    <span className="ks-product-meta">
+                      <span>{product.sizeLabel}</span>
+                      {price && (
+                        <strong className="ks-product-price">
+                          {price.label}
+                        </strong>
+                      )}
+                    </span>
                   </div>
                   <p>{product.description}</p>
                   <button
@@ -310,6 +358,20 @@ export default function StoryPage() {
                     <span>{flavor === key ? c.selected : c.choose}</span>
                     {flavor === key ? <Check size={18} /> : <Plus size={18} />}
                   </button>
+                  {commerce.status !== "off" && (
+                    <button
+                      type="button"
+                      className="ks-button ks-button-gold ks-product-add"
+                      onClick={() => commerce.add(key)}
+                      disabled={!price?.available}
+                    >
+                      {soldOut ? t.cart.soldOut : t.lineup.cta}
+                      <ShoppingBag size={18} />
+                    </button>
+                  )}
+                  {commerce.status === "unavailable" && (
+                    <span className="ks-product-note">{t.cart.unavailable}</span>
+                  )}
                   <details>
                     <summary>
                       {c.ingredients}
@@ -438,11 +500,35 @@ export default function StoryPage() {
           />
         </a>
         <a href="/">{c.original}</a>
+        <nav className="ks-footer-legal">
+          {LEGAL_LINKS.map(([href, key]) => (
+            <a key={key} href={`${href}?lang=${lang}`}>
+              {t.legal[key]}
+            </a>
+          ))}
+        </nav>
         <a href="#top">
           {c.back}
           <ArrowUpRight size={16} />
         </a>
       </footer>
+      <CartDrawer
+        skin="story"
+        lang={lang}
+        browseHref="#jars"
+        products={{
+          mustard: {
+            name: products.mustard.name,
+            size: products.mustard.sizeLabel,
+            photo: products.mustard.photo.src,
+          },
+          tapenade: {
+            name: products.tapenade.name,
+            size: products.tapenade.sizeLabel,
+            photo: products.tapenade.photo.src,
+          },
+        }}
+      />
     </div>
   );
 }

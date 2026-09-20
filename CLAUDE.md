@@ -16,6 +16,8 @@ npm run build    # production build
 
 - Use **npm**: `pnpm-workspace.yaml` pins `supportedArchitectures` to Linux only (a leftover from Figma Make's build environment), which breaks native binaries on this Windows machine. npm ignores that file.
 - In PowerShell, if `npm` fails with an execution-policy error, run `npm.cmd` instead.
+- In PowerShell, the `npx` wrapper (`npx.ps1`) silently drops a bare `--`, so `npx sanity exec script.ts -- --flag` fails with "Nonexistent flag". Use `npx.cmd`, Git Bash, or a script argument without dashes (e.g. `seed-commerce.ts write`).
+- In PowerShell, an unquoted comma list becomes an array: `stripe listen --events a,b,c` reaches the CLI as `"a b c"`, which it rejects ("isn't a valid event") and then forwards nothing. Quote the list, or omit `--events` — `/api/stripe-webhook` ignores event types it doesn't handle.
 - `react`/`react-dom` are declared only as optional peerDependencies; npm installs them transitively via the hard peer deps of packages like `@mui/material`. Don't "clean up" the package.json peer-dep arrangement — it's the Figma Make convention.
 
 ## Architecture
@@ -27,5 +29,8 @@ npm run build    # production build
 - **Assets**: local images/video live in `src/imports/`; supplementary photos are hotlinked from Unsplash (the `PHOTOS` map in App.tsx). `vite.config.ts` has a custom resolver mapping `figma:asset/<file>` imports to `src/assets/` and aliases `@` → `src/`.
 - **Styles entry**: `src/main.tsx` imports `src/styles/index.css`, which chains `fonts.css` → `tailwind.css` → `theme.css`. `globals.css` and `default_shadcn_theme.css` are not in that chain.
 - `vite.config.ts` notes the React and Tailwind plugins are both required by Figma Make even if seemingly unused — do not remove them, and never add `.css`/`.ts`/`.tsx` to `assetsInclude`.
+- **Commerce server (in progress, see `PLAN-stripe-and-shippo.md` and `progress/`)**: `api/` holds Vercel Functions (Web-standard `GET`/`POST(request: Request)` handlers) and `server/` their shared modules. They run as Node ES modules (`"type": "module"`), so **every relative import in `api/` and `server/` ends in `.js`** even though the files are `.ts`. Secrets are server-only env vars — never `VITE_`-prefixed. `npm run typecheck` checks both `tsconfig.json` and `tsconfig.server.json`; functions only run locally under `vercel dev`, not `npm run dev`. Under `vercel dev`, functions read their variables from the root **`.env`** file (or, if it is absent, the project's Development variables on Vercel) — **not** `.env.local`, which only Vite reads for `VITE_*`. Both files are gitignored.
+- `vercel.json`'s SPA rewrite deliberately skips `/api/`, Vite's `/@…`, `node_modules/`, `src/` and any path with a file extension; a plain catch-all makes `vercel dev` hand `index.html` to Vite as JavaScript ("Failed to parse source for import analysis").
+- `src/features/products/localize.ts` and `query.ts` are also executed inside the functions. Keep their imports type-only (or with `.js` extensions) and never use `import.meta.env` in them — `tsc` would still pass while the deployed functions fail to load.
 
 The original design lives at https://www.figma.com/design/czHyq9lxg6e94VAF2zb7Fm/Landing-page-for-lemon-jar.

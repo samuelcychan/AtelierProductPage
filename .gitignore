@@ -27,3 +27,5 @@ Thumbs.db
 # Claude Design tooling scratch dirs (not project source)
 .design-canvas/
 .design-import/
+.vercel
+.env*

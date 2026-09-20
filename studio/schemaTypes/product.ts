@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType, type ValidationContext} from 'sanity'
 import {allLanguages} from './validation'
 
 // Where a photo appears. Values must match PhotoContext in
@@ -11,6 +11,8 @@ const PHOTO_CONTEXTS = [
 ]
 
 // One price per market. Major units: 13 means $13, 1900 means ¥1,900.
+// Only JPY is sold at launch (PLAN-stripe-and-shippo D3). The other currencies
+// stay hidden, with no validation, until their market opens.
 const PRICES = [
   {name: 'usd', title: 'USD, English site'},
   {name: 'jpy', title: 'JPY, Japanese site'},
@@ -18,6 +20,13 @@ const PRICES = [
   {name: 'cny', title: 'CNY, Simplified Chinese site'},
   {name: 'twd', title: 'TWD, Traditional Chinese site'},
 ]
+
+// SKU and packed weight are needed to ship an order, but the preserved lemon is
+// not for sale and has neither. Requiring them only while "For sale" is on keeps
+// that product publishable. Custom rules also run on empty values.
+const requiredWhenForSale = (value: unknown, context: ValidationContext) =>
+  context.document?.isActive !== true || (value !== undefined && value !== null && value !== '') ||
+  'Required while "For sale" is on.'
 
 // Fields marked MAIN PAGE are stored now so no migration is needed later, but
 // stay hidden until the main page reads from Sanity (PLAN3 §8.5): editing them
@@ -35,6 +44,7 @@ export const product = defineType({
     {name: 'copy', title: 'Words', default: true},
     {name: 'size', title: 'Size'},
     {name: 'photos', title: 'Photos'},
+    {name: 'commerce', title: 'Commerce'},
     {name: 'settings', title: 'Settings'},
   ],
 
@@ -151,6 +161,63 @@ export const product = defineType({
           .warning(),
     }),
 
+    // ── Commerce: read by the checkout server ────────────────────────────
+    defineField({
+      name: 'isActive',
+      title: 'For sale',
+      description: 'Shows the price and Add to Cart. Turn off to stop selling this product.',
+      type: 'boolean',
+      group: 'commerce',
+      initialValue: false,
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'prices',
+      title: 'Prices',
+      description: 'Tax-inclusive price charged at checkout. Major units: 1900 means ¥1,900.',
+      type: 'object',
+      group: 'commerce',
+      hidden: false,
+      validation: (rule) => rule.required(),
+      fields: PRICES.map(({name, title}) =>
+        name === 'jpy'
+          ? defineField({name, title, type: 'number', validation: (rule) => rule.required().integer().min(1)})
+          : defineField({name, title, type: 'number', hidden: true}),
+      ),
+    }),
+    defineField({
+      name: 'sku',
+      title: 'SKU',
+      description: 'Shown on orders and labels, e.g. KIMIE-MUS-200.',
+      type: 'string',
+      group: 'commerce',
+      validation: (rule) => rule.custom(requiredWhenForSale).regex(/^[A-Z0-9-]{3,32}$/),
+    }),
+    defineField({
+      name: 'packedWeightGrams',
+      title: 'Packed weight (g)',
+      description: 'One jar with its packaging. Used for shipping labels.',
+      type: 'number',
+      group: 'commerce',
+      validation: (rule) => rule.custom(requiredWhenForSale).integer().positive(),
+    }),
+    defineField({
+      name: 'customsDescription',
+      title: 'Customs description (English)',
+      description: 'Plain words for customs forms, e.g. "Mustard sauce in glass jar".',
+      type: 'string',
+      group: 'commerce',
+      validation: (rule) => rule.max(50),
+    }),
+    defineField({
+      name: 'hsCode',
+      title: 'HS code',
+      description: 'Tariff number for customs. Confirm with the carrier or customs broker.',
+      type: 'string',
+      group: 'commerce',
+      validation: (rule) => rule.regex(/^\d{6,10}$/).warning(),
+    }),
+
     // ── Settings ─────────────────────────────────────────────────────────
     defineField({
       name: 'internalTitle',
@@ -181,20 +248,6 @@ export const product = defineType({
       name: 'tag',
       title: 'Badge',
       type: 'internationalizedArrayString',
-      hidden: HIDDEN_UNTIL_MAIN_PAGE,
-    }),
-    defineField({
-      name: 'prices',
-      title: 'Prices',
-      type: 'object',
-      hidden: HIDDEN_UNTIL_MAIN_PAGE,
-      fields: PRICES.map(({name, title}) => defineField({name, title, type: 'number'})),
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Show on main page',
-      type: 'boolean',
-      initialValue: false,
       hidden: HIDDEN_UNTIL_MAIN_PAGE,
     }),
     defineField({

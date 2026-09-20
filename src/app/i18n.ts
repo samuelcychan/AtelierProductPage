@@ -210,6 +210,16 @@ export interface Translations {
     copyright: string;
     links: [string, string, string];
   };
+  // Storefront: cart drawer, order confirmation page, legal footer links.
+  cart: {
+    title: string; open: string; close: string; empty: string; browse: string;
+    subtotal: string; checkout: string; remove: string;
+    increase: string; decrease: string; quantity: string;
+    shippingNote: string; unavailable: string; soldOut: string; redirecting: string;
+    priceChanged: string; stockLimited: string; error: string;
+  };
+  order: { thanks: string; number: string; receipt: string; pending: string; notFound: string; back: string; total: string; loading: string; item: string };
+  legal: { tokushoho: string; privacy: string; shipping: string; returns: string };
 }
 
 const en: Translations = {
@@ -293,6 +303,23 @@ const en: Translations = {
     copyright: "© 2025 All rights reserved.",
     links: ["Privacy Policy", "Shipping Info", "Instagram"],
   },
+  cart: {
+    title: "Your cart", open: "Open cart", close: "Close cart", empty: "Your cart is empty.", browse: "Browse the jars",
+    subtotal: "Subtotal", checkout: "Checkout", remove: "Remove",
+    increase: "Increase quantity", decrease: "Decrease quantity", quantity: "Quantity",
+    shippingNote: "Free shipping within Japan. Prices include tax.",
+    unavailable: "Ordering is paused right now. Please try again later.",
+    soldOut: "Sold out", redirecting: "Opening secure checkout…",
+    priceChanged: "A price has changed. Please check your cart.",
+    stockLimited: "We've adjusted your cart to the jars still available.",
+    error: "Something went wrong. Your cart is saved — please try again.",
+  },
+  order: {
+    thanks: "Thank you for your order.", number: "Order number", receipt: "A receipt has been sent to your e-mail.",
+    pending: "We've received your order. We'll confirm it as soon as your payment is complete.",
+    notFound: "We couldn't find this order.", back: "Back to the shop", total: "Total", loading: "Loading your order…", item: "Item",
+  },
+  legal: { tokushoho: "Legal notice", privacy: "Privacy policy", shipping: "Shipping", returns: "Returns & refunds" },
 };
 
 const ja: Translations = {
@@ -376,6 +403,23 @@ const ja: Translations = {
     copyright: "© 2025 All rights reserved.",
     links: ["プライバシーポリシー", "配送情報", "Instagram"],
   },
+  cart: {
+    title: "カート", open: "カートを開く", close: "カートを閉じる", empty: "カートは空です。", browse: "商品を見る",
+    subtotal: "小計", checkout: "ご購入手続きへ", remove: "削除",
+    increase: "数量を増やす", decrease: "数量を減らす", quantity: "数量",
+    shippingNote: "送料無料（日本国内）・税込",
+    unavailable: "現在ご注文を受け付けておりません。しばらくしてからお試しください。",
+    soldOut: "売り切れ", redirecting: "決済ページへ移動しています…",
+    priceChanged: "価格が変更されました。カートをご確認ください。",
+    stockLimited: "在庫に合わせて数量を調整しました。",
+    error: "エラーが発生しました。カートの内容は保存されています。もう一度お試しください。",
+  },
+  order: {
+    thanks: "ご注文ありがとうございます。", number: "注文番号", receipt: "領収書をメールでお送りしました。",
+    pending: "ご注文を承りました。お支払いの完了を確認しだい、ご連絡いたします。",
+    notFound: "ご注文が見つかりませんでした。", back: "ショップに戻る", total: "合計", loading: "ご注文を確認しています…", item: "商品",
+  },
+  legal: { tokushoho: "特定商取引法に基づく表記", privacy: "プライバシーポリシー", shipping: "配送について", returns: "返品・返金について" },
 };
 
 const fr: Translations = {
@@ -459,6 +503,23 @@ const fr: Translations = {
     copyright: "© 2025 Tous droits réservés.",
     links: ["Confidentialité", "Livraison", "Instagram"],
   },
+  cart: {
+    title: "Votre panier", open: "Ouvrir le panier", close: "Fermer le panier", empty: "Votre panier est vide.", browse: "Découvrir les bocaux",
+    subtotal: "Sous-total", checkout: "Passer commande", remove: "Retirer",
+    increase: "Augmenter la quantité", decrease: "Diminuer la quantité", quantity: "Quantité",
+    shippingNote: "Livraison gratuite au Japon. Prix TTC.",
+    unavailable: "Les commandes sont suspendues pour le moment. Veuillez réessayer plus tard.",
+    soldOut: "Épuisé", redirecting: "Ouverture du paiement sécurisé…",
+    priceChanged: "Un prix a changé. Veuillez vérifier votre panier.",
+    stockLimited: "Nous avons ajusté votre panier aux bocaux encore disponibles.",
+    error: "Une erreur est survenue. Votre panier est conservé — veuillez réessayer.",
+  },
+  order: {
+    thanks: "Merci pour votre commande.", number: "Numéro de commande", receipt: "Un reçu vous a été envoyé par e-mail.",
+    pending: "Nous avons bien reçu votre commande. Nous la confirmerons dès que votre paiement sera finalisé.",
+    notFound: "Nous n'avons pas trouvé cette commande.", back: "Retour à la boutique", total: "Total", loading: "Chargement de votre commande…", item: "Article",
+  },
+  legal: { tokushoho: "Mentions légales", privacy: "Politique de confidentialité", shipping: "Livraison", returns: "Retours et remboursements" },
 };
 
 const zh: Translations = {
@@ -542,6 +603,23 @@ const zh: Translations = {
     copyright: "© 2025 保留所有权利。",
     links: ["隐私政策", "配送信息", "Instagram"],
   },
+  cart: {
+    title: "购物车", open: "打开购物车", close: "关闭购物车", empty: "购物车是空的。", browse: "查看商品",
+    subtotal: "小计", checkout: "去结算", remove: "删除",
+    increase: "增加数量", decrease: "减少数量", quantity: "数量",
+    shippingNote: "日本境内免运费，价格含税。",
+    unavailable: "目前暂停接受订单，请稍后再试。",
+    soldOut: "已售罄", redirecting: "正在打开安全结算页面…",
+    priceChanged: "价格已变更，请检查您的购物车。",
+    stockLimited: "我们已根据现有库存调整了您的购物车。",
+    error: "出现问题。您的购物车已保存，请重试。",
+  },
+  order: {
+    thanks: "感谢您的订购。", number: "订单编号", receipt: "收据已发送至您的电子邮箱。",
+    pending: "我们已收到您的订单，付款完成后将为您确认。",
+    notFound: "未找到此订单。", back: "返回商店", total: "合计", loading: "正在加载订单…", item: "商品",
+  },
+  legal: { tokushoho: "特定商业交易法标示", privacy: "隐私政策", shipping: "配送信息", returns: "退货与退款" },
 };
 
 const zhTw: Translations = {
@@ -605,6 +683,23 @@ const zhTw: Translations = {
     tagline: "來自日本愛媛縣的手工保存檸檬。小批量生產，用心配送。", japaneseText: "手作りの瓶詰めで保存。少量生産で、心を込めてお届けします。", navigate: "導覽", contact: "聯絡方式", email: "hello@yuzumono.jp",
     address: ["〒792-0000", "愛媛県新居浜市山根町", "Niihama-shi, Ehime, Japan"], copyright: "© 2025 YuzuMono. 保留所有權利。", links: ["隱私權政策", "配送資訊", "Instagram"],
   },
+  cart: {
+    title: "購物車", open: "開啟購物車", close: "關閉購物車", empty: "購物車是空的。", browse: "查看商品",
+    subtotal: "小計", checkout: "前往結帳", remove: "刪除",
+    increase: "增加數量", decrease: "減少數量", quantity: "數量",
+    shippingNote: "日本境內免運費，價格含稅。",
+    unavailable: "目前暫停接受訂單，請稍後再試。",
+    soldOut: "已售完", redirecting: "正在開啟安全結帳頁面…",
+    priceChanged: "價格已變更，請檢查您的購物車。",
+    stockLimited: "我們已依現有庫存調整了您的購物車。",
+    error: "發生問題。您的購物車已保存，請再試一次。",
+  },
+  order: {
+    thanks: "感謝您的訂購。", number: "訂單編號", receipt: "收據已寄至您的電子郵件信箱。",
+    pending: "我們已收到您的訂單，付款完成後將為您確認。",
+    notFound: "找不到此訂單。", back: "返回商店", total: "合計", loading: "正在載入訂單…", item: "商品",
+  },
+  legal: { tokushoho: "特定商業交易法標示", privacy: "隱私權政策", shipping: "配送資訊", returns: "退貨與退款" },
 };
 
 export const translations: Record<Lang, Translations> = { en, ja, fr, zh, "zh-TW": zhTw };
