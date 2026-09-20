@@ -104,6 +104,28 @@ Two routes. **Route A is recommended**, because it also stops test purchases con
 
 **Verify:** `/api/catalog` on the preview reflects staging's stock; make a test purchase; confirm the `stock-*` documents in `production` did not move.
 
+### Seeing both datasets in the Studio
+
+`studio/sanity.config.ts` defines **one workspace per dataset**, so the Studio names the dataset in the navbar and switching needs no restart:
+
+| Workspace | URL | Dataset |
+|---|---|---|
+| PRODUCTION — real stock | `http://localhost:3333/production` | `production` |
+| Staging — preview tests | `http://localhost:3333/staging` | `staging` |
+
+`npm --prefix studio run dev` starts it; bare `http://localhost:3333` redirects to `/production`. Use "Choose another workspace" in the top-left to switch. This matters because the two datasets hold identical-looking content — without the label there is nothing on screen to tell you whether you are about to edit real stock.
+
+Outside the Studio:
+
+```
+cd studio && npx.cmd sanity dataset list
+cd studio && npx.cmd sanity documents query "*[_type=='stock']{_id,available}" --dataset staging
+```
+
+sanity.io/manage → project → Datasets shows both with their sizes.
+
+**The CLI still defaults to `production`** via `SANITY_STUDIO_DATASET` in `studio/.env` and `sanity.cli.ts`, so pass `--dataset staging` explicitly when a script should touch staging — including `scripts/seed-commerce.ts`.
+
 **Consequence to accept:** real stock lives in `production` and preview testing only touches `staging`. The two will drift, and a preview test no longer tells you anything about real inventory.
 
 ### Route B — turn on Vercel deployment protection
