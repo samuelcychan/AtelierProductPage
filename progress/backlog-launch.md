@@ -227,7 +227,7 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 
 ### 12. Commerce code on production, switched off, on a commercial Vercel plan
 
-**Why:** Merging and deploying with commerce off lets the legal pages and product information go live for Stripe's review (item 11) without exposing checkout early. Vercel Hobby doesn't permit commercial use, and the daily reconcile cron needs a paid plan.
+**Why:** Merging and deploying with commerce off lets the legal pages and product information go live for Stripe's review (item 11) without exposing checkout early. Vercel Hobby is restricted to non-commercial, personal use, so selling from the site needs Pro. (Corrected 2026-09-20: the daily cron is **not** a reason to upgrade — cron jobs run on every plan, and `0 1 * * *` is inside Hobby's once-a-day limit. Only the ±59 min timing precision differs, which a daily safety net does not care about.)
 
 **What:** Move the project to a Vercel plan that allows commercial use (D13). Merge `feat/commerce-stripe-shippo` into `main` via a pull request and let production deploy **without** Stripe variables. Without them, commerce reports as off, so the site shows no prices or buy buttons.
 

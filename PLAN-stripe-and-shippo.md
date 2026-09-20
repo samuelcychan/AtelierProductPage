@@ -186,7 +186,7 @@ The plan is written assuming each recommendation.
 | **D10** | Customer e-mails | **Stripe's payment receipt** e-mail for the order confirmation. Shipping notice: Path A — Shippo's tracking e-mails if the plan includes them; Path B — Kimie e-mails the tracking number. | Avoids adding an e-mail provider. Revisit if order volume makes manual e-mails a burden. |
 | **D11** | When the commerce backend is unavailable | **Hide the price and disable Add to Cart** with a short message; all Sanity content stays visible. | Showing the old `i18n.ts` price could quote a price checkout does not charge. |
 | **D12** | Preserved lemon | **Not for sale** (no stock document, `isActive` false). | Matches PLAN3. |
-| **D13** | Hosting plan | **A Vercel plan that permits commercial use** (Pro), before taking real orders. | Vercel Hobby is for non-commercial projects; Vercel Cron's daily schedule also requires a paid plan. |
+| **D13** | Hosting plan | **A Vercel plan that permits commercial use** (Pro), before taking real orders. | Hobby "restricts users to non-commercial, personal use only", so selling from the site needs Pro. **Correction (2026-09-20):** an earlier version of this row also claimed the daily cron needs a paid plan. It does not — cron jobs run on every plan, and Hobby's limits are a minimum interval of once per day and ±59 min timing precision, both of which `0 1 * * *` satisfies. Commercial use is the only reason to upgrade. |
 
 ---
 
