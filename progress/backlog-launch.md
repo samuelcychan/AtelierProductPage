@@ -8,15 +8,16 @@
 **State as of:** 2026-09-21
 **Progress:** items 1, 2 and 3 are done; item 12 is done but for the D13 plan decision. Items 4–11 and 13 are open, and the owner and adviser items still set the launch date.
 
-## Starting point (verified 2026-09-16)
+## Current state (verified 2026-09-21)
 
-A baseline, not current state — several lines below have since been overtaken. The **Status** block under each item is the authority.
+Checked live against Vercel, Sanity and the deployed sites on the date above. The original 2026-09-16 baseline this backlog opened with is in git history.
 
-- **Local:** a test payment (`KJ-260915-2664B8`) completed end to end under `vercel dev`: paid in Stripe, order logged in Sanity, stock decremented.
-- **Preview:** branch pushed, preview live at `https://atelier-product-page-git-feat-commerce-62a5ef-samuelcychan-team.vercel.app`, functions load on Vercel. Preview `SITE_URL`, Stripe test keys, webhook secret and Sanity token are set. The Stripe test webhook and Sanity CORS point at the branch address. **Missing:** `VITE_SANITY_*` for Preview, so `/api/catalog` returns `{"enabled":false}`.
-- **Production:** only `VITE_SANITY_*` set; no Stripe, token, `SITE_URL` or `CRON_SECRET`. Commerce is off.
-- **Owner data:** SKUs set, stock documents exist, packed weights read 100 g (unconfirmed), customs description and HS code empty, hosted Studio not deployed.
-- **Legal pages:** every business detail is still a placeholder.
+- **Local:** `vercel dev` serves the functions from the root `.env`. The first end-to-end test payment (`KJ-260915-2664B8`) was made this way on 2026-09-15: paid in Stripe, order logged in Sanity, stock decremented.
+- **Preview:** live at `https://atelier-product-page-git-feat-commerce-62a5ef-samuelcychan-team.vercel.app` with all seven variables set, so commerce is **on**. It reads and writes the `staging` Sanity dataset, not `production` (finding F2). Every PLAN §15.1 scenario has passed here — item 2.
+- **Production:** `https://kimie-atelier.vercel.app` serves the merged branch with commerce **off**: `/api/catalog` returns `{"enabled":false}`. It holds `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET` (=`production`), `VITE_SANITY_API_VERSION` and `CRON_SECRET`. The Stripe keys, `SANITY_WRITE_TOKEN` and `SITE_URL` are deliberately absent until item 13.
+- **Owner data:** SKUs set; stock in the `production` dataset reads mustard 1 / tapenade 1; packed weights still read 100 g (unconfirmed); customs description and HS code empty; the hosted Studio is still not deployed — item 6.
+- **Legal pages:** every business detail is still a placeholder — item 4.
+- **Security:** findings F1–F4 are closed. F5 (rate limiting) waits for the commercial plan and F6 (Studio dependencies) is not a launch blocker — item 3.
 
 ---
 
