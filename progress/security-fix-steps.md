@@ -96,13 +96,29 @@ Two routes. **Route A is recommended**, because it also stops test purchases con
    cd studio && npx.cmd sanity dataset import ../staging.tar.gz staging
    ```
 
-3. **Point Preview at it.** `VITE_SANITY_DATASET` is currently one variable covering Production *and* Preview, so it cannot simply be edited: untick Preview on the existing variable, then add a new **Preview-only** `VITE_SANITY_DATASET` with the value `staging`.
+3. **Point Preview at it — by splitting the variable, not editing it.** `VITE_SANITY_DATASET` starts as one variable covering Production *and* Preview. It must become **two**:
+
+   ```
+   npx.cmd vercel env rm VITE_SANITY_DATASET
+   echo production | npx.cmd vercel env add VITE_SANITY_DATASET production
+   echo staging    | npx.cmd vercel env add VITE_SANITY_DATASET preview
+   ```
+
+   ⚠️ **The mistake to avoid** (made and caught on 2026-09-20): editing the shared variable's value to `staging` also moves **production** onto the staging dataset. Nothing breaks immediately, because `VITE_*` is baked in at build time and the live build keeps the old value — but the next production deploy silently switches the live site to staging data, and because staging is a copy it looks completely normal. Confirm with `vercel env ls` that **two** `VITE_SANITY_DATASET` rows exist, one per environment.
 
    No new token is needed — Sanity tokens are scoped to the project, not a dataset, so `SANITY_WRITE_TOKEN` writes to both. No CORS change is needed either, for the same reason.
 
 4. **Redeploy the branch.** `VITE_*` values are baked in at build time, so this will not take effect without a fresh build.
 
-**Verify:** `/api/catalog` on the preview reflects staging's stock; make a test purchase; confirm the `stock-*` documents in `production` did not move.
+**Verify.** The decisive check is which dataset each site actually queries. Open `/story` and read the Sanity request:
+
+```js
+performance.getEntriesByType('resource').map(r => r.name).filter(n => /apicdn\.sanity\.io/.test(n))
+```
+
+The preview must show `/data/query/staging`, production `/data/query/production`. Then make a test purchase on the preview and confirm the `stock-*` documents in the `production` dataset did not move.
+
+Status 2026-09-20: preview confirmed on `staging`; production's deployed build still queries `production`, but its environment variable was left pointing at `staging` and needs splitting per step 3 before the next production deploy.
 
 ### Seeing both datasets in the Studio
 
