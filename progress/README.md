@@ -100,6 +100,10 @@ Independent pass over `api/`, `server/`, `src/features/commerce/`, `vercel.json`
 
 **Observation, not a defect:** `studio/schemaTypes` has no `fulfilment` type, so the order log cannot be read in the Studio — only with a token. Worth resolving in the fulfilment runbook (item 8).
 
+## Production deploy (backlog item 12, 2026-09-20)
+
+PR #5 merged into `main` (`763443a`) and deployed with commerce dark. Verified on `https://kimie-atelier.vercel.app`: `/api/catalog` returns `{"enabled":false}`, checkout 503, order 404, cron 401; `/`, `/story`, `/order/complete` and all four `/legal/*` pages render with no prices, no buy controls and no console errors; `/story` still reads product copy from Sanity; the SPA rewrite serves `.js` and `.css` with the right content types; all five F4 security headers are present. Still open: the D13 plan decision, F1 and F2.
+
 ## Not yet assigned
 
 | Work | Why not now |

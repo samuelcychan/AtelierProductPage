@@ -242,6 +242,19 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 
 Priority: P0 | Effort: S | Owner: owner (plan) + engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging
 
+**Status: Partly done — merged and verified 2026-09-20.** PR [#5](https://github.com/samuelcychan/AtelierProductPage/pull/5) merged into `main` (`763443a`, 59 commits, 45 files, no conflicts, CI green) and deployed to `https://kimie-atelier.vercel.app`.
+
+Verified on production:
+- `/api/catalog` returns `{"enabled":false}`; `/api/checkout` 503, `/api/order` 404, `/api/cron/reconcile` 401 ✅
+- `/` and `/story` render with no prices and no cart or buy controls; `/story` still reports `data-products-source="cms"`, so Sanity product copy is unaffected ✅
+- All four `/legal/*` pages render, each showing the Draft notice and placeholders (item 4) ✅
+- `/order/complete` without a session shows "order not found" ✅
+- No console errors on any page ✅
+- The SPA rewrite works: `/assets/*.js` serves as `application/javascript` and `/assets/*.css` as `text/css`, and every client route returns `index.html` ✅
+- All five security headers from finding F4 are present on production ✅
+
+**Still open on this item:** the commercial-use plan decision (D13), finding F1 (`CRON_SECRET` unset — Vercel now calls the cron daily and gets 401) and finding F2 (previews still write to the live dataset).
+
 ---
 
 ### 13. Go live: real orders accepted in Japan
