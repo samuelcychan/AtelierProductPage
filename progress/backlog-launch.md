@@ -237,7 +237,7 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 - `/`, `/story` and all four `/legal/*` pages load on production with no buy buttons and no console errors
 - `vercel.json`'s rewrite serves built assets correctly on production (no HTML served for `.js`/`.css`)
 - The five security response headers added for finding F4 are present on production (`curl -I`)
-- **F1:** `CRON_SECRET` is set on Preview and Production, and `/api/cron/reconcile` returns `{"checked":…}` with the bearer instead of 401
+- **F1:** `CRON_SECRET` is set on Preview and Production (done 2026-09-20). Note that production answers 401 to the cron regardless until commerce is switched on, because `isCommerceConfigured` is checked before the bearer — verify the bearer on the preview now, and on production at item 13
 - **F2:** previews no longer write to the live dataset — either Vercel deployment protection is on for previews, or Preview points at a separate Sanity dataset
 
 Priority: P0 | Effort: S | Owner: owner (plan) + engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging

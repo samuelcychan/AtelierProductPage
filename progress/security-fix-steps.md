@@ -37,13 +37,31 @@ In Git Bash, prefix any `vercel` command whose argument starts with `/` with `MS
 
 4. **Optional, for local testing:** add `CRON_SECRET=<value>` to the root `.env` (not `.env.local` — see CLAUDE.md).
 
-### Verify
+### Verify — on the **preview**, not production
+
+`/api/cron/reconcile` tests `isCommerceConfigured` *before* the bearer:
+
+```ts
+if (!isCommerceConfigured || !authorized(request)) return 401
+```
+
+Production is deliberately commerce-dark (no `STRIPE_SECRET_KEY`, `SANITY_WRITE_TOKEN` or `SITE_URL`), so it answers **401 whatever bearer you send** — the secret is never read. That is correct: there is nothing to reconcile while the shop is off. Production will keep returning 401, and Vercel's daily call will keep failing, until commerce is switched on at item 13. Do not treat that as a broken fix.
+
+The preview has all seven variables, so test there. Redeploy it first — Vercel applies environment variables at deploy time, so a deployment built before `CRON_SECRET` existed does not have it:
 
 ```
-curl -H "Authorization: Bearer <secret>" https://kimie-atelier.vercel.app/api/cron/reconcile
+npx.cmd vercel redeploy https://atelier-product-page-git-feat-commerce-62a5ef-samuelcychan-team.vercel.app
+```
+
+Then:
+
+```
+curl -H "Authorization: Bearer <secret>" https://<preview-host>/api/cron/reconcile
 ```
 
 Expect `{"checked":N,"failed":0}` instead of `401 Unauthorized`. Safe to run: every session it finds is already logged, so each one is a no-op.
+
+**At go-live**, re-run the same check against production once its Stripe and Sanity variables are set; that is when the daily cron starts doing real work.
 
 ### Notes
 
