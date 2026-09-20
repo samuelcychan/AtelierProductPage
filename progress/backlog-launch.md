@@ -93,7 +93,7 @@ Priority: P0 | Effort: M | Owner: engineering (independent reviewer) | Dependenc
 - A fresh `dist/` contains none of the key patterns, and none of the secret values in the root `.env`; only the public `VITE_SANITY_*` identifiers appear ✅
 - Six findings recorded with severity and action: F1 and F2 medium, F3–F6 low ✅
 - No open high-severity finding ✅
-- F4 (missing security response headers) fixed on the branch in `vercel.json`; verify on the next preview deploy
+- F4 (missing security response headers) fixed on the branch in `vercel.json` and confirmed live on the preview ✅
 
 **Carried out of this item:** F1 `CRON_SECRET` unset (owner, Vercel) and F2 public preview writing to the live dataset (owner, before go-live) both belong to item 12; F3 Sanity CORS credentials (owner, Sanity dashboard); F5 rate limiting waits for the commercial plan; F6 Studio dependency upgrade is not a launch blocker.
 
