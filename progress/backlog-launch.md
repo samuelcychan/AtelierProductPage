@@ -253,6 +253,8 @@ Verified on production:
 - The SPA rewrite works: `/assets/*.js` serves as `application/javascript` and `/assets/*.css` as `text/css`, and every client route returns `index.html` ✅
 - All five security headers from finding F4 are present on production ✅
 
+**Steps for F1 and F2:** [security-fix-steps.md](security-fix-steps.md) — neither depends on D13.
+
 **Still open on this item:** the commercial-use plan decision (D13), finding F1 (`CRON_SECRET` unset — Vercel now calls the cron daily and gets 401) and finding F2 (previews still write to the live dataset).
 
 ---

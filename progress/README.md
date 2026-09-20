@@ -89,6 +89,8 @@ Independent pass over `api/`, `server/`, `src/features/commerce/`, `vercel.json`
 
 ### Findings
 
+Step-by-step fixes for F1, F2 and F3, with verification commands: **[security-fix-steps.md](security-fix-steps.md)**. None of them depend on the Vercel Pro decision (D13).
+
 | ID | Severity | Finding | Action |
 |---|---|---|---|
 | F1 | Medium | `CRON_SECRET` is set in no Vercel environment, so `/api/cron/reconcile` answers 401 to Vercel's own daily call. The endpoint fails closed, which is right, but the safety net that catches a missed webhook — the exact failure of 2026-09-16 — never runs | Add `CRON_SECRET` to Preview and Production, redeploy, then confirm the cron returns `{"checked":…}` with the bearer. Owner (Vercel) |
@@ -148,7 +150,7 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 - [ ] **Security F1:** `CRON_SECRET` is set in no environment, so the daily reconcile answers 401 to Vercel's own call. Add it to Preview and Production
 - [ ] **Security F2:** previews are public and write to the live Sanity dataset. Before go-live, turn on deployment protection for previews or give Preview its own dataset
 
-**Sanity (security F3)**
+**Sanity (security F3)** — see [security-fix-steps.md](security-fix-steps.md)
 - [ ] Re-add the CORS origin `http://localhost:5173` **without** "Allow credentials" (it needs none — the site's dev server reads the public CDN with no token), and delete the stale origin `https://atelier-product-page-38z417igl-samuelcychan-team.vercel.app`. `http://localhost:3333` keeps credentials: the Studio needs them
 
 ## Shared contracts
