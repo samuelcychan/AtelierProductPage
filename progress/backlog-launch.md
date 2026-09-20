@@ -5,9 +5,12 @@
 **Total items:** 13 — 7 engineering or shared, 6 owner or adviser
 **Estimated effort:** engineering is about one sprint (review, preview testing, launch wiring). The owner and adviser items (legal text, tax and food compliance, Stripe activation) depend on outside parties, typically days to weeks, and set the launch date.
 **Source:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), [progress/README.md](README.md)
-**State as of:** 2026-09-16
+**State as of:** 2026-09-21
+**Progress:** items 1, 2 and 3 are done; item 12 is done but for the D13 plan decision. Items 4–11 and 13 are open, and the owner and adviser items still set the launch date.
 
-## Starting point (verified)
+## Starting point (verified 2026-09-16)
+
+A baseline, not current state — several lines below have since been overtaken. The **Status** block under each item is the authority.
 
 - **Local:** a test payment (`KJ-260915-2664B8`) completed end to end under `vercel dev`: paid in Stripe, order logged in Sanity, stock decremented.
 - **Preview:** branch pushed, preview live at `https://atelier-product-page-git-feat-commerce-62a5ef-samuelcychan-team.vercel.app`, functions load on Vercel. Preview `SITE_URL`, Stripe test keys, webhook secret and Sanity token are set. The Stripe test webhook and Sanity CORS point at the branch address. **Missing:** `VITE_SANITY_*` for Preview, so `/api/catalog` returns `{"enabled":false}`.
@@ -56,7 +59,7 @@ Priority: P0 | Effort: S | Owner: engineering (needs Vercel project access) | De
 
 Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencies: item 1
 
-**Status: Partly done.** One purchase on the preview succeeded end to end: order `KJ-260916-E0C41B`, tapenade ×1, ¥2,100, paid 2026-09-16 01:56 UTC. Its Stripe session's success and cancel URLs are the branch address (started from `/story`), it created exactly one `fulfilment.*` document, and `stock-tapenade` went 2 → 1 at the same moment — with no `stripe listen` running, so the Dashboard webhook delivered it.
+**First purchase: passed.** One purchase on the preview succeeded end to end: order `KJ-260916-E0C41B`, tapenade ×1, ¥2,100, paid 2026-09-16 01:56 UTC. Its Stripe session's success and cancel URLs are the branch address (started from `/story`), it created exactly one `fulfilment.*` document, and `stock-tapenade` went 2 → 1 at the same moment — with no `stripe listen` running, so the Dashboard webhook delivered it.
 
 **Declined card: passed (2026-09-19 15:10 UTC).** Payment intent `pi_3UHPxEE…` (¥1,900) ended `requires_payment_method` with `card_declined` / `generic_decline`; charge `ch_3UHPxEE…` `failed`, `paid: false`; session `cs_test_a171WramWH…` stayed `unpaid`. No `fulfilment.*` document was created (count still 2) and stock was unchanged (mustard 1, tapenade 1).
 
@@ -70,7 +73,7 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 **Price changed: passed (2026-09-20).** With a cart holding tapenade at ¥2,100 open on the preview, the price was changed to ¥2,200 in Sanity. Checkout was refused, and the drawer updated the line and subtotal to ¥2,200 with "A price has changed. Please check your cart.", staying on `/story` with the cart intact. The price was restored to ¥2,100 and the catalog confirms it.
 
-**Status: Done.** Every §15.1 scenario has evidence; the results table is in [README.md](README.md) under "Preview test results". Note for launch: `stock-mustard` is 0 because the last test purchase took the final jar — set real stock before going live.
+**Status: Done.** Every §15.1 scenario has evidence; the results table is in [README.md](README.md) under "Preview test results". Since then the preview has moved to its own `staging` dataset (finding F2), so re-running any of these scenarios exercises staging and no longer touches live stock. Note for launch: real numbers must be set in the `production` dataset, which reads mustard 1 / tapenade 1 as of 2026-09-21.
 
 ---
 
@@ -95,7 +98,7 @@ Priority: P0 | Effort: M | Owner: engineering (independent reviewer) | Dependenc
 - No open high-severity finding ✅
 - F4 (missing security response headers) fixed on the branch in `vercel.json` and confirmed live on the preview ✅
 
-**Carried out of this item:** F1 `CRON_SECRET` unset (owner, Vercel) and F2 public preview writing to the live dataset (owner, before go-live) both belong to item 12; F3 Sanity CORS credentials (owner, Sanity dashboard); F5 rate limiting waits for the commercial plan; F6 Studio dependency upgrade is not a launch blocker.
+**Carried out of this item:** F1 `CRON_SECRET` unset and F2 public preview writing to the live dataset belonged to item 12 and were **closed 2026-09-20**; F3 Sanity CORS credentials was **closed 2026-09-21** — `http://localhost:5173` re-added without credentials and the stale origin deleted. Still open: F5 rate limiting, which waits for the commercial plan, and F6 the Studio dependency upgrade, which is not a launch blocker. Steps and evidence in [security-fix-steps.md](security-fix-steps.md).
 
 ---
 
@@ -140,7 +143,7 @@ Priority: P1 | Effort: S | Owner: owner decides; engineering updates copy | Depe
 **Acceptance Criteria:**
 - Both products' packed weight is a measured value, confirmed by the owner
 - The hosted Studio URL loads, and Kimie can open Products → Commerce and Stock
-- Stock numbers equal the jars on hand on launch day
+- Stock numbers equal the jars on hand on launch day, set in the **`production`** dataset (the preview’s `staging` copy is test data)
 - A Vision query confirms both products are for sale with a SKU, a weight and a positive whole-yen price
 
 Priority: P1 | Effort: S | Owner: owner (data), engineering (deploy) | Dependencies: none
@@ -255,7 +258,7 @@ Verified on production:
 
 **Steps for F1 and F2:** [security-fix-steps.md](security-fix-steps.md) — neither depends on D13.
 
-**Still open on this item:** only the commercial-use plan decision (D13), which is on hold. F1 and F2 were closed on 2026-09-20 — see [security-fix-steps.md](security-fix-steps.md). Production still shows mustard 0 / tapenade 1; real stock must be set there before launch.
+**Still open on this item:** only the commercial-use plan decision (D13), which is on hold. F1 and F2 were closed on 2026-09-20 — see [security-fix-steps.md](security-fix-steps.md). The `production` dataset reads mustard 1 / tapenade 1 (checked 2026-09-21); real launch stock must be set there before item 13.
 
 ---
 
@@ -263,7 +266,7 @@ Verified on production:
 
 **Why:** This is the outcome everything else serves: customers in Japan can buy jars and Kimie gets paid.
 
-**What:** Add Production variables: live `STRIPE_SECRET_KEY`, the signing secret of a **live** webhook endpoint at `https://kimie-atelier.vercel.app/api/stripe-webhook`, `SANITY_WRITE_TOKEN`, `SITE_URL=https://kimie-atelier.vercel.app` and `CRON_SECRET`. Redeploy, set real stock, and run the PLAN §16.1 launch checklist, including one real-card order that is fulfilled and refunded.
+**What:** Add Production variables: live `STRIPE_SECRET_KEY`, the signing secret of a **live** webhook endpoint at `https://kimie-atelier.vercel.app/api/stripe-webhook`, `SANITY_WRITE_TOKEN`, `SITE_URL=https://kimie-atelier.vercel.app` and `CRON_SECRET` — the last of these has been set on Production since F1, so only the four Stripe and Sanity values are missing. Redeploy, set real stock, and run the PLAN §16.1 launch checklist, including one real-card order that is fulfilled and refunded.
 
 **Acceptance Criteria:**
 - The production catalog returns `"enabled":true`, and a real one-jar order completes, logs, decrements stock, and appears in Stripe live mode
@@ -294,6 +297,7 @@ Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3
 ## Technical notes
 
 - **Environment variables are per environment and apply only to new deployments.** `VITE_*` values are baked in at build time, so a redeploy is required after changing them. The server reads `VITE_SANITY_PROJECT_ID` at runtime too.
+- **Preview and production read different Sanity datasets** since finding F2: `VITE_SANITY_DATASET` is `staging` on Preview and `production` on Production. A preview test purchase moves staging stock only, so a preview stock figure says nothing about real inventory. The Studio serves both, one workspace per dataset; the CLI still defaults to `production`, so pass `--dataset staging` deliberately.
 - **The catalog is CDN-cached** (`s-maxage=60`, or `300` when commerce is off). After configuration changes, check with a cache-busting query (`?t=…`).
 - **`SITE_URL` must equal the exact origin buyers use**, with no path and no trailing slash, or checkout returns 403. Preview uses the branch alias; production uses `https://kimie-atelier.vercel.app`.
 - **Webhooks need a stable, publicly reachable address.** If Deployment Protection is enabled later, Stripe webhooks need Vercel's protection bypass for automation.
