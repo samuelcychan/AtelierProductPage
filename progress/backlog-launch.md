@@ -88,6 +88,15 @@ Priority: P0 | Effort: M | Owner: engineering + owner (card entry) | Dependencie
 
 Priority: P0 | Effort: M | Owner: engineering (independent reviewer) | Dependencies: none
 
+**Status: Done — reviewed 2026-09-20.** Full record in [README.md](README.md) under "Security review (PLAN §13, 2026-09-20)".
+- Every §13 rule is marked verified against the live preview, Sanity and Vercel, or noted as not applicable (Shippo webhook) ✅
+- A fresh `dist/` contains none of the key patterns, and none of the secret values in the root `.env`; only the public `VITE_SANITY_*` identifiers appear ✅
+- Six findings recorded with severity and action: F1 and F2 medium, F3–F6 low ✅
+- No open high-severity finding ✅
+- F4 (missing security response headers) fixed on the branch in `vercel.json`; verify on the next preview deploy
+
+**Carried out of this item:** F1 `CRON_SECRET` unset (owner, Vercel) and F2 public preview writing to the live dataset (owner, before go-live) both belong to item 12; F3 Sanity CORS credentials (owner, Sanity dashboard); F5 rate limiting waits for the commercial plan; F6 Studio dependency upgrade is not a launch blocker.
+
 ---
 
 ### 4. Legal and policy pages contain real business details
@@ -227,6 +236,9 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 - `https://kimie-atelier.vercel.app/api/catalog` returns `{"enabled":false}` after the merge
 - `/`, `/story` and all four `/legal/*` pages load on production with no buy buttons and no console errors
 - `vercel.json`'s rewrite serves built assets correctly on production (no HTML served for `.js`/`.css`)
+- The five security response headers added for finding F4 are present on production (`curl -I`)
+- **F1:** `CRON_SECRET` is set on Preview and Production, and `/api/cron/reconcile` returns `{"checked":…}` with the bearer instead of 401
+- **F2:** previews no longer write to the live dataset — either Vercel deployment protection is on for previews, or Preview points at a separate Sanity dataset
 
 Priority: P0 | Effort: S | Owner: owner (plan) + engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging
 

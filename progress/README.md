@@ -63,13 +63,49 @@ All run against `https://atelier-product-page-git-feat-commerce-62a5ef-…vercel
 
 **Not covered here:** live-mode payments, the daily reconcile cron (production only), Shippo (path undecided), and anything needing real legal or compliance sign-off.
 
+## Security review (PLAN §13, 2026-09-20)
+
+Independent pass over `api/`, `server/`, `src/features/commerce/`, `vercel.json`, the Sanity project and the Vercel project. Every rule was confirmed against the running preview, the live Sanity API and the Vercel configuration, not against the code alone.
+
+**Result: no high-severity finding.** Six findings: two medium, four low. One is fixed in this commit; the rest are configuration actions listed below.
+
+### §13 rules, as checked
+
+| Rule | How it was checked | Result |
+|---|---|---|
+| Secrets | Fresh `npm run build`, then searched `dist/` for `sk_live_`, `sk_test_`, `rk_live_`, `whsec_`, `shippo_*` and for the literal value of every variable in the root `.env`. Only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET` and `VITE_SANITY_API_VERSION` appear, which are public identifiers. `git grep` and `git log -S` for key patterns match documentation only; `.env*` is gitignored | Pass |
+| Payment data | No card field in the repo; the only external origin the buyer is sent to is `https://checkout.stripe.com/` | Pass |
+| Prices | `api/checkout.ts:69` compares the browser's `unitAmount` with Sanity's and refuses on mismatch; line items are built from `item.jpy`, never from the request | Pass |
+| Checkout endpoint | Live probes against the preview: no `Origin` → 403; foreign origin → 403; lookalike host `…vercel.app.evil.example` → 403; `text/plain` → 415; 9 KB body → 400; 3 lines → 400; quantity 11 → 400; unknown `lang` → 400; unknown slug → 409 | Pass |
+| Stripe webhook | Unsigned POST → 400 "Invalid signature". The signature is checked on the raw body before anything else, and the handler re-reads the Session from Stripe rather than trusting the event body | Pass |
+| Shippo webhook | Not implemented; `SHIPPO_WEBHOOK_TOKEN` is read in `server/env.ts` and unused. Correct — Shippo is gated behind item 7 | N/A |
+| Cron | `Authorization: Bearer` compared with `timingSafeEqual`, and an unset secret never matches. Live: 401 with no header and with a wrong bearer | Pass, but see F1 |
+| Redirects | Server rejects a Session URL not starting with `https://checkout.stripe.com/` (`api/checkout.ts:115`); the client re-checks before `location.assign` (`api.ts:130`). `returnPath` is limited to `/` and `/story` and anything else silently becomes `/` — confirmed live with `returnPath: https://evil.example` | Pass |
+| Personal data | The three `fulfilment.*` documents hold only `orderNumber`, `paidAt`, `oversold` and lines of `slug`/`sku`/`quantity` — no name, address, phone or e-mail. An anonymous query for `*[_id in path("fulfilment.**")]` returns `[]`, so the log needs a token, while `stock` and `product` are public (public dataset, by design). Error paths log messages only, and `server/shippo.ts` deliberately drops Shippo's response body because it can echo the address | Pass |
+| Browser storage | `ym-cart-v1` holds slug and quantity only, `ym-checkout-lang` a language code; both are named in the privacy pages | Pass |
+| Cookie consent | The site sets no cookies. Note: Google Fonts is fetched from `fonts.googleapis.com` on every page, so the buyer's IP reaches Google — name it in the privacy policy (item 4) | Pass with note |
+| Sanity token | Confirmed scoped, not administrator: the management API refuses it with "missing required grant sanity.project.cors/read". It can still write or delete any document in the dataset, which the design requires; rotate on exposure | Pass |
+| Rollback of secrets | Procedure unchanged; not exercised | Not tested |
+
+### Findings
+
+| ID | Severity | Finding | Action |
+|---|---|---|---|
+| F1 | Medium | `CRON_SECRET` is set in no Vercel environment, so `/api/cron/reconcile` answers 401 to Vercel's own daily call. The endpoint fails closed, which is right, but the safety net that catches a missed webhook — the exact failure of 2026-09-16 — never runs | Add `CRON_SECRET` to Preview and Production, redeploy, then confirm the cron returns `{"checked":…}` with the bearer. Owner (Vercel) |
+| F2 | Medium | The branch preview is publicly reachable (no Vercel deployment protection) and its `SANITY_WRITE_TOKEN` and dataset point at **production**. Anyone who learns the URL can complete a test-card checkout and decrement real stock — which is how `stock-mustard` reached 0 | Before go-live: turn on deployment protection for previews, or point Preview at a separate dataset. Owner (Vercel / Sanity) |
+| F3 | Low | Two Sanity CORS origins return `Access-Control-Allow-Credentials: true`: `http://localhost:3333` and `http://localhost:5173`. A page served from those ports on a machine signed in to Sanity could read private documents, including `fulfilment.*`, and write as that user. 3333 is the Studio's own requirement; 5173 is not — the site's dev server reads the public CDN with no token. `https://atelier-product-page-38z417igl-…` is also a stale origin from the old CLI deployment | Re-add `http://localhost:5173` without credentials; delete the stale origin. Deployed origins are already credential-free. Owner (Sanity dashboard) |
+| F4 | Low | No security response headers: the deployment returned only Vercel's HSTS, so the page could be framed by any origin and the thank-you URL's `session_id` relied on browser referrer defaults | **Fixed on the branch**: `vercel.json` now sends `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Content-Security-Policy: frame-ancestors 'none'`, `Referrer-Policy: strict-origin-when-cross-origin` and a `Permissions-Policy`. Verify on the next preview deploy |
+| F5 | Low | No rate limiting on `/api/checkout` or `/api/order`. The origin check is CSRF protection, not authentication — a non-browser client sets the header freely. Unlimited Session creation reserves no stock and takes no money, so the cost is Stripe quota, dashboard noise and possible abuse flags | Add a Vercel WAF rate-limit rule when the project moves to the commercial plan (item 12) |
+| F6 | Low | Ten open Dependabot alerts, **all** in `studio/package-lock.json` (adm-zip, js-yaml, smol-toml, uuid, reached through the `sanity` CLI). `npm audit` on the root lockfile — the deployed site and its functions — reports 0 vulnerabilities. The alerts are denial-of-service and prototype-pollution issues in tooling that only processes the owner's own files | Schedule the Studio upgrade; the fix needs `sanity@5.14.1`, a major version. Not a launch blocker |
+
+**Observation, not a defect:** `studio/schemaTypes` has no `fulfilment` type, so the order log cannot be read in the Studio — only with a token. Worth resolving in the fulfilment runbook (item 8).
+
 ## Not yet assigned
 
 | Work | Why not now |
 |---|---|
 | Phase 0 accounts, preview routing proof, Shippo go/no-go (§6.1–6.2, §6.4) | Owner actions: accounts, logins, keys |
 | Phase 6 Shippo webhook (§12.1) | Blocked on the §6.4 result and the real `transaction_created` payload |
-| Phase 7 security review (§13) | Unblocked: all four tracks are merged; not started |
 | Phase 9 testing (§15) | After merge, with Stripe test keys and a preview deploy |
 | Phase 10 launch (§16), documentation | After testing |
 
@@ -104,7 +140,12 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 **Vercel (§6.2, D13)**
 - [x] `vercel link`: linked to project `atelier-product-page` (team `samuelcychan-team`), which serves `https://kimie-atelier.vercel.app`; `.vercel` and `.env*` are gitignored
 - [ ] Commercial-use plan decision (D13): plan tier isn't visible from the CLI; check the team's billing page
-- [ ] Project environment variables: only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `VITE_SANITY_API_VERSION` (Production). Nothing for Preview, and no `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SANITY_WRITE_TOKEN`, `SITE_URL` or `CRON_SECRET` in any environment
+- [ ] Project environment variables: Preview now has all seven; Production still has only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `VITE_SANITY_API_VERSION` (checked 2026-09-20)
+- [ ] **Security F1:** `CRON_SECRET` is set in no environment, so the daily reconcile answers 401 to Vercel's own call. Add it to Preview and Production
+- [ ] **Security F2:** previews are public and write to the live Sanity dataset. Before go-live, turn on deployment protection for previews or give Preview its own dataset
+
+**Sanity (security F3)**
+- [ ] Re-add the CORS origin `http://localhost:5173` **without** "Allow credentials" (it needs none — the site's dev server reads the public CDN with no token), and delete the stale origin `https://atelier-product-page-38z417igl-samuelcychan-team.vercel.app`. `http://localhost:3333` keeps credentials: the Studio needs them
 
 ## Shared contracts
 
