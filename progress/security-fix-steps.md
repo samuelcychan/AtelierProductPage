@@ -118,8 +118,6 @@ performance.getEntriesByType('resource').map(r => r.name).filter(n => /apicdn\.s
 
 The preview must show `/data/query/staging`, production `/data/query/production`. Then make a test purchase on the preview and confirm the `stock-*` documents in the `production` dataset did not move.
 
-Status 2026-09-20: preview confirmed on `staging`; production's deployed build still queries `production`, but its environment variable was left pointing at `staging` and needs splitting per step 3 before the next production deploy.
-
 ### Seeing both datasets in the Studio
 
 `studio/sanity.config.ts` defines **one workspace per dataset**, so the Studio names the dataset in the navbar and switching needs no restart:
@@ -192,7 +190,7 @@ curl -sI -H "Origin: http://localhost:5173" "https://59rfnf2c.api.sanity.io/v202
 
 - [x] **F1** — done 2026-09-20. `CRON_SECRET` set on Preview and Production. On the preview, `GET /api/cron/reconcile` with the bearer returned **`{"checked":1,"failed":0}` (HTTP 200)**, and the same call without it returned 401. The one session it examined was already fulfilled, so nothing changed — idempotency confirmed on a live deployment. Production still answers 401 by design until commerce is switched on at item 13.
 - [x] **F2** — done 2026-09-20, Route A. `staging` created and seeded from `production`; `VITE_SANITY_DATASET` split into two variables (`production` → `production`, `preview` → `staging`). Proof: `stock-mustard` was set to **5 in staging only**, after which the preview's `/api/catalog` reported mustard `available:true` and `/api/checkout` reported `available:5`, while the `production` dataset stayed at 0. The preview's server functions therefore read and write staging, and a preview test purchase can no longer touch live inventory.
-- [ ] **F3** `localhost:5173` re-added without credentials, stale origin deleted, verified by response header
+- [x] **F3** — done, verified 2026-09-21. `http://localhost:5173` deleted and re-added with `--no-credentials`, and the stale `atelier-product-page-38z417igl-…` origin removed from the CORS list. Proof: a query to the Sanity API with `Origin: http://localhost:5173` returns `Access-Control-Allow-Origin` but **no `Access-Control-Allow-Credentials`**, while `http://localhost:3333` still returns `Access-Control-Allow-Credentials: true`, which the Studio needs. `http://localhost:3000` and `https://kimie-atelier.vercel.app` are credential-free too.
 
 **Left in place deliberately:** staging `stock-mustard` is 5, so the preview has stock to test with. The `production` dataset still reads mustard 0 / tapenade 1 — real numbers must be set there before launch.
 
