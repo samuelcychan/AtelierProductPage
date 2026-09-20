@@ -29,3 +29,6 @@ Thumbs.db
 .design-import/
 .vercel
 .env*
+
+# Sanity dataset exports (e.g. the staging copy in progress/security-fix-steps.md)
+*.tar.gz
