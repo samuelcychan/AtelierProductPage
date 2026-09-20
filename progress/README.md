@@ -152,9 +152,9 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 **Vercel (§6.2, D13)**
 - [x] `vercel link`: linked to project `atelier-product-page` (team `samuelcychan-team`), which serves `https://kimie-atelier.vercel.app`; `.vercel` and `.env*` are gitignored
 - [ ] Commercial-use plan decision (D13): plan tier isn't visible from the CLI; check the team's billing page
-- [ ] Project environment variables: Preview now has all seven; Production still has only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `VITE_SANITY_API_VERSION` (checked 2026-09-20)
-- [ ] **Security F1:** `CRON_SECRET` is set in no environment, so the daily reconcile answers 401 to Vercel's own call. Add it to Preview and Production
-- [ ] **Security F2:** previews are public and write to the live Sanity dataset. Before go-live, turn on deployment protection for previews or give Preview its own dataset
+- [ ] Project environment variables: Preview has all seven; Production has only `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `VITE_SANITY_API_VERSION` and `CRON_SECRET` — still no Stripe or Sanity write credentials, so the shop stays dark until item 13 (checked 2026-09-21)
+- [x] **Security F1:** `CRON_SECRET` set on Preview and Production — **done 2026-09-20**. The preview cron returns `{"checked":1,"failed":0}` with the bearer and 401 without it; production keeps answering 401 until commerce is switched on, because `isCommerceConfigured` is checked first
+- [x] **Security F2:** Preview reads and writes its own `staging` Sanity dataset, so a preview test purchase can no longer decrement live stock — **done 2026-09-20**. `VITE_SANITY_DATASET` is now two variables, production→`production` and preview→`staging`
 
 **Sanity (security F3)** — see [security-fix-steps.md](security-fix-steps.md)
 - [x] Re-add the CORS origin `http://localhost:5173` **without** "Allow credentials" (it needs none — the site's dev server reads the public CDN with no token), and delete the stale origin `https://atelier-product-page-38z417igl-samuelcychan-team.vercel.app`. `http://localhost:3333` keeps credentials: the Studio needs them — **done 2026-09-21**, verified by response header
