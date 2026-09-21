@@ -294,7 +294,7 @@ Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3
 
 Priority: P0 | Effort: S (a decision, plus billing) | Owner: owner | Dependencies: none
 
-**Status: On hold** — the decision has not been made. Nothing else waits on it: preview testing, the security work and the dark production deploy all run on the current plan.
+**Status: Deferred 2026-09-21** — set aside by the owner for now. Nothing else waits on it: preview testing, the security work and the dark production deploy all run on the current plan. It must be settled before item 13, which cannot take real money without it.
 
 ---
 
