@@ -2,11 +2,11 @@
 
 **Format:** WWA (Why – What – Acceptance)
 **Scope:** only the work left after tracks A–D were merged into `feat/commerce-stripe-shippo`. Built and verified work is not repeated here.
-**Total items:** 13 — 7 engineering or shared, 6 owner or adviser
+**Total items:** 14 — 7 engineering or shared, 7 owner or adviser
 **Estimated effort:** engineering is about one sprint (review, preview testing, launch wiring). The owner and adviser items (legal text, tax and food compliance, Stripe activation) depend on outside parties, typically days to weeks, and set the launch date.
 **Source:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), [progress/README.md](README.md)
 **State as of:** 2026-09-21
-**Progress:** items 1, 2 and 3 are done; item 12 is done but for the D13 plan decision. Items 4–11 and 13 are open, and the owner and adviser items still set the launch date.
+**Progress:** items 1, 2, 3 and 12 are done. Items 4–11, 13 and 14 are open, and the owner and adviser items still set the launch date.
 
 ## Current state (verified 2026-09-21)
 
@@ -17,7 +17,7 @@ Checked live against Vercel, Sanity and the deployed sites on the date above. Th
 - **Production:** `https://kimie-atelier.vercel.app` serves the merged branch with commerce **off**: `/api/catalog` returns `{"enabled":false}`. It holds `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET` (=`production`), `VITE_SANITY_API_VERSION` and `CRON_SECRET`. The Stripe keys, `SANITY_WRITE_TOKEN` and `SITE_URL` are deliberately absent until item 13.
 - **Owner data:** SKUs set; stock in the `production` dataset reads mustard 1 / tapenade 1 — the owner raised mustard from 0 to 1 by hand on 2026-09-20 after a preview purchase took the last jar, so neither figure is a counted shelf number; packed weights still read 100 g (unconfirmed); customs description and HS code empty; the hosted Studio is still not deployed — item 6.
 - **Legal pages:** every business detail is still a placeholder — item 4.
-- **Security:** findings F1–F4 are closed. F5 (rate limiting) waits for the commercial plan and F6 (Studio dependencies) is not a launch blocker — item 3.
+- **Security:** findings F1–F4 are closed. F5 (rate limiting) waits for the commercial plan — item 14 — and F6 (Studio dependencies) is not a launch blocker. Both sit under item 3.
 
 ---
 
@@ -229,14 +229,13 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 
 ---
 
-### 12. Commerce code on production, switched off, on a commercial Vercel plan
+### 12. Commerce code on production, switched off
 
-**Why:** Merging and deploying with commerce off lets the legal pages and product information go live for Stripe's review (item 11) without exposing checkout early. Vercel Hobby is restricted to non-commercial, personal use, so selling from the site needs Pro. (Corrected 2026-09-20: the daily cron is **not** a reason to upgrade — cron jobs run on every plan, and `0 1 * * *` is inside Hobby's once-a-day limit. Only the ±59 min timing precision differs, which a daily safety net does not care about.)
+**Why:** Merging and deploying with commerce off lets the legal pages and product information go live for Stripe's review (item 11) without exposing checkout early. The hosting plan this runs on is a separate decision — item 14.
 
-**What:** Move the project to a Vercel plan that allows commercial use (D13). Merge `feat/commerce-stripe-shippo` into `main` via a pull request and let production deploy **without** Stripe variables. Without them, commerce reports as off, so the site shows no prices or buy buttons.
+**What:** Merge `feat/commerce-stripe-shippo` into `main` via a pull request and let production deploy **without** Stripe variables. Without them, commerce reports as off, so the site shows no prices or buy buttons.
 
 **Acceptance Criteria:**
-- The Vercel team is on a plan permitting commercial use (checked on the billing page)
 - `https://kimie-atelier.vercel.app/api/catalog` returns `{"enabled":false}` after the merge
 - `/`, `/story` and all four `/legal/*` pages load on production with no buy buttons and no console errors
 - `vercel.json`'s rewrite serves built assets correctly on production (no HTML served for `.js`/`.css`)
@@ -244,9 +243,9 @@ Priority: P0 | Effort: M (external review) | Owner: owner | Dependencies: item 4
 - **F1:** ✅ done 2026-09-20 — `CRON_SECRET` set on Preview and Production; the preview cron returns `{"checked":1,"failed":0}` with the bearer and 401 without it. Note that production answers 401 to the cron regardless until commerce is switched on, because `isCommerceConfigured` is checked before the bearer — verify the bearer on the preview now, and on production at item 13
 - **F2:** ✅ done 2026-09-20 — Preview points at the new `staging` dataset; `VITE_SANITY_DATASET` is split per environment and the separation was proved with a stock value present only in staging
 
-Priority: P0 | Effort: S | Owner: owner (plan) + engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging
+Priority: P0 | Effort: S | Owner: engineering (PR, deploy) | Dependencies: item 3 (security review) is recommended before merging
 
-**Status: Partly done — merged and verified 2026-09-20.** PR [#5](https://github.com/samuelcychan/AtelierProductPage/pull/5) merged into `main` (`763443a`, 59 commits, 45 files, no conflicts, CI green) and deployed to `https://kimie-atelier.vercel.app`.
+**Status: Done — merged and verified 2026-09-20.** PR [#5](https://github.com/samuelcychan/AtelierProductPage/pull/5) merged into `main` (`763443a`, 59 commits, 45 files, no conflicts, CI green) and deployed to `https://kimie-atelier.vercel.app`.
 
 Verified on production:
 - `/api/catalog` returns `{"enabled":false}`; `/api/checkout` 503, `/api/order` 404, `/api/cron/reconcile` 401 ✅
@@ -257,9 +256,11 @@ Verified on production:
 - The SPA rewrite works: `/assets/*.js` serves as `application/javascript` and `/assets/*.css` as `text/css`, and every client route returns `index.html` ✅
 - All five security headers from finding F4 are present on production ✅
 
-**Steps for F1 and F2:** [security-fix-steps.md](security-fix-steps.md) — neither depends on D13.
+**Steps for F1 and F2:** [security-fix-steps.md](security-fix-steps.md) — neither depended on the plan decision.
 
-**Still open on this item:** only the commercial-use plan decision (D13), which is on hold. F1 and F2 were closed on 2026-09-20 — see [security-fix-steps.md](security-fix-steps.md). The `production` dataset reads mustard 1 / tapenade 1 (checked 2026-09-21); real launch stock must be set there before item 13.
+**Split out 2026-09-21:** this item also carried the commercial-use plan decision (D13), which held it open although the deploy work finished on 2026-09-20. The decision is now **item 14**, owned by the owner and gating item 13 alone.
+
+**Carry into item 13:** the `production` dataset reads mustard 1 / tapenade 1 (checked 2026-09-21); real launch stock must be set there before go-live.
 
 ---
 
@@ -276,7 +277,24 @@ Verified on production:
 - Each stop lever is rehearsed once: stock → 0 hides purchase within a minute; "For sale" off; removing `STRIPE_SECRET_KEY` + redeploy turns commerce off
 - No live secret appears in the repository, the bundle or function logs
 
-Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3, 4, 10, 11, 12 (and 7–8 for fulfilment)
+Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3, 4, 10, 11, 12, 14 (and 7–8 for fulfilment)
+
+---
+
+### 14. Vercel plan permitting commercial use (D13)
+
+**Why:** Vercel's Hobby plan restricts the account to non-commercial, personal use, so taking real money from the site needs a plan that permits commercial use. This is a billing decision, not engineering work, and it gates item 13 alone — everything up to and including the dark production deploy runs on the plan in use today. (Corrected 2026-09-20: the daily cron is **not** a reason to upgrade — cron jobs run on every plan and `0 1 * * *` is inside Hobby's once-a-day limit. Only the ±59 min timing precision differs, which a daily safety net does not care about.)
+
+**What:** Check the team's billing page for the current tier, choose the plan (Pro, from $20/month per member, is the expected answer — PLAN §23 D13), settle who owns billing, and record the decision.
+
+**Acceptance Criteria:**
+- The Vercel team is on a plan permitting commercial use, confirmed on the billing page — the CLI does not expose the tier, so this cannot be checked from a terminal
+- The chosen tier and the billing owner are recorded in the PLAN §23 decision log
+- Finding F5 (rate limiting on `/api/checkout` and `/api/order`) is scheduled, since a Vercel WAF rule needs the commercial plan
+
+Priority: P0 | Effort: S (a decision, plus billing) | Owner: owner | Dependencies: none
+
+**Status: On hold** — the decision has not been made. Nothing else waits on it: preview testing, the security work and the dark production deploy all run on the current plan.
 
 ---
 
@@ -291,9 +309,10 @@ Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3
 | 10 Tax and food compliance | | |
 | 11 Stripe live activation | | |
 | 12 Deploy dark on production | | |
+| 14 Commercial Vercel plan (D13) | | |
 | 13 Go live | | |
 
-**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 7, 10 start now in parallel (owner work gates launch) · 12 once 3 is done · 11 once 4 and 12 are live · 8 after 7 · 9 after 5 · 13 last.
+**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 7, 10 start now in parallel (owner work gates launch) · 12 once 3 is done · 14 any time, but before 13 · 11 once 4 and 12 are live · 8 after 7 · 9 after 5 · 13 last.
 
 ## Technical notes
 
@@ -310,7 +329,7 @@ Priority: P0 | Effort: M | Owner: engineering + owner | Dependencies: items 2, 3
 1. **Shipping scope at launch:** Japan only (recommended), or honour the FAQ's international promise? (item 5)
 2. **Fulfilment path:** will Shippo work from Kanagawa at an acceptable rate, or do we launch on Japan Post? (item 7)
 3. **Packed weights:** are 100 g per jar measured values, or placeholders? (item 6)
-4. **Vercel plan:** which commercial plan tier, and who owns billing? (item 12)
+4. **Vercel plan:** which commercial plan tier, and who owns billing? (item 14)
 5. **Delivery estimate:** checkout shows 2–5 business days as a placeholder. What should it say? (items 5, 13)
 6. **Customer shipping notice:** manual e-mail from Kimie at launch (D10), or is a transactional e-mail provider wanted?
 7. **Custom domain:** launch on `kimie-atelier.vercel.app`, or a custom domain first? This affects `SITE_URL`, CORS, the webhook URL and Stripe's review.
