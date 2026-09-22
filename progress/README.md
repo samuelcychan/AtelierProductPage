@@ -112,6 +112,12 @@ Step-by-step fixes for F1, F2 and F3, with verification commands: **[security-fi
 
 PR #5 merged into `main` (`763443a`) and deployed with commerce dark. Verified on `https://kimie-atelier.vercel.app`: `/api/catalog` returns `{"enabled":false}`, checkout 503, order 404, cron 401; `/`, `/story`, `/order/complete` and all four `/legal/*` pages render with no prices, no buy controls and no console errors; `/story` still reads product copy from Sanity; the SPA rewrite serves `.js` and `.css` with the right content types; all five F4 security headers are present. Still open: the D13 plan decision, F1 and F2.
 
+## Runbooks
+
+| Document | For | State |
+|---|---|---|
+| [runbook-fulfilment.md](runbook-fulfilment.md) | Shipping an order by hand with Japan Post (backlog item 8) | Written 2026-09-23. Packing (step 4) waits on item 15; the rehearsal with Kimie is still to do. Japanese page for Kimie: <https://claude.ai/artifact/CLJNM4dtEHWzCVzh1ikpZL> |
+
 ## Not yet assigned
 
 | Work | Why not now |

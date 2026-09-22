@@ -177,7 +177,7 @@ Priority: P1 | Effort: S (time-boxed spike, 1–2 days elapsed for carrier repli
 **What:** Write a one-page owner runbook for Japan Post (PLAN §12.2, chosen in item 7): where new orders appear, packing with the parcel type from item 15, the ゆうパック label (handwritten or printed), drop-off or collection, entering the tracking number into the Stripe payment metadata, and e-mailing the buyer. Kimie rehearses it on a preview test order.
 
 **Acceptance Criteria:**
-- Runbook exists in the repo and is linked from the board
+- Runbook exists in the repo and is linked from the board — **done 2026-09-23:** [runbook-fulfilment.md](runbook-fulfilment.md), with a Japanese page for Kimie at <https://claude.ai/artifact/CLJNM4dtEHWzCVzh1ikpZL> (private until the owner shares it). Step 4 (packing) stays open until item 15.
 - Kimie completes a full rehearsal on a test order without developer help: finds the order, creates a label (or a mock label), adds `tracking_number` in Stripe
 - Weekly checks (stock vs shelf, oversold query, tracking on every payment) are listed in the runbook
 
