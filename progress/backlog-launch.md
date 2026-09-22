@@ -2,11 +2,11 @@
 
 **Format:** WWA (Why – What – Acceptance)
 **Scope:** only the work left after tracks A–D were merged into `feat/commerce-stripe-shippo`. Built and verified work is not repeated here.
-**Total items:** 14 — 7 engineering or shared, 7 owner or adviser
+**Total items:** 15 — 7 engineering or shared, 8 owner or adviser
 **Estimated effort:** engineering is about one sprint (review, preview testing, launch wiring). The owner and adviser items (legal text, tax and food compliance, Stripe activation) depend on outside parties, typically days to weeks, and set the launch date.
 **Source:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), [progress/README.md](README.md)
 **State as of:** 2026-09-21
-**Progress:** items 1, 2, 3 and 12 are done. Items 4–11, 13 and 14 are open, and the owner and adviser items still set the launch date.
+**Progress:** items 1, 2, 3, 7 and 12 are done. Items 4–6, 8–11 and 13–15 are open, and the owner and adviser items still set the launch date.
 
 ## Current state (verified 2026-09-21)
 
@@ -113,9 +113,10 @@ Priority: P0 | Effort: M | Owner: engineering (independent reviewer) | Dependenc
 - `grep` finds no `todoJa(`, `todoEn(`, `todoFr(`, `todoZh(`, `todoTw(`, `reviewJa(` or `reviewEn(` calls in `content.ts`
 - The "Draft" notice no longer appears on any legal page in any language
 - The legal name, address, phone and e-mail on `/legal/tokushoho` match the Stripe account application
-- The privacy page names every data processor actually used (Stripe; Shippo only if item 7 chooses it; Vercel; Sanity)
+- The privacy page names every data processor actually used: Stripe, Vercel and Sanity. Not Shippo, which item 7 dropped. Japan Post receives addresses as the carrier.
+- The shipping costs on `/legal/tokushoho` and `/legal/shipping` match item 15's decision
 
-Priority: P0 | Effort: M (text) + S (engineering) | Owner: owner and advisers | Dependencies: item 7 (only for the privacy page's Shippo line)
+Priority: P0 | Effort: M (text) + S (engineering) | Owner: owner and advisers | Dependencies: item 15 (shipping-cost wording)
 
 ---
 
@@ -165,20 +166,22 @@ Priority: P1 | Effort: S | Owner: owner (data), engineering (deploy) | Dependenc
 
 Priority: P1 | Effort: S (time-boxed spike, 1–2 days elapsed for carrier replies) | Owner: owner + engineering | Dependencies: none
 
+**Status: Done 2026-09-21. Path B (Japan Post, manual); Shippo dropped.** Decided from a desk comparison of six options (PLAN §2.3) instead of the Shippo test. A Japan-only launch needs a domestic carrier, and Shippo has none, so no test label could change the answer. That makes the first acceptance criterion moot. Public rates were recorded instead (PLAN §19.3). They cover one parcel; the one- versus two-jar difference moves to item 15 once packed weights are measured (item 6). The decision and roadmap are in PLAN §23. `SHIPPO_API_TOKEN` stays unset in every environment; `server/shippo.ts` is inert, and the Shippo webhook is won't-do.
+
 ---
 
 ### 8. Kimie can fulfil an order end to end on the chosen path
 
 **Why:** An order that is paid but never shipped is worse than no store. The first real orders must not be the first time anyone runs the fulfilment steps.
 
-**What:** Write a one-page owner runbook for the chosen path (§12.1 or §12.2): where new orders appear, packing, label creation, entering the tracking number into the Stripe payment metadata, and e-mailing the buyer. Kimie rehearses it on a preview test order.
+**What:** Write a one-page owner runbook for Japan Post (PLAN §12.2, chosen in item 7): where new orders appear, packing with the parcel type from item 15, the ゆうパック label (handwritten or printed), drop-off or collection, entering the tracking number into the Stripe payment metadata, and e-mailing the buyer. Kimie rehearses it on a preview test order.
 
 **Acceptance Criteria:**
 - Runbook exists in the repo and is linked from the board
 - Kimie completes a full rehearsal on a test order without developer help: finds the order, creates a label (or a mock label), adds `tracking_number` in Stripe
 - Weekly checks (stock vs shelf, oversold query, tracking on every payment) are listed in the runbook
 
-Priority: P1 | Effort: S | Owner: owner, supported by engineering | Dependencies: item 7 (path), item 2 (a preview test order)
+Priority: P1 | Effort: S | Owner: owner, supported by engineering | Dependencies: item 7 (path — done), item 15 (parcel type), item 2 (a preview test order)
 
 ---
 
@@ -298,21 +301,53 @@ Priority: P0 | Effort: S (a decision, plus billing) | Owner: owner | Dependencie
 
 ---
 
+### 15. Domestic parcel type and a profitable one-jar order
+
+**Why:** Free shipping (D4) on a single ¥1,900 jar leaves little margin. ゆうパック 60 size from Kanagawa costs ¥880–¥1,450, plus a card fee of about ¥68 and packaging (PLAN §19.3, PRD assumption A4). The shipping wording on the legal pages (item 4) and in the site copy (item 5) depends on this answer.
+
+**What:** With the measured packed weight and size from item 6, choose the domestic parcel. Compare ゆうパック 60 size with at least one cheaper protected option: a Japan Post or Yamato contract quote, or a flat-rate service such as レターパックプラス if a packed jar survives a drop test. Then decide how a one-jar order is priced:
+- keep free shipping and raise the price;
+- charge shipping on one jar, free from two jars (¥4,000);
+- or charge shipping on every order.
+
+**Acceptance Criteria:**
+- The chosen parcel type, its rate for one and two jars to the nearest and farthest zones, and the packaging cost are recorded in PLAN §19.3
+- A drop test of a packed jar in the chosen parcel is passed
+- The margin per one-jar and two-jar order is written down, and the pricing rule is recorded in PLAN §23
+- If shipping is no longer free on every order: D4 is updated, the Checkout shipping option is changed, and the `priceNote`, `twoJar.shipping` and `buyStrip.priceNote` copy is updated in all five locales. Item 5 covers the copy.
+
+Priority: P1 | Effort: S | Owner: owner decides; engineering changes checkout and copy if needed | Dependencies: item 6 (packed weight)
+
+---
+
 ## Story map
 
 | Must-have (P0) | Should-have (P1) | Nice-to-have (P2) |
 |---|---|---|
 | 1 Preview shows real prices | 5 Shipping promises consistent | 9 Native-reviewed translations |
 | 2 Checkout verified on preview | 6 Catalog data accurate, Studio hosted | |
-| 3 Security review | 7 Spike: Shippo or Japan Post | |
+| 3 Security review | ~~7 Spike: Shippo or Japan Post~~ (done: Japan Post) | |
 | 4 Legal pages complete | 8 Fulfilment rehearsal | |
+| | 15 Parcel type and one-jar margin | |
 | 10 Tax and food compliance | | |
 | 11 Stripe live activation | | |
 | 12 Deploy dark on production | | |
 | 14 Commercial Vercel plan (D13) | | |
 | 13 Go live | | |
 
-**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 7, 10 start now in parallel (owner work gates launch) · 12 once 3 is done · 14 any time, but before 13 · 11 once 4 and 12 are live · 8 after 7 · 9 after 5 · 13 last.
+**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 10 start now in parallel (owner work gates launch) · 15 as soon as 6 gives a packed weight, then finish the shipping wording in 4 and 5 · 12 once 3 is done · 14 any time, but before 13 · 11 once 4 and 12 are live · 8 after 15 · 9 after 5 · 13 last.
+
+## Fulfilment roadmap after launch (PLAN §2.3)
+
+These are not launch items. Each starts only when its trigger happens.
+
+| Order | Option | Trigger | First step |
+|---|---|---|---|
+| 1 | Japan Post, manual | Launch | Items 8 and 15 |
+| 2 | Ship&co label API (Japan Post, Yamato and Sagawa at home, EMS and couriers abroad) | Any month reaches about 20–30 orders, or the first overseas market opens | 30-day free trial; replace `server/shippo.ts` with a Ship&co module and write tracking to Stripe metadata |
+| 3 | Cross-border line forwarder (跨境專線) | Taiwan or Hong Kong has cleared PLAN §5.2 | 2–3 quotes compared with EMS, UGX and Ship&co; formal customs clearance and food in glass accepted in writing |
+| 4 | OpenLogi (3PL) | Kimie wants to stop packing orders | Decide how stock ownership moves from Sanity to the warehouse |
+| — | Shippo | Dropped 2026-09-21 | — |
 
 ## Technical notes
 
@@ -327,9 +362,10 @@ Priority: P0 | Effort: S (a decision, plus billing) | Owner: owner | Dependencie
 ## Open questions
 
 1. **Shipping scope at launch:** Japan only (recommended), or honour the FAQ's international promise? (item 5)
-2. **Fulfilment path:** will Shippo work from Kanagawa at an acceptable rate, or do we launch on Japan Post? (item 7)
+2. ~~**Fulfilment path:** will Shippo work from Kanagawa at an acceptable rate, or do we launch on Japan Post? (item 7)~~ **Answered 2026-09-21:** Japan Post, manual; Shippo dropped.
 3. **Packed weights:** are 100 g per jar measured values, or placeholders? (item 6)
 4. **Vercel plan:** which commercial plan tier, and who owns billing? (item 14)
 5. **Delivery estimate:** checkout shows 2–5 business days as a placeholder. What should it say? (items 5, 13)
 6. **Customer shipping notice:** manual e-mail from Kimie at launch (D10), or is a transactional e-mail provider wanted?
 7. **Custom domain:** launch on `kimie-atelier.vercel.app`, or a custom domain first? This affects `SITE_URL`, CORS, the webhook URL and Stripe's review.
+8. **One-jar pricing:** keep free shipping on a single jar, or set a threshold of two jars (¥4,000)? (item 15)

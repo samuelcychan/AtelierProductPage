@@ -36,7 +36,7 @@ Today people can read about Kimie's jars, but they can't buy them: every "Add to
 - **What's left** is mostly setup, review, and work outside the code: legal text, compliance, and Stripe approval.
 
 **What we learned while building.**
-- **Shippo may not help us.** It has no Japanese carriers, and its discounted rates are for parcels leaving the US. Japan Post needs its own system for international customs data. So fulfilment may start with Japan Post.
+- **Shippo may not help us.** It has no Japanese carriers, and its discounted rates are for parcels leaving the US. Japan Post needs its own system for international customs data. So fulfilment may start with Japan Post. **Decided 2026-09-21:** launch on Japan Post by hand, and drop Shippo (PLAN §2.3).
 - **The copy contradicts itself.** Some copy promises international shipping, but the new legal pages say Japan only. This must be settled before launch.
 - **Selling food online has rules.** A business permit, allergen labels and a legal notice page are required. Stripe also checks the website before it allows live payments.
 
@@ -192,7 +192,7 @@ New order e-mail from Stripe
 
 | # | User story | Acceptance criteria | Status |
 |---|---|---|---|
-| P1-1 | As the owner, I want a simple, practised way to ship each order, so that orders go out within 3 business days. | Fulfilment path chosen (Japan Post or Shippo); a one-page runbook; Kimie ships a test order without help | **Remaining** (spike + runbook) |
+| P1-1 | As the owner, I want a simple, practised way to ship each order, so that orders go out within 3 business days. | Fulfilment path chosen (Japan Post or Shippo); a one-page runbook; Kimie ships a test order without help | Path chosen: **Japan Post** (2026-09-21). **Remaining:** parcel type (backlog item 15) + runbook (item 8) |
 | P1-2 | As a buyer, I want the shipping promises to match what really happens, so that I'm not misled. | FAQ, shipping page and cart note all say the same destinations in five languages; origin reads Kanagawa | **Remaining** |
 | P1-3 | As a visitor reading in French or Chinese, I want natural wording at checkout, so that I trust the shop. | Native reviewers sign off the cart, order, legal-link and shipping copy | **Remaining** |
 | P1-4 | As the owner, I want accurate packed weights and launch stock, so that labels are right and I don't oversell. | Weights measured (currently 100 g each, unconfirmed); stock equals jars on hand at launch | **Remaining** |
@@ -226,8 +226,8 @@ These are beliefs we haven't proven yet. Each needs checking.
 | A1 | **Enough visitors come to the site to reach 100 orders a month.** | No traffic data exists yet, so KR1 may be out of reach without marketing | Add visitor measurement before launch; compare visits with orders in the first 30 days |
 | A2 | **Kimie can make and ship about 150–200 jars a month.** (100 orders × 1.5–2 jars is our guess) | Selling more than can be made means sold-out pages or oversold orders | Kimie confirms batch size and packing time per order |
 | A3 | Buyers in Japan are happy paying by card, Apple Pay or Google Pay. | No konbini or PayPay at launch | Watch abandoned checkouts and questions from buyers |
-| A4 | Free shipping still leaves a profit on a ¥1,900 jar. | Shipping, packaging and the 3.6% card fee come out of each order | Get Japan Post quotes for one and two jars; work out the margin per order |
-| A5 | Japan Post is workable if Shippo can't ship from Kanagawa. | Fulfilment path and effort per order | The Shippo spike (backlog item 7) |
+| A4 | Free shipping still leaves a profit on a ¥1,900 jar. | Shipping, packaging and the 3.6% card fee come out of each order | Get Japan Post quotes for one and two jars; work out the margin per order. **At risk:** ゆうパック 60 size costs ¥880–¥1,450 from Kanagawa, so one jar at ¥1,900 is thin (backlog item 15) |
+| A5 | Japan Post is workable if Shippo can't ship from Kanagawa. | Fulfilment path and effort per order | **Settled 2026-09-21:** Japan Post chosen; Shippo dropped (backlog item 7) |
 | A6 | Stripe approves the account once the legal pages are complete. | No live payments without approval | Submit after the legal pages go live on production |
 | A7 | Manual shipping e-mails are acceptable at launch volume. | At 100 orders a month, that's about 5 e-mails every working day | Track the time Kimie spends; revisit at 30 orders a month |
 
@@ -259,7 +259,8 @@ The launch date depends on Phase 1b (outside parties), not on the code.
 | Question | Owner | Needed by |
 |---|---|---|
 | Is launch Japan only? If yes, the FAQ's international promise must be removed in all five languages. | Kimie | Before the legal text is finalised |
-| Can Shippo label a jar from Kanagawa at a fair price, or do we launch on Japan Post? | samuelcychan + Kimie | Within the first week of Phase 1 |
+| ~~Can Shippo label a jar from Kanagawa at a fair price, or do we launch on Japan Post?~~ **Answered 2026-09-21:** Japan Post; Shippo dropped | samuelcychan | — |
+| Does a one-jar order keep free shipping, or is shipping free only from two jars (¥4,000)? (backlog item 15) | Kimie | Before the legal shipping text is finalised |
 | How many jars can be made and shipped per month (A2)? Is 100 orders a month realistic for launch? | Kimie | Before launch; it may change KR1's timing |
 | How will we count visitors, so we can judge conversion and KR1? (No analytics on the site today.) | samuelcychan | Before launch |
 | Are the packed weights (100 g each) real measurements? | Kimie | Before the first label is printed |

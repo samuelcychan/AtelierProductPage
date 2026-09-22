@@ -37,6 +37,8 @@ The site promises shipping **from Ehime** — by EMS abroad, and implicitly by a
 
 If Path A fails its test, the honest recommendation is to launch on Path B and revisit Shippo only if a non-Japan fulfilment partner or a Japan-enabled carrier account appears. Everything else in this plan is unaffected.
 
+**Decided 2026-09-21: Path B, without running the §6.4 test.** A Japan-only launch (D2) needs a domestic carrier, and Shippo has none, so the test could not produce a usable result. Shippo is dropped. `server/shippo.ts` stays in the code but does nothing while `SHIPPO_API_TOKEN` is unset. Later upgrades have trigger conditions: Ship&co for label automation and EMS, and cross-border line forwarders for Taiwan and Hong Kong. See §2.3 and §23.
+
 ### How this differs from PLAN-shopify
 
 | Topic | PLAN-shopify | This plan |
@@ -118,6 +120,31 @@ If Path A fails its test, the honest recommendation is to launch on Path B and r
 | Needs embedded form | No | Yes | No |
 | Owner effort per order | Buy label in Shippo app | Buy label | Create label on 国際郵便マイページ or at the counter; paste tracking into Stripe |
 
+### 2.3 Fulfilment providers compared (2026-09-21)
+
+The table below replaced the §6.4 test as the basis for the item 7 decision. It widens §2.2 to every realistic option for a shop that ships jars from Kanagawa. Prices were checked on 2026-09-21 on the providers' public pages ([§22](#22-sources)). Items marked *quote* have no public price.
+
+| | Shippo | **Japan Post, manual** | **Ship&co** | Yamato B2 Cloud | OpenLogi (3PL) | **Cross-border line forwarder (跨境專線)** |
+|---|---|---|---|---|---|---|
+| **API integration** | REST API, and `server/shippo.ts` is already written. It has no Japanese carriers, so it works only through your own DHL, FedEx or UPS Japan account. | None needed. Kimie reads the order in Stripe and pastes the tracking number back. International goods use the 国際郵便マイページ web form; its API (Hubez) is for large shippers. | REST API for rates, labels, tracking and customs invoices. It is the only single API covering Japan Post (ゆうパック and international mail), Yamato, Sagawa, DHL, FedEx and UPS. It would replace `shippo.ts` with a module of similar size. | Free web app with CSV import. The API is a paid option agreed in a sales meeting. | Full API: the webhook would pass the order to the warehouse. | Varies by forwarder. Usually Excel or CSV upload, with an API only at some. Tracking often switches to a local carrier's number partway through. |
+| **Running cost** | Free up to 30 labels a month, then about 5¢ per label | ¥0 | ¥1,100 a month + ¥22 per label (up to 50 labels), about ¥59 per order at 30 orders a month | App free. API: ¥10,000 set-up, ¥5,000 a month, plus a per-label fee | No fixed fee. You pay per item for receiving, storage and picking. Overseas adds a ¥300 fee on top of postage. | Usually per parcel only. Often cheaper than EMS on fixed routes (*quote*) |
+| **Postage, one jar** | DHL Express contract rate (*quote*). Uneconomic for a ¥1,900 jar, and it has no domestic service | ゆうパック 60 size from Kanagawa: ¥820–¥1,450 (¥880 to Kanto) | Carrier's rate | 宅急便 contract rate (*quote*) | Their negotiated rates | *quote*. Compare with EMS zone 1: ¥1,450 (500 g), ¥2,200 (1 kg) |
+| **Complexity** | High: a courier account, a webhook, a URL token, and still no domestic shipping | Lowest to build; the most manual work per order | Low to medium | Low in the app, medium with the API | High: stock moves to their warehouse, which conflicts with Sanity as the stock record. Food and glass handling need checking. | Medium to high: a contract, minimum volumes, food and glass acceptance, and reliability all vary by forwarder |
+| **Speed** | 1–4 days abroad | 1–3 days in Japan. EMS 2–6 days | Carrier's speed; labels take seconds | Next day across most of Japan | Ships the next day from the warehouse | About 3–7 days to Taiwan or Hong Kong, depending on the consolidation schedule |
+| **Overseas** | Courier only; no EMS | EMS and small packets. Electronic customs data required from 2026. EMS to the US resumed 14 Apr 2026. UGX cross-border EC service launched 2 Mar 2026. | EMS and courier services with automatic customs paperwork | Not practical | EMS, ePacket and DHL to about 120 countries | One route per forwarder, typically Taiwan or Hong Kong |
+
+**Decision and priority:**
+
+| Priority | Option | When |
+|---|---|---|
+| **1 — launch** | **Japan Post, manual** (Path B, §12.2) | Now. No new code; the runbook is backlog item 8 and the parcel and margin choice is item 15 |
+| **2 — later** | **Ship&co** (label API, domestic carriers and EMS) | When any month reaches about 20–30 orders, or the first overseas market opens, whichever comes first |
+| **3 — later, per market** | **Cross-border line forwarder** | Only when Taiwan or Hong Kong has cleared §5.2. Get 2–3 quotes and compare them with EMS, UGX and Ship&co. Accept only formal customs clearance (no split or grey-channel "tax-included" (包稅) service) and written acceptance of food in glass. |
+| **4 — only if needed** | **OpenLogi** (3PL) | Only if Kimie wants to stop packing orders herself. It would require moving stock ownership out of Sanity. |
+| — | **Shippo** | Dropped. The code stays inert; the Shippo webhook (§12.1) will not be built. |
+
+The free-shipping margin matters more than the tool. On a single ¥1,900 jar, ゆうパック (¥880–¥1,450) plus the card fee (about ¥68) plus packaging takes roughly 50–80% of the price (PRD assumption A4). Backlog item 15 settles the parcel type and the one-jar pricing before the legal shipping text is finalised.
+
 ---
 
 ## 3. Target architecture
@@ -178,7 +205,7 @@ The plan is written assuming each recommendation.
 | **D2** | Where to sell at launch | **Japan only**; add countries one at a time after §5.2. | Same reasoning as PLAN-shopify: animal-derived ingredients (anchovies, honey) and per-country food-import duties. |
 | **D3** | Currency | **JPY only at launch, on every language.** International later: the buyer picks a destination country in the cart; the function charges that market's fixed Sanity price (`usd`, `eur`, `twd`) and restricts `shipping_address_collection.allowed_countries` to that market. **Adaptive Pricing off.** | A Checkout Session's currency is fixed when it is created, before the address is entered, so the country must be known first. Adaptive Pricing adds a 2–4% conversion fee paid by the customer and would show amounts that differ from the site. |
 | **D4** | Shipping charge | **Free shipping**, one fixed shipping option of ¥0, cost absorbed in the price. | Matches "Shipping included" in five locales. Charging shipping means editing `priceNote`, `twoJar.shipping` and `buyStrip.priceNote` everywhere. |
-| **D5** | Shippo's role | **Fulfilment only** (orders → labels → tracking), **gated by §6.4**. Path B (Japan Post) always available. | Keeps checkout independent of Shippo's unconfirmed Japan support. |
+| **D5** | Shippo's role | ~~**Fulfilment only** (orders → labels → tracking), **gated by §6.4**. Path B (Japan Post) always available.~~ **Superseded 2026-09-21: not used.** Launch on Path B (Japan Post, manual). Label automation later through Ship&co (§2.3). | Keeps checkout independent of any shipping provider. Shippo has no Japanese domestic carrier, which a Japan-only launch needs. |
 | **D6** | Where prices and stock live | **Sanity**: `product.prices` and a `stock` document per product. Orders and personal data stay in **Stripe**. | One editing tool for Kimie; no new database. Sanity never holds customer data. |
 | **D7** | Stock reservation | **Check stock when creating the Session; decrement when payment is confirmed.** Sessions expire after **30 minutes** (the minimum). An oversold order is flagged for refund. | Reserving at Session creation needs expiry handling for every abandoned checkout. At this volume, two people buying the last jar within the same half hour is rare and handled by a refund. |
 | **D8** | Tax | **Fixed tax-inclusive prices** (総額表示). **Stripe Tax off at launch.** Registration status and receipts decided with a tax accountant. | Stripe Tax costs 0.5% per transaction in registered locations and matters mainly for a JCT-registered business. Japan's cabinet approved cutting the food rate from 8% to **1% from April 2027** (legislation pending at the time of writing), which affects tax-inclusive price decisions — review with the accountant. |
@@ -214,8 +241,10 @@ The plan is written assuming each recommendation.
 | **European Union** | Foods containing products of animal origin (anchovies; honey) are tightly controlled, including small consumer consignments. Confirm either jar may be sent at all. | EU official controls / import adviser |
 | **United Kingdom** | Same question under UK rules. | UK import guidance / adviser |
 | **Australia** | Biosecurity import conditions for foods with fish or honey. | BICON / adviser |
-| **Taiwan** | Import food regulations for small consumer shipments. | Taiwan FDA / adviser |
-| **All** | EMS restrictions per country; **customs electronic data via 国際郵便マイページ** for Japan Post; for DHL Express / FedEx / UPS, their own food rules; who pays import duty and tax, and whether checkout must say so. | Japan Post, carrier |
+| **Taiwan** | Import food regulations for small consumer shipments. The low-value personal-use exemption applies per recipient: parcels under NT$2,000 are duty-free, for at most 6 parcels per half-year. Confirm whether direct-to-consumer sales count as personal import or need a registered importer (TFDA), and whether Japanese food needs a certificate of origin. | Taiwan FDA, Ministry of Finance / adviser |
+| **Hong Kong** | Hong Kong restricts some Japanese aquatic products by prefecture. Confirm whether the tapenade (anchovies) from Kanagawa is affected. | Centre for Food Safety / adviser |
+| **Mainland China** | China has suspended imports of Japanese aquatic products since 2023, so the tapenade (anchovies) is probably excluded. Do not open this market without adviser confirmation. | GACC / adviser |
+| **All** | EMS restrictions per country. **Customs electronic data through 国際郵便マイページ** for Japan Post. For DHL Express, FedEx and UPS, their own food rules. For a **cross-border line forwarder**, written confirmation of formal customs clearance in the buyer's country (no split or grey-channel "tax-included" service) and acceptance of food in glass (§2.3). Who pays import duty and tax, and whether checkout must say so. | Japan Post, carrier, forwarder |
 
 If a destination proves impractical, remove it from the FAQ copy in all five locales rather than leave an unfulfillable promise.
 
@@ -265,6 +294,8 @@ export function GET(): Response {
 **Exit criterion:** on a Vercel preview, `/api/health` returns `{"ok":true}`, and `/`, `/story` and a deep link such as `/order/complete` still load the SPA. Delete `api/health.ts` afterwards.
 
 ### 6.4 Shippo go/no-go test (Path A)
+
+> **Closed 2026-09-21 without running (decision: Path B).** Kept for reference only. See §2.3 and §23.
 
 1. Create a Shippo account at <https://goshippo.com> with the business address in **Ehime, Japan**. Stay on the free Starter plan.
 2. Ask the preferred carrier (DHL Express Japan is the likeliest) for a business account, then in Shippo connect it (**Settings → Carriers**, or `POST /carrier_accounts` with `carrier`, `account_id`, `parameters`, `active`).
@@ -1052,6 +1083,8 @@ Implementation: one `LegalPage.tsx` rendering structured content from a new `src
 
 ### 12.1 Path A — Shippo
 
+> **Won't do (2026-09-21).** Path B was chosen (§2.3). Kept for reference only.
+
 1. Paid order arrives → Shippo web app → **Orders** shows it with status *Paid*.
 2. Kimie opens it, enters the packed weight and parcel size (from the Studio), completes the customs declaration for international orders, chooses the connected carrier's service and **buys the label**. Shippo marks the order *Shipped*.
 3. `transaction_created` webhook → `api/shippo-webhook.ts` copies `tracking_number` and the carrier to the Stripe PaymentIntent metadata (`tracking_number`, `carrier`), so the Stripe Dashboard shows the whole order.
@@ -1091,7 +1124,7 @@ export async function POST(request: Request): Promise<Response> {
 
 Confirm the exact `transaction_created` payload in Shippo's webhook test tool during §6.4 and adjust field names before release.
 
-### 12.2 Path B — Japan Post
+### 12.2 Path B — Japan Post (chosen 2026-09-21)
 
 1. Stripe Dashboard (or app) → **Payments** → the payment → name, address, phone and items (order number in metadata).
 2. Domestic: a Japan Post parcel service chosen for glass jars (quotes in §19). International (when a market opens): create the label and customs data on **国際郵便マイページサービス**, then hand over at the post office.
@@ -1365,6 +1398,17 @@ Add **2%** when a payment needs currency conversion (relevant once non-JPY price
 
 Not quoted by this plan. Before fixing prices, get: Japan Post domestic parcel rates for one and two packed jars; EMS by zone (for later markets); and on Path A the connected carrier's contract rates from Japan (§6.4 step 5). Shipping per parcel comes straight out of each order's margin.
 
+**Public rates found 2026-09-21** (recheck before fixing prices; ゆうパック rates change on 1 Oct 2026):
+
+| Service | Rate |
+|---|---|
+| ゆうパック 60 size from Kanagawa | ¥820 within Kanagawa · ¥880 Tohoku/Kanto/Shinetsu/Hokuriku/Tokai · ¥990 Kinki · ¥1,150 Chugoku/Shikoku · ¥1,410 Hokkaido and Kyushu · ¥1,450 Okinawa |
+| ゆうパック 80 size from Kanagawa | ¥1,130–¥1,810 |
+| EMS, 500 g / 1 kg | Zone 1 (China, Korea, Taiwan) ¥1,450 / ¥2,200 · Zone 2 (rest of Asia) ¥1,900 / ¥3,150 · Zone 3 (Europe, Oceania, Canada) ¥3,150 / ¥4,400 · US ¥3,900 / ¥5,300 |
+| Ship&co (if adopted) | ¥1,100 a month + ¥22 per label (up to 50 labels a month) |
+
+Against a ¥1,900 jar with the card fee of about ¥68, free shipping on a single jar leaves a thin margin. Backlog item 15 decides the parcel type and whether a one-jar order carries a shipping charge or a free-shipping threshold.
+
 ### 19.4 One-time or per market (if exporting)
 
 | Item | Note |
@@ -1379,7 +1423,10 @@ Not quoted by this plan. Before fixing prices, get: Japan Post domestic parcel r
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
-| Shippo cannot buy labels for parcels from Japan, or only at uneconomic carrier rates | High | Medium | Checkout independent of Shippo; §6.4 go/no-go; Path B |
+| Shippo cannot buy labels for parcels from Japan, or only at uneconomic carrier rates | — | — | **Resolved 2026-09-21:** Path B chosen, Shippo dropped (§2.3) |
+| Free shipping on a single ¥1,900 jar leaves little or no margin | High | Medium | Backlog item 15: parcel type, contract quotes, one-jar pricing or a free-shipping threshold |
+| Manual labelling becomes a burden as orders grow | Medium | Medium | Add Ship&co at about 20–30 orders a month (§2.3) |
+| A "tax-included" (包稅) forwarder clears food through a grey channel, and parcels are seized | Medium, if a forwarder is used | High | Formal customs clearance required in writing (§5.2 "All") |
 | Compliance work delays launch | High | High | Japan-only launch (D2); legal pages early, because Stripe activation depends on them |
 | Stripe account review rejects the site | Medium | High | Product information, prices, real address and 特定商取引法 page live before applying (§5.1, §11.6) |
 | Bug in owned order or stock code (double decrement, missed order) | Medium | High | Transactional log-plus-decrement, replay tests (§15.1 #10–11), daily reconcile cron |
@@ -1430,6 +1477,7 @@ Verified 2026-09-15.
 - [Shippo pricing](https://goshippo.com/pricing) and [API pricing](https://goshippo.com/pricing/api) — Starter, Pro, API Starter fees
 - [Shippo Orders](https://docs.goshippo.com/orders/orders.md), [webhooks](https://docs.goshippo.com/tracking/webhooks.md), [webhook security](https://docs.goshippo.com/tracking/webhook-security.md), [international shipping](https://docs.goshippo.com/international-shipping/international-shipping.md)
 - [Japan Post 国際郵便マイページサービス](https://www.post.japanpost.jp/intmypage/whatsmypage.html) and [通関電子データ送信義務化](https://www.post.japanpost.jp/int/ead/index.html) — customs electronic data required for goods to all destinations
+- Checked 2026-09-21 for §2.3: [Ship&co pricing](https://www.shipandco.com/ja/pricing/), [Ship&co API](https://developer.shipandco.com/en/), [Ship&co: one API for Japanese domestic carriers](https://blog.shipandco.com/en/one-api-to-connect-with-japan-domestic-carriers/), [ゆうパック rates from Kanagawa](https://www.post.japanpost.jp/service/domestic/charge/list/yu-pack/14.html), [EMS rates](https://www.post.japanpost.jp/send/oversea/charge/list-ems/all.html), [UGX cross-border EC service](https://www.logi-today.com/917895), [Yamato B2クラウドAPI](https://business.kuronekoyamato.co.jp/service/lineup/b2api/index.html), [OpenLogi pricing](https://service.openlogi.com/pricing/), [OpenLogi overseas shipping](https://service.openlogi.com/openlogi_mag/overseas-shipping/), [Taiwan MOF: buying goods from abroad online](https://www.etax.nat.gov.tw/etwmain/tax-info/network-transaction-taxtation-area/consumer/oversea-online-shopping-notice), [JETRO: Taiwan cross-border EC](https://www.jetro.go.jp/worldtop/asia/tw/crossborder_ec/)
 - [Vercel Functions — Node.js runtime](https://vercel.com/docs/functions/runtimes/node-js) — `/api` Web handlers, `request.text()`
 - [Sanity IDs and paths](https://www.sanity.io/docs/content-lake/ids) — documents with a period in the id require authentication to read
 - [Sanity document type (`liveEdit`)](https://www.sanity.io/docs/studio/document-type) — edits publish immediately, no drafts
@@ -1444,4 +1492,5 @@ Verified 2026-09-15.
 |---|---|---|
 | 2026-09-15 | Stripe Checkout + Shippo plan written as an alternative to PLAN-shopify; both kept | Owner |
 | — | Choice between PLAN-shopify and this plan | — |
-| — | §6.4 Shippo result: Path A or Path B, with rates found | — |
+| 2026-09-21 | **Fulfilment: Path B (Japan Post, manual) at launch; Shippo dropped** without running §6.4. A Japan-only launch needs a domestic carrier and Shippo has none. `SHIPPO_API_TOKEN` stays unset in every environment; the Shippo webhook (§12.1) is won't-do. Rates in §19.3 | samuelcychan |
+| 2026-09-21 | **Fulfilment roadmap (§2.3):** (1) Japan Post manual now; (2) Ship&co when a month reaches about 20–30 orders or the first overseas market opens; (3) a cross-border line forwarder only for Taiwan or Hong Kong once cleared in §5.2, formal customs clearance only; (4) OpenLogi only if packing is outsourced | samuelcychan |

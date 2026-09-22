@@ -116,8 +116,8 @@ PR #5 merged into `main` (`763443a`) and deployed with commerce dark. Verified o
 
 | Work | Why not now |
 |---|---|
-| Phase 0 accounts, preview routing proof, Shippo go/no-go (§6.1–6.2, §6.4) | Owner actions: accounts, logins, keys |
-| Phase 6 Shippo webhook (§12.1) | Blocked on the §6.4 result and the real `transaction_created` payload |
+| Phase 0 accounts, preview routing proof (§6.1–6.2) | Owner actions: accounts, logins, keys. The Shippo go/no-go (§6.4) was closed on 2026-09-21 without running |
+| ~~Phase 6 Shippo webhook (§12.1)~~ | Won't do: Path B (Japan Post) was chosen on 2026-09-21 (backlog item 7) |
 | Phase 9 testing (§15) | After merge, with Stripe test keys and a preview deploy |
 | Phase 10 launch (§16), documentation | After testing |
 
@@ -132,7 +132,7 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 - [x] Stock entered: mustard 1 (was 2; one jar used by test order `KJ-260915-2664B8`), tapenade 2. Reset to real numbers before launch
 - [x] Write token works end to end: the test order's webhook created `fulfilment.cs_test_…` and decremented stock (after replaying the missed event)
 - [x] CORS origins: `http://localhost:3333`, `http://localhost:5173`, `http://localhost:3000`, `https://kimie-atelier.vercel.app`
-- [ ] Customs description and HS code: empty on both products. Only needed for export or Shippo (Path A)
+- [ ] Customs description and HS code: empty on both products. Only needed for export (Shippo dropped)
 - [ ] Hosted Studio: `kimie-jars.sanity.studio` still returns 404 (`npx sanity deploy`). Optional while editing through local `sanity dev`
 - [ ] CORS for preview deployments: no preview origin listed; add the preview URL(s) before testing on a preview deploy
 
@@ -142,7 +142,7 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 - [ ] Webhook endpoints and keys for Preview (test) and Production (live) (§10.1): none created yet
 
 **Shippo (§6.4)**
-- [ ] Shippo account and a DHL Express Japan (or FedEx/UPS) business account request: nothing set up (no Shippo token anywhere); the go/no-go test hasn't run
+- [x] ~~Shippo account and a DHL Express Japan (or FedEx/UPS) business account request~~. Not needed: Shippo was dropped on 2026-09-21 in favour of Japan Post (backlog item 7). No Shippo token anywhere, which is correct.
 
 **Legal and tax (§5.1)**
 - [ ] Legal notice, privacy and returns text: none filled in. `src/features/legal/content.ts` still has 37 Japanese + 37 English owner placeholders, 8 each in French, Simplified and Traditional Chinese (shipping page), and 4 adviser-review items
