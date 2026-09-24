@@ -2,11 +2,11 @@
 
 **Format:** WWA (Why – What – Acceptance)
 **Scope:** only the work left after tracks A–D were merged into `feat/commerce-stripe-shippo`. Built and verified work is not repeated here.
-**Total items:** 15 — 7 engineering or shared, 8 owner or adviser
+**Total items:** 16 — 8 engineering or shared, 8 owner or adviser
 **Estimated effort:** engineering is about one sprint (review, preview testing, launch wiring). The owner and adviser items (legal text, tax and food compliance, Stripe activation) depend on outside parties, typically days to weeks, and set the launch date.
 **Source:** [PLAN-stripe-and-shippo.md](../PLAN-stripe-and-shippo.md), [progress/README.md](README.md)
 **State as of:** 2026-09-21
-**Progress:** items 1, 2, 3, 7 and 12 are done. Items 4–6, 8–11 and 13–15 are open, and the owner and adviser items still set the launch date.
+**Progress:** items 1, 2, 3, 7 and 12 are done. Items 4–6, 8–11 and 13–16 are open, and the owner and adviser items still set the launch date.
 
 ## Current state (verified 2026-09-21)
 
@@ -320,6 +320,22 @@ Priority: P1 | Effort: S | Owner: owner decides; engineering changes checkout an
 
 ---
 
+### 16. Spare payment account, so the production shop can be tested (PayPal)
+
+**Why:** Stripe will not take a live payment until its account review clears (item 11), so nothing can be bought on the production site until then — every test so far has been Stripe test mode on the preview, against the `staging` dataset. A second account that can take one real payment closes that gap, and doubles as a fallback if the review is refused or delayed. It also covers the case where the seller turns out to be an individual in Taiwan, for whom Stripe is not available at all.
+
+**What:** [PLAN-payment-backup.md](../PLAN-payment-backup.md). The owner opens a PayPal Taiwan account (Taiwan ID and passport, no company registration) with payouts to a Taiwan bank through 玉山全球通, and answers the open items in §7 with PayPal in writing. Then **Path A**: take one real payment through a PayPal payment link and refund it, to prove the account and the payout. **Path B** (a second checkout path in `api/`, §6) is a separate decision, taken only if Stripe's activation stalls or PayPal becomes the primary provider.
+
+**Acceptance Criteria:**
+- The PayPal account exists, and one real payment has reached the Taiwan bank account and been refunded, with the elapsed time recorded
+- §7 items 1–4 are answered in writing (personal vs business account, card payment without a PayPal account, which conversion fee applies, payout setup) and recorded in the plan
+- A decision is recorded in PLAN §23: Path A only, or Path B with a reason
+- If Path B is ever built: `/legal/tokushoho` and the privacy page name PayPal as a payment method and a data processor (item 4) **before** any real buyer can use it
+
+Priority: P1 | Effort: S (owner, Path A) + M (engineering, only if Path B) | Owner: owner, supported by engineering | Dependencies: none — it is deliberately independent of Stripe's review
+
+---
+
 ## Story map
 
 | Must-have (P0) | Should-have (P1) | Nice-to-have (P2) |
@@ -329,13 +345,14 @@ Priority: P1 | Effort: S | Owner: owner decides; engineering changes checkout an
 | 3 Security review | ~~7 Spike: Shippo or Japan Post~~ (done: Japan Post) | |
 | 4 Legal pages complete | 8 Fulfilment rehearsal | |
 | | 15 Parcel type and one-jar margin | |
+| | 16 Spare payment account (PayPal) | |
 | 10 Tax and food compliance | | |
 | 11 Stripe live activation | | |
 | 12 Deploy dark on production | | |
 | 14 Commercial Vercel plan (D13) | | |
 | 13 Go live | | |
 
-**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 10 start now in parallel (owner work gates launch) · 15 as soon as 6 gives a packed weight, then finish the shipping wording in 4 and 5 · 12 once 3 is done · 14 any time, but before 13 · 11 once 4 and 12 are live · 8 after 15 · 9 after 5 · 13 last.
+**Suggested order:** 1 → 2 and 3 in parallel · 4, 5, 6, 10 start now in parallel (owner work gates launch) · 15 as soon as 6 gives a packed weight, then finish the shipping wording in 4 and 5 · 12 once 3 is done · 14 any time, but before 13 · 11 once 4 and 12 are live · 8 after 15 · 9 after 5 · 16 any time, ideally while 11 is waiting on Stripe · 13 last.
 
 ## Fulfilment roadmap after launch (PLAN §2.3)
 
@@ -369,3 +386,4 @@ These are not launch items. Each starts only when its trigger happens.
 6. **Customer shipping notice:** manual e-mail from Kimie at launch (D10), or is a transactional e-mail provider wanted?
 7. **Custom domain:** launch on `kimie-atelier.vercel.app`, or a custom domain first? This affects `SITE_URL`, CORS, the webhook URL and Stripe's review.
 8. **One-jar pricing:** keep free shipping on a single jar, or set a threshold of two jars (¥4,000)? (item 15)
+9. **Spare payment account:** open PayPal to test a real payment on production while Stripe's review runs — and is Path B (a second checkout path) wanted, or Path A only? (item 16)

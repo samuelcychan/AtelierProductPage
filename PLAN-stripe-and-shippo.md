@@ -2,7 +2,7 @@
 
 Plan for adding real purchasing to the site: customers add jars to a cart on the existing pages, pay on **Stripe's hosted Checkout**, and orders are fulfilled with **Shippo** where it can serve a shop that ships from Ehime, with Japan Post as the proven fallback. Stripe becomes the system of record for **payments, customers and orders**. Sanity (PLAN3) stays the system of record for **words and photos**, and gains **prices and stock**. The Vite/React site keeps its design and hosting on Vercel, and gains a small set of Vercel Functions.
 
-**An alternative to [PLAN-shopify.md](PLAN-shopify.md)** — both plans are kept so the owner can choose. Companion documents: [PLAN3.md](PLAN3.md) (Sanity content, `/story` live), [PLAN.md](PLAN.md) (original custom-admin option).
+**An alternative to [PLAN-shopify.md](PLAN-shopify.md)** — both plans are kept so the owner can choose. Companion documents: [PLAN3.md](PLAN3.md) (Sanity content, `/story` live), [PLAN.md](PLAN.md) (original custom-admin option), [PLAN-payment-backup.md](PLAN-payment-backup.md) (a PayPal account as a spare, and to test a real payment on production before Stripe is activated).
 
 Facts below were verified on 2026-09-15 against the repository (branch `docs/shopify-plan` @ `dcc5472`; application code identical to `main` @ `239da23`) and the sources in §22. This is an engineering plan, not legal or tax advice: every item in §5 must be confirmed with the relevant authority or a qualified adviser before taking real orders.
 
@@ -1493,4 +1493,5 @@ Verified 2026-09-15.
 | 2026-09-15 | Stripe Checkout + Shippo plan written as an alternative to PLAN-shopify; both kept | Owner |
 | — | Choice between PLAN-shopify and this plan | — |
 | 2026-09-21 | **Fulfilment: Path B (Japan Post, manual) at launch; Shippo dropped** without running §6.4. A Japan-only launch needs a domestic carrier and Shippo has none. `SHIPPO_API_TOKEN` stays unset in every environment; the Shippo webhook (§12.1) is won't-do. Rates in §19.3 | samuelcychan |
+| 2026-09-24 | **Stripe stays the payment provider.** A **PayPal Taiwan** account is opened alongside it as a spare and to take one real payment on the production site while Stripe's activation review runs — not as a replacement. Details and the two paths: [PLAN-payment-backup.md](PLAN-payment-backup.md); backlog item 16 | samuelcychan |
 | 2026-09-21 | **Fulfilment roadmap (§2.3):** (1) Japan Post manual now; (2) Ship&co when a month reaches about 20–30 orders or the first overseas market opens; (3) a cross-border line forwarder only for Taiwan or Hong Kong once cleared in §5.2, formal customs clearance only; (4) OpenLogi only if packing is outsourced | samuelcychan |
