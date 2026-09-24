@@ -144,7 +144,7 @@ Priority: P1 | Effort: S | Owner: owner decides; engineering updates copy | Depe
 
 **Acceptance Criteria:**
 - Both products' packed weight is a measured value, confirmed by the owner
-- The hosted Studio URL loads, and Kimie can open Products → Commerce and Stock
+- The hosted Studio URL loads, and Kimie can open Products → Commerce and Stock — **half done 2026-09-25:** <https://kimie.sanity.studio/> is live and serves both workspaces; Kimie still has to be invited to the project
 - Stock numbers equal the jars on hand on launch day, set in the **`production`** dataset (the preview’s `staging` copy is test data)
 - A Vision query confirms both products are for sale with a SKU, a weight and a positive whole-yen price
 

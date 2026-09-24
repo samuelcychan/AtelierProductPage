@@ -139,7 +139,7 @@ Status checked 2026-09-16 against the live systems (Sanity queries, Stripe CLI, 
 - [x] Write token works end to end: the test order's webhook created `fulfilment.cs_test_…` and decremented stock (after replaying the missed event)
 - [x] CORS origins: `http://localhost:3333`, `http://localhost:5173`, `http://localhost:3000`, `https://kimie-atelier.vercel.app`
 - [ ] Customs description and HS code: empty on both products. Only needed for export (Shippo dropped)
-- [ ] Hosted Studio: `kimie-jars.sanity.studio` still returns 404 (`npx sanity deploy`). Optional while editing through local `sanity dev`
+- [x] Hosted Studio: **deployed 2026-09-25 to <https://kimie.sanity.studio/>** (both workspaces: `/production` and `/staging`). `studioHost: 'kimie'` and the returned `deployment.appId` are now in `studio/sanity.cli.ts`, so later deploys need no prompt. The page loads and redirects to Sanity's login, as expected. Remaining: invite Kimie to the project
 - [ ] CORS for preview deployments: no preview origin listed; add the preview URL(s) before testing on a preview deploy
 
 **Stripe (§6.1)**

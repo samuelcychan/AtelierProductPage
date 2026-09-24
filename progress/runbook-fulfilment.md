@@ -12,7 +12,7 @@
 | Prerequisite | Why | State |
 |---|---|---|
 | Kimie has her own Stripe Dashboard login for the account | Every customer detail lives in Stripe and nowhere else | **Not set up** |
-| Kimie can open the hosted Sanity Studio | Stock lives there, and the order log is read through Vision | Waits on item 6 |
+| Kimie can open the hosted Sanity Studio at <https://kimie.sanity.studio/> | Stock lives there, and the order log is read through Vision | Deployed 2026-09-25; **Kimie still needs an invitation to the project** |
 | Parcel type, packaging materials and postage are chosen | Fixes how a jar is packed and what postage costs | Waits on item 15 (**TBC**) |
 | Kimie has run one rehearsal on a preview test order | So a real customer is not the first attempt | Part of item 8 |
 
