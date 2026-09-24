@@ -324,15 +324,17 @@ Priority: P1 | Effort: S | Owner: owner decides; engineering changes checkout an
 
 **Why:** Stripe will not take a live payment until its account review clears (item 11), so nothing can be bought on the production site until then — every test so far has been Stripe test mode on the preview, against the `staging` dataset. A second account that can take one real payment closes that gap, and doubles as a fallback if the review is refused or delayed. It also covers the case where the seller turns out to be an individual in Taiwan, for whom Stripe is not available at all.
 
-**What:** [PLAN-payment-backup.md](../PLAN-payment-backup.md). The owner opens a PayPal Taiwan account (Taiwan ID and passport, no company registration) with payouts to a Taiwan bank through 玉山全球通, and answers the open items in §7 with PayPal in writing. Then **Path A**: take one real payment through a PayPal payment link and refund it, to prove the account and the payout. **Path B** (a second checkout path in `api/`, §6) is a separate decision, taken only if Stripe's activation stalls or PayPal becomes the primary provider.
+**What:** [PLAN-payment-backup.md](../PLAN-payment-backup.md). The owner opens a PayPal Taiwan account (Taiwan ID and passport, no company registration) with payouts to a Taiwan bank through 玉山全球通, and answers the open items in §7 with PayPal in writing. **Step 0** (§5): one real payment through a payment link, refunded, to prove the account and the payout before any code is written. Then **Path B** (§6, chosen 2026-09-25): PayPal is built into the site as a second checkout path — create, capture and webhook endpoints, a provider-agnostic fulfilment core shared with Stripe, buttons in the cart drawer — so the production shop can be proved end to end.
 
 **Acceptance Criteria:**
-- The PayPal account exists, and one real payment has reached the Taiwan bank account and been refunded, with the elapsed time recorded
+- The PayPal account exists, and one real payment has reached the Taiwan bank account and been refunded, with the elapsed time recorded (§5)
 - §7 items 1–4 are answered in writing (personal vs business account, card payment without a PayPal account, which conversion fee applies, payout setup) and recorded in the plan
-- A decision is recorded in PLAN §23: Path A only, or Path B with a reason
-- If Path B is ever built: `/legal/tokushoho` and the privacy page name PayPal as a payment method and a data processor (item 4) **before** any real buyer can use it
+- All ten sandbox scenarios in §6.13 pass on the branch preview against the `staging` dataset, including the replayed webhook and the double capture
+- On production with live credentials, one real order is bought, fulfilled from the runbook and refunded, with the PayPal buttons still gated behind the `?pay=paypal` opt-in (§6.14)
+- `/legal/tokushoho` and the privacy page name PayPal as a payment method and a data processor (item 4) **before** the gate is dropped for real buyers
+- Removing `PAYPAL_SECRET` and redeploying makes the buttons disappear while Stripe's path keeps working
 
-Priority: P1 | Effort: S (owner, Path A) + M (engineering, only if Path B) | Owner: owner, supported by engineering | Dependencies: none — it is deliberately independent of Stripe's review
+Priority: P1 | Effort: S (owner) + 14–22 h engineering (PLAN-payment-backup §6.15) | Owner: owner (account), engineering (build) | Dependencies: none — deliberately independent of Stripe's review
 
 ---
 
